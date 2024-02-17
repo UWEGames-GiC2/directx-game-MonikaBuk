@@ -53,16 +53,33 @@ void Player::Tick(GameData* _GD)
 	}
 
 	//change orinetation of player
+	Vector3 rightMove = 40.0f * Vector3::Right;
+	Matrix rotMove = Matrix::CreateRotationY(m_yaw);
+	rightMove = Vector3::Transform(rightMove, rotMove);
+
 	float rotSpeed = 2.0f * _GD->m_dt;
+	float speed = 10.0f;
 	if (_GD->m_KBS.A)
 	{
-		m_yaw += rotSpeed;
+		//m_yaw += rotSpeed;
+		m_acc -= rightMove;
+		
 	}
 	if (_GD->m_KBS.D)
 	{
-		m_yaw -= rotSpeed;
+		m_acc += rightMove;
+		//m_yaw -= rotSpeed;
 	}
+	 auto mouse = _GD->m_MS;
 
+	 // Check if mouse input is relative for rotation
+	 if (mouse.positionMode == Mouse::MODE_RELATIVE)
+	 {
+		 Vector3 delta = Vector3(static_cast<float>(mouse.x), static_cast<float>(mouse.y), 0.f)
+			 * rotSpeed;
+		 m_pitch -= delta.y; 
+		 m_yaw -= delta.x;
+	 }
 	//move player up and down
 	if (_GD->m_KBS.R)
 	{
