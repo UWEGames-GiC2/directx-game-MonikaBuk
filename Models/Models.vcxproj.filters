@@ -20,5 +20,8 @@
     <MeshContentTask Include="Vase\JEMINA vase -up.fbx" />
     <MeshContentTask Include="Table\table.FBX" />
     <MeshContentTask Include="Bird\BirdModelV1.fbx" />
+    <MeshContentTask Include="Mac10.fbx">
+      <Filter>VBFileModels</Filter>
+    </MeshContentTask>
   </ItemGroup>
 </Project>
