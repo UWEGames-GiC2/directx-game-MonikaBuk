@@ -101,6 +101,7 @@ void Game::Initialize(HWND _window, int _width, int _height)
     FileVBGO* terrainBox = new FileVBGO("terrainTex", m_d3dDevice.Get());
     m_GameObjects.push_back(terrainBox);
 
+    /*
     FileVBGO* Box = new FileVBGO("cube", m_d3dDevice.Get());
     m_GameObjects.push_back(Box);
     Box->SetPos(Vector3(0.0f, 0.0f, -100.0f));
@@ -143,6 +144,7 @@ void Game::Initialize(HWND _window, int _width, int _height)
     VBMC->SetPitch(-XM_PIDIV2);
     VBMC->SetScale(Vector3(3, 3, 1.5));
     m_GameObjects.push_back(VBMC);
+    */
 
     //create a base camera
     m_cam = new Camera(0.25f * XM_PI, AR, 1.0f, 10000.0f, Vector3::UnitY, Vector3::Zero);
@@ -163,43 +165,43 @@ void Game::Initialize(HWND _window, int _width, int _height)
     params[0] = 10.f;  params[1] = 20.0f; params[2] = 30.f;
     GPGO* pGPGO = new GPGO(m_d3dContext.Get(), GPGO_BOX, (float*)&Colors::Azure, params);
     pGPGO->SetPos(Vector3(-50.0f, 10.0f, -100.f));
-    m_GameObjects.push_back(pGPGO);
+  //  m_GameObjects.push_back(pGPGO);
     params[0] = params[1] = 20.0f; params[2] = (size_t)32;
     pGPGO = new GPGO(m_d3dContext.Get(), GPGO_CONE, (float*)&Colors::Navy,params);
     pGPGO->SetPos(Vector3(-50.0f, 10.0f, -70.f));
-    m_GameObjects.push_back(pGPGO);
+  //  m_GameObjects.push_back(pGPGO);
     params[0] = 15.0f;
     pGPGO = new GPGO(m_d3dContext.Get(), GPGO_CUBE, (float*)&Colors::SeaGreen, params);
     pGPGO->SetPos(Vector3(-50.0f, 10.0f, -40.f));
-    m_GameObjects.push_back(pGPGO);
+   // m_GameObjects.push_back(pGPGO);
     params[0] = params[1] = 20.0f; params[2] = (size_t)32;
     pGPGO = new GPGO(m_d3dContext.Get(), GPGO_CYLINDER, (float*)&Colors::OliveDrab, params);
     pGPGO->SetPos(Vector3(-50.0f, 10.0f, -10.f));
-    m_GameObjects.push_back(pGPGO);
+   // m_GameObjects.push_back(pGPGO);
     params[0] = 15.0f;
     pGPGO = new GPGO(m_d3dContext.Get(), GPGO_DODECAHEDRON, (float*)&Colors::OrangeRed,params);
     pGPGO->SetPos(Vector3(-50.0f, 10.0f, 20.f));
-    m_GameObjects.push_back(pGPGO);
+   // m_GameObjects.push_back(pGPGO);
     params[0] =  15.0f; params[1] = (size_t)3;
     pGPGO = new GPGO(m_d3dContext.Get(), GPGO_GEOSPHERE, (float*)&Colors::BlueViolet, params);
     pGPGO->SetPos(Vector3(-50.0f, 10.0f, 50.f));
-    m_GameObjects.push_back(pGPGO);
+  //  m_GameObjects.push_back(pGPGO);
     params[0] = 20;
     pGPGO = new GPGO(m_d3dContext.Get(), GPGO_ICOSAHEDRON, (float*)&Colors::DodgerBlue, params);
     pGPGO->SetPos(Vector3(-50.0f, 10.0f, 80.f));
-    m_GameObjects.push_back(pGPGO);
+    //m_GameObjects.push_back(pGPGO);
     params[0] = 20;
     pGPGO = new GPGO(m_d3dContext.Get(), GPGO_OCTAHEDRON, (float*)&Colors::PaleTurquoise, params);
     pGPGO->SetPos(Vector3(-50.0f, 10.0f, 110.f));
-    m_GameObjects.push_back(pGPGO);
+   // m_GameObjects.push_back(pGPGO);
     params[0] = 15.0f; params[1] = (size_t)16;
     pGPGO = new GPGO(m_d3dContext.Get(), GPGO_SPHERE, (float*)&Colors::LawnGreen, params);
     pGPGO->SetPos(Vector3(-50.0f, 10.0f, 140.0));
-    m_GameObjects.push_back(pGPGO);
+  //  m_GameObjects.push_back(pGPGO);
     params[0] = 15.0f; params[1] = (size_t)8;
     pGPGO = new GPGO(m_d3dContext.Get(), GPGO_TEAPOT, (float*)&Colors::YellowGreen, params);
     pGPGO->SetPos(Vector3(-50.0f, 10.0f, 170.0f));
-    m_GameObjects.push_back(pGPGO);
+   // m_GameObjects.push_back(pGPGO);
     params[0] = 20;
     pGPGO = new GPGO(m_d3dContext.Get(), GPGO_TETRAHEDRON, (float*)&Colors::Firebrick, params);
     pGPGO->SetPos(Vector3(-50.0f, 10.0f, 200.f));
@@ -217,17 +219,23 @@ void Game::Initialize(HWND _window, int _width, int _height)
     m_DD->m_light = m_light;
 
     //example basic 2D stuff
-    ImageGO2D* logo = new ImageGO2D("logo_small", m_d3dDevice.Get());
-    logo->SetPos(200.0f * Vector2::One);
-    m_GameObjects2D.push_back(logo);
-    ImageGO2D* bug_test = new ImageGO2D("bug_test", m_d3dDevice.Get());
+    ImageGO2D* croshair = new ImageGO2D("crosshair", m_d3dDevice.Get());
+    RECT window;
+    GetWindowRect(m_window, &window);
+    croshair->SetPos(Vector2(20,20));
+    m_GameObjects2D.push_back(croshair);
+
+
+ /*ImageGO2D* bug_test = new ImageGO2D("bug_test", m_d3dDevice.Get());
     bug_test->SetPos(300.0f * Vector2::One);
     m_GameObjects2D.push_back(bug_test);
+    
 
     TextGO2D* text = new TextGO2D("Test Text");
     text->SetPos(Vector2(100, 10));
     text->SetColour(Color((float*)&Colors::Yellow));
     m_GameObjects2D.push_back(text);
+    */
 
     //Test Sounds
     Loop* loop = new Loop(m_audioEngine.get(), "NightAmbienceSimple_02");
