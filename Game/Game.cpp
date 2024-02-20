@@ -91,11 +91,11 @@ void Game::Initialize(HWND _window, int _width, int _height)
     float AR = (float)_width / (float)_height;
 
     //example basic 3D stuff
-    Terrain* terrain = new Terrain("table", m_d3dDevice.Get(), m_fxFactory, Vector3(200.0f, 0.0f, 200.0f), 0.0f, 0.0f, 0.0f, 0.25f * Vector3::One);
-    m_GameObjects.push_back(terrain);
+    //Terrain* terrain = new Terrain("table", m_d3dDevice.Get(), m_fxFactory, Vector3(200.0f, 0.0f, 200.0f), 0.0f, 0.0f, 0.0f, 0.25f * Vector3::One);
+  //  m_GameObjects.push_back(terrain);
 
     //L-system like tree
-    m_GameObjects.push_back(new Tree(4, 4, .6f, 10.0f * Vector3::Up, XM_PI / 6.0f, "JEMINA vase -up", m_d3dDevice.Get(), m_fxFactory));
+    //m_GameObjects.push_back(new Tree(4, 4, .6f, 10.0f * Vector3::Up, XM_PI / 6.0f, "JEMINA vase -up", m_d3dDevice.Get(), m_fxFactory));
 
     //Vertex Buffer Game Objects
     FileVBGO* terrainBox = new FileVBGO("terrainTex", m_d3dDevice.Get());
@@ -222,7 +222,8 @@ void Game::Initialize(HWND _window, int _width, int _height)
     ImageGO2D* croshair = new ImageGO2D("crosshair", m_d3dDevice.Get());
     RECT window;
     GetWindowRect(m_window, &window);
-    croshair->SetPos(Vector2(20,20));
+    croshair->SetPos(Vector2(((window.left + window.right) >> 1) * 0.4, ((window.bottom + window.top) >> 1) *0.7));
+    croshair->SetScale(0.1);
     m_GameObjects2D.push_back(croshair);
 
 

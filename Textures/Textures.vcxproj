@@ -151,7 +151,7 @@
     <ImageContentTask Include="white.jpg" />
   </ItemGroup>
   <ItemGroup>
-    <Image Include="crosshair.png" />
+    <ImageContentTask Include="crosshair.png" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
