@@ -10,7 +10,7 @@ Player::Player(string _fileName, ID3D11Device* _pd3dDevice, IEffectFactory* _EF)
 
 	m_pos.y = 10.0f;
 
-	SetDrag(0.7);
+	SetDrag(2);
 	SetPhysicsOn(true);
 }
 
@@ -22,39 +22,23 @@ Player::~Player()
 
 void Player::Tick(GameData* _GD)
 {
-	switch (_GD->m_GS)
+	//TURN AND FORWARD CONTROL HERE
+	Vector3 forwardMove = 40.0f * Vector3::Forward;
+	Matrix rotMove = Matrix::CreateRotationY(m_yaw);
+	forwardMove = Vector3::Transform(forwardMove, rotMove);
+	if (_GD->m_KBS.W)
 	{
-	case GS_PLAY_MAIN_CAM:
+		m_acc += forwardMove;
+	}
+	if (_GD->m_KBS.S)
 	{
-		{
-			//MOUSE CONTROL SCHEME HERE
-			float speed = 10.0f;
-			m_acc.x += speed * _GD->m_MS.x;
-			m_acc.z += speed * _GD->m_MS.y;
-			break;
-		}
+		m_acc -= forwardMove;
 	}
-	case GS_PLAY_TPS_CAM:
-	{
-		//TURN AND FORWARD CONTROL HERE
-		Vector3 forwardMove = 40.0f * Vector3::Forward;
-		Matrix rotMove = Matrix::CreateRotationY(m_yaw);
-		forwardMove = Vector3::Transform(forwardMove, rotMove);
-		if (_GD->m_KBS.W)
-		{
-			m_acc += forwardMove;
-		}
-		if (_GD->m_KBS.S)
-		{
-			m_acc -= forwardMove;
-		}
-		break;
-	}
-	}
+
+
 
 	//change orinetation of player
 	Vector3 rightMove = 40.0f * Vector3::Right;
-	Matrix rotMove = Matrix::CreateRotationY(m_yaw);
 	rightMove = Vector3::Transform(rightMove, rotMove);
 
 	float rotSpeed = 2.0f * _GD->m_dt;
@@ -63,33 +47,28 @@ void Player::Tick(GameData* _GD)
 	{
 		//m_yaw += rotSpeed;
 		m_acc -= rightMove;
-		
+
 	}
 	if (_GD->m_KBS.D)
 	{
 		m_acc += rightMove;
 		//m_yaw -= rotSpeed;
 	}
-	 auto mouse = _GD->m_MS;
+	auto mouse = _GD->m_MS;
 
-	 // Check if mouse input is relative for rotation
-	 if (mouse.positionMode == Mouse::MODE_RELATIVE)
-	 {
-		 Vector3 delta = Vector3(static_cast<float>(mouse.x), static_cast<float>(mouse.y), 0.f)
-			 * rotSpeed;
-		 m_pitch -= delta.y; 
-		 m_yaw -= delta.x;
-	 }
-	//move player up and down
-	if (_GD->m_KBS.R)
+	// Check if mouse input is relative for rotation
+	if (mouse.positionMode == Mouse::MODE_RELATIVE)
 	{
-		m_acc.y += 40.0f;
+		Vector3 delta = Vector3(static_cast<float>(mouse.x), static_cast<float>(mouse.y), 0.f)
+			* rotSpeed;
+		m_pitch -= delta.y;
+		auto m_maxrot = XMConvertToRadians(60);
+		if (m_pitch > m_maxrot) m_pitch = m_maxrot;
+		if (m_pitch < -m_maxrot) m_pitch = -m_maxrot;
+		m_yaw -= delta.x;
 	}
 
-	if (_GD->m_KBS.F)
-	{
-		m_acc.y -= 40.0f;
-	}
+
 
 	//limit motion of the player
 	float length = m_pos.Length();

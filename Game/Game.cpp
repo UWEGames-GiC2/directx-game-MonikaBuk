@@ -101,7 +101,7 @@ void Game::Initialize(HWND _window, int _width, int _height)
     FileVBGO* terrainBox = new FileVBGO("terrainTex", m_d3dDevice.Get());
     m_GameObjects.push_back(terrainBox);
 
-    /*
+    
     FileVBGO* Box = new FileVBGO("cube", m_d3dDevice.Get());
     m_GameObjects.push_back(Box);
     Box->SetPos(Vector3(0.0f, 0.0f, -100.0f));
@@ -114,50 +114,21 @@ void Game::Initialize(HWND _window, int _width, int _height)
     cube->SetScale(4.0f);
     m_GameObjects.push_back(cube);
 
-    VBSpike* spikes = new VBSpike();
-    spikes->init(11, m_d3dDevice.Get());
-    spikes->SetPos(Vector3(0.0f, 0.0f, 100.0f));
-    spikes->SetScale(4.0f);
-    m_GameObjects.push_back(spikes);
-
-    VBSpiral* spiral = new VBSpiral();
-    spiral->init(11, m_d3dDevice.Get());
-    spiral->SetPos(Vector3(-100.0f, 0.0f, 0.0f));
-    spiral->SetScale(4.0f);
-    m_GameObjects.push_back(spiral);
-
-    VBPillow* pillow = new VBPillow();
-    pillow->init(11, m_d3dDevice.Get());
-    pillow->SetPos(Vector3(-100.0f, 0.0f, -100.0f));
-    pillow->SetScale(4.0f);
-    m_GameObjects.push_back(pillow);
-
-    VBSnail* snail = new VBSnail(m_d3dDevice.Get(), "shell", 150, 0.98f, 0.09f * XM_PI, 0.4f, Color(1.0f, 0.0f, 0.0f, 1.0f), Color(0.0f, 0.0f, 1.0f, 1.0f));
-    snail->SetPos(Vector3(-100.0f, 0.0f, 100.0f));
-    snail->SetScale(2.0f);
-    m_GameObjects.push_back(snail);
-
-    //Marching Cubes
-    VBMarchCubes* VBMC = new VBMarchCubes();
-    VBMC->init(Vector3(-8.0f, -8.0f, -17.0f), Vector3(8.0f, 8.0f, 23.0f), 60.0f * Vector3::One, 0.01, m_d3dDevice.Get());
-    VBMC->SetPos(Vector3(100, 0, -100));
-    VBMC->SetPitch(-XM_PIDIV2);
-    VBMC->SetScale(Vector3(3, 3, 1.5));
-    m_GameObjects.push_back(VBMC);
-    */
-
-    //create a base camera
-    m_cam = new Camera(0.25f * XM_PI, AR, 1.0f, 10000.0f, Vector3::UnitY, Vector3::Zero);
-    m_cam->SetPos(Vector3(0.0f, 200.0f, 200.0f));
-    m_GameObjects.push_back(m_cam);
-
     //add Player
     Player* pPlayer = new Player("Mac10", m_d3dDevice.Get(), m_fxFactory);
     pPlayer->SetScale(0.7);
+    pPlayer->isVisible = false;
     m_GameObjects.push_back(pPlayer);
 
+
+
+    //create a base camera
+    m_FPScam = new FPSCamera(0.25f * XM_PI, AR, 1.0f, 10000.0f, pPlayer, Vector3::UnitY, Vector3(0.0f, 10.0f, 50.0f));
+    m_GameObjects.push_back(m_FPScam);
+
+    
     //add a secondary camera
-    m_TPScam = new TPSCamera(0.25f * XM_PI, AR, 1.0f, 10000.0f, pPlayer, Vector3::UnitY, Vector3(0.0f, 10.0f, 50.0f));
+    m_TPScam = new TPSCamera(0.25f * XM_PI, AR, 1.0f, 10000.0f, pPlayer, Vector3::UnitY, Vector3(0.0f, 10.0f, 100));
     m_GameObjects.push_back(m_TPScam);
 
     //test all GPGOs
@@ -209,34 +180,28 @@ void Game::Initialize(HWND _window, int _width, int _height)
     params[0] = 30.0f; params[1] = 10.0f; params[2] = (size_t)32;
     pGPGO = new GPGO(m_d3dContext.Get(), GPGO_TORUS, (float*)&Colors::Aquamarine, params);
     pGPGO->SetPos(Vector3(-50.0f, 10.0f, 230.f));
-    m_GameObjects.push_back(pGPGO);
+   // m_GameObjects.push_back(pGPGO);
 
     //create DrawData struct and populate its pointers
     m_DD = new DrawData;
     m_DD->m_pd3dImmediateContext = nullptr;
     m_DD->m_states = m_states;
-    m_DD->m_cam = m_cam;
+    m_DD->m_cam = m_FPScam;
     m_DD->m_light = m_light;
 
     //example basic 2D stuff
     ImageGO2D* croshair = new ImageGO2D("crosshair", m_d3dDevice.Get());
     RECT window;
     GetWindowRect(m_window, &window);
-    croshair->SetPos(Vector2(((window.left + window.right) >> 1) * 0.4, ((window.bottom + window.top) >> 1) *0.7));
+    croshair->SetPos(Vector2(_width /2, _height/2));
     croshair->SetScale(0.1);
     m_GameObjects2D.push_back(croshair);
 
-
- /*ImageGO2D* bug_test = new ImageGO2D("bug_test", m_d3dDevice.Get());
-    bug_test->SetPos(300.0f * Vector2::One);
-    m_GameObjects2D.push_back(bug_test);
-    
-
-    TextGO2D* text = new TextGO2D("Test Text");
-    text->SetPos(Vector2(100, 10));
-    text->SetColour(Color((float*)&Colors::Yellow));
+    TextGO2D* text = new TextGO2D("000");
+    text->SetPos(Vector2(10 , 10));
+    text->SetColour(Color((float*)&Colors::White));
     m_GameObjects2D.push_back(text);
-    */
+    
 
     //Test Sounds
     Loop* loop = new Loop(m_audioEngine.get(), "NightAmbienceSimple_02");
@@ -290,6 +255,7 @@ void Game::Update(DX::StepTimer const& _timer)
         if (m_GD->m_GS == GS_PLAY_MAIN_CAM)
         {
             m_GD->m_GS = GS_PLAY_TPS_CAM;
+           
         }
         else
         {
@@ -323,7 +289,7 @@ void Game::Render()
     m_DD->m_pd3dImmediateContext = m_d3dContext.Get();
 
     //set which camera to be used
-    m_DD->m_cam = m_cam;
+    m_DD->m_cam = m_FPScam;
     if (m_GD->m_GS == GS_PLAY_TPS_CAM)
     {
         m_DD->m_cam = m_TPScam;
@@ -335,7 +301,10 @@ void Game::Render()
     //Draw 3D Game Obejects
     for (list<GameObject*>::iterator it = m_GameObjects.begin(); it != m_GameObjects.end(); it++)
     {
-        (*it)->Draw(m_DD);
+        if ((*it)->isVisible)
+        {
+            (*it)->Draw(m_DD);
+        }
     }
 
     // Draw sprite batch stuff 

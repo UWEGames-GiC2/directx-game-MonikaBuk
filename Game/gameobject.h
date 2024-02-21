@@ -51,7 +51,7 @@ public:
 	void		SetPhysicsOn(bool _physics) { m_physicsOn = _physics; }
 	void		TogglePhysics() { m_physicsOn = !m_physicsOn; }
 	void		SetDrag(float _drag) { m_drag = _drag; }
-
+	bool isVisible = true;
 
 protected:
 
