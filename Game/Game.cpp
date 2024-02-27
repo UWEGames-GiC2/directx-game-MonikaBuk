@@ -91,17 +91,11 @@ void Game::Initialize(HWND _window, int _width, int _height)
     float AR = (float)_width / (float)_height;
 
     //example basic 3D stuff
-    //Terrain* terrain = new Terrain("table", m_d3dDevice.Get(), m_fxFactory, Vector3(200.0f, 0.0f, 200.0f), 0.0f, 0.0f, 0.0f, 0.25f * Vector3::One);
-  //  m_GameObjects.push_back(terrain);
-
-    //L-system like tree
-    //m_GameObjects.push_back(new Tree(4, 4, .6f, 10.0f * Vector3::Up, XM_PI / 6.0f, "JEMINA vase -up", m_d3dDevice.Get(), m_fxFactory));
 
     //Vertex Buffer Game Objects
     FileVBGO* terrainBox = new FileVBGO("terrainTex", m_d3dDevice.Get());
     m_GameObjects.push_back(terrainBox);
 
-    
     FileVBGO* Box = new FileVBGO("cube", m_d3dDevice.Get());
     m_GameObjects.push_back(Box);
     Box->SetPos(Vector3(0.0f, 0.0f, -100.0f));
@@ -120,13 +114,10 @@ void Game::Initialize(HWND _window, int _width, int _height)
     pPlayer->isVisible = false;
     m_GameObjects.push_back(pPlayer);
 
-
-
     //create a base camera
     m_FPScam = new FPSCamera(0.25f * XM_PI, AR, 1.0f, 10000.0f, pPlayer, Vector3::UnitY, Vector3(0.0f, 10.0f, 50.0f));
     m_GameObjects.push_back(m_FPScam);
 
-    
     //add a secondary camera
     m_TPScam = new TPSCamera(0.25f * XM_PI, AR, 1.0f, 10000.0f, pPlayer, Vector3::UnitY, Vector3(0.0f, 10.0f, 100));
     m_GameObjects.push_back(m_TPScam);
@@ -199,6 +190,7 @@ void Game::Initialize(HWND _window, int _width, int _height)
 
     TextGO2D* text = new TextGO2D("000");
     text->SetPos(Vector2(10 , 10));
+    text->SetScale(0.5);
     text->SetColour(Color((float*)&Colors::White));
     m_GameObjects2D.push_back(text);
     
@@ -208,9 +200,6 @@ void Game::Initialize(HWND _window, int _width, int _height)
     loop->SetVolume(0.1f);
     loop->Play();
     m_Sounds.push_back(loop);
-
-    TestSound* TS = new TestSound(m_audioEngine.get(), "Explo1");
-    m_Sounds.push_back(TS);
 }
 
 // Executes the basic game loop.
