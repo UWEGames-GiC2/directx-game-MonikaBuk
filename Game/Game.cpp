@@ -6,12 +6,18 @@
 #include "Game.h"
 #include <time.h>
 
+#include <iostream>
+
 //Scarle Headers
 #include "GameData.h"
 #include "GameState.h"
 #include "DrawData.h"
 #include "DrawData2D.h"
 #include "ObjectList.h"
+
+#include "CMOGO.h"
+#include <DirectXCollision.h>
+#include "Collision.h"
 
 extern void ExitGame() noexcept;
 
@@ -91,6 +97,18 @@ void Game::Initialize(HWND _window, int _width, int _height)
     float AR = (float)_width / (float)_height;
 
     //example basic 3D stuff
+    Terrain* terrain = new Terrain("table", m_d3dDevice.Get(), m_fxFactory, Vector3(100.0f, 0.0f, 100.0f), 0.0f, 0.0f, 0.0f, 0.25f * Vector3::One);
+    m_GameObjects.push_back(terrain);
+    m_ColliderObjects.push_back(terrain);
+
+    Terrain* terrain2 = new Terrain("table", m_d3dDevice.Get(), m_fxFactory, Vector3(-100.0f, 0.0f, -100.0f), 0.0f, 0.0f, 0.0f, Vector3::One);
+    m_GameObjects.push_back(terrain2);
+    m_ColliderObjects.push_back(terrain2);
+
+    //L-system like tree
+    Tree* tree = new Tree(4, 4, .6f, 10.0f * Vector3::Up, XM_PI / 6.0f, "JEMINA vase -up", m_d3dDevice.Get(), m_fxFactory);
+    m_GameObjects.push_back(tree);  
+    // todo: add to cmogo
 
     //Vertex Buffer Game Objects
     FileVBGO* terrainBox = new FileVBGO("terrainTex", m_d3dDevice.Get());
@@ -108,48 +126,130 @@ void Game::Initialize(HWND _window, int _width, int _height)
     cube->SetScale(4.0f);
     m_GameObjects.push_back(cube);
 
-    //add Player
-    Player* pPlayer = new Player("Mac10", m_d3dDevice.Get(), m_fxFactory);
-    pPlayer->SetScale(0.7);
-    pPlayer->isVisible = false;
-    m_GameObjects.push_back(pPlayer);
+    VBSpike* spikes = new VBSpike();
+    spikes->init(11, m_d3dDevice.Get());
+    spikes->SetPos(Vector3(0.0f, 0.0f, 100.0f));
+    spikes->SetScale(4.0f);
+    m_GameObjects.push_back(spikes);
+
+    VBSpiral* spiral = new VBSpiral();
+    spiral->init(11, m_d3dDevice.Get());
+    spiral->SetPos(Vector3(-100.0f, 0.0f, 0.0f));
+    spiral->SetScale(4.0f);
+    m_GameObjects.push_back(spiral);
+
+    VBPillow* pillow = new VBPillow();
+    pillow->init(11, m_d3dDevice.Get());
+    pillow->SetPos(Vector3(-100.0f, 0.0f, -100.0f));
+    pillow->SetScale(4.0f);
+    m_GameObjects.push_back(pillow);
+
+    VBSnail* snail = new VBSnail(m_d3dDevice.Get(), "shell", 150, 0.98f, 0.09f * XM_PI, 0.4f, Color(1.0f, 0.0f, 0.0f, 1.0f), Color(0.0f, 0.0f, 1.0f, 1.0f));
+    snail->SetPos(Vector3(-100.0f, 0.0f, 100.0f));
+    snail->SetScale(2.0f);
+    m_GameObjects.push_back(snail);
+
+    //Marching Cubes
+    VBMarchCubes* VBMC = new VBMarchCubes();
+    VBMC->init(Vector3(-8.0f, -8.0f, -17.0f), Vector3(8.0f, 8.0f, 23.0f), 60.0f * Vector3::One, 0.01, m_d3dDevice.Get());
+    VBMC->SetPos(Vector3(100, 0, -100));
+    VBMC->SetPitch(-XM_PIDIV2);
+    VBMC->SetScale(Vector3(3, 3, 1.5));
+    m_GameObjects.push_back(VBMC);
 
     //create a base camera
-    m_FPScam = new FPSCamera(0.25f * XM_PI, AR, 1.0f, 10000.0f, pPlayer, Vector3::UnitY, Vector3(0.0f, 10.0f, 50.0f));
-    m_GameObjects.push_back(m_FPScam);
+    m_cam = new Camera(0.25f * XM_PI, AR, 1.0f, 10000.0f, Vector3::UnitY, Vector3::Zero);
+    m_cam->SetPos(Vector3(0.0f, 200.0f, 200.0f));
+    m_GameObjects.push_back(m_cam);
+
+    //add Player
+    Player* pPlayer = new Player("BirdModelV1", m_d3dDevice.Get(), m_fxFactory);
+    m_GameObjects.push_back(pPlayer);
+    m_PhysicsObjects.push_back(pPlayer);
 
     //add a secondary camera
-    m_TPScam = new TPSCamera(0.25f * XM_PI, AR, 1.0f, 10000.0f, pPlayer, Vector3::UnitY, Vector3(0.0f, 10.0f, 100));
+    m_TPScam = new TPSCamera(0.25f * XM_PI, AR, 1.0f, 10000.0f, pPlayer, Vector3::UnitY, Vector3(0.0f, 10.0f, 50.0f));
     m_GameObjects.push_back(m_TPScam);
 
+    //test all GPGOs
+    float* params = new float[3];
+    params[0] = 10.f;  params[1] = 20.0f; params[2] = 30.f;
+    GPGO* pGPGO = new GPGO(m_d3dContext.Get(), GPGO_BOX, (float*)&Colors::Azure, params);
+    pGPGO->SetPos(Vector3(-50.0f, 10.0f, -100.f));
+    m_GameObjects.push_back(pGPGO);
+    params[0] = params[1] = 20.0f; params[2] = (size_t)32;
+    pGPGO = new GPGO(m_d3dContext.Get(), GPGO_CONE, (float*)&Colors::Navy,params);
+    pGPGO->SetPos(Vector3(-50.0f, 10.0f, -70.f));
+    m_GameObjects.push_back(pGPGO);
+    params[0] = 15.0f;
+    pGPGO = new GPGO(m_d3dContext.Get(), GPGO_CUBE, (float*)&Colors::SeaGreen, params);
+    pGPGO->SetPos(Vector3(-50.0f, 10.0f, -40.f));
+    m_GameObjects.push_back(pGPGO);
+    params[0] = params[1] = 20.0f; params[2] = (size_t)32;
+    pGPGO = new GPGO(m_d3dContext.Get(), GPGO_CYLINDER, (float*)&Colors::OliveDrab, params);
+    pGPGO->SetPos(Vector3(-50.0f, 10.0f, -10.f));
+    m_GameObjects.push_back(pGPGO);
+    params[0] = 15.0f;
+    pGPGO = new GPGO(m_d3dContext.Get(), GPGO_DODECAHEDRON, (float*)&Colors::OrangeRed,params);
+    pGPGO->SetPos(Vector3(-50.0f, 10.0f, 20.f));
+    m_GameObjects.push_back(pGPGO);
+    params[0] =  15.0f; params[1] = (size_t)3;
+    pGPGO = new GPGO(m_d3dContext.Get(), GPGO_GEOSPHERE, (float*)&Colors::BlueViolet, params);
+    pGPGO->SetPos(Vector3(-50.0f, 10.0f, 50.f));
+    m_GameObjects.push_back(pGPGO);
+    params[0] = 20;
+    pGPGO = new GPGO(m_d3dContext.Get(), GPGO_ICOSAHEDRON, (float*)&Colors::DodgerBlue, params);
+    pGPGO->SetPos(Vector3(-50.0f, 10.0f, 80.f));
+    m_GameObjects.push_back(pGPGO);
+    params[0] = 20;
+    pGPGO = new GPGO(m_d3dContext.Get(), GPGO_OCTAHEDRON, (float*)&Colors::PaleTurquoise, params);
+    pGPGO->SetPos(Vector3(-50.0f, 10.0f, 110.f));
+    m_GameObjects.push_back(pGPGO);
+    params[0] = 15.0f; params[1] = (size_t)16;
+    pGPGO = new GPGO(m_d3dContext.Get(), GPGO_SPHERE, (float*)&Colors::LawnGreen, params);
+    pGPGO->SetPos(Vector3(-50.0f, 10.0f, 140.0));
+    m_GameObjects.push_back(pGPGO);
+    params[0] = 15.0f; params[1] = (size_t)8;
+    pGPGO = new GPGO(m_d3dContext.Get(), GPGO_TEAPOT, (float*)&Colors::YellowGreen, params);
+    pGPGO->SetPos(Vector3(-50.0f, 10.0f, 170.0f));
+    m_GameObjects.push_back(pGPGO);
+    params[0] = 20;
+    pGPGO = new GPGO(m_d3dContext.Get(), GPGO_TETRAHEDRON, (float*)&Colors::Firebrick, params);
+    pGPGO->SetPos(Vector3(-50.0f, 10.0f, 200.f));
+    m_GameObjects.push_back(pGPGO);
+    params[0] = 30.0f; params[1] = 10.0f; params[2] = (size_t)32;
+    pGPGO = new GPGO(m_d3dContext.Get(), GPGO_TORUS, (float*)&Colors::Aquamarine, params);
+    pGPGO->SetPos(Vector3(-50.0f, 10.0f, 230.f));
+    m_GameObjects.push_back(pGPGO);
 
     //create DrawData struct and populate its pointers
     m_DD = new DrawData;
     m_DD->m_pd3dImmediateContext = nullptr;
     m_DD->m_states = m_states;
-    m_DD->m_cam = m_FPScam;
+    m_DD->m_cam = m_cam;
     m_DD->m_light = m_light;
 
     //example basic 2D stuff
-    ImageGO2D* croshair = new ImageGO2D("crosshair", m_d3dDevice.Get());
-    RECT window;
-    GetWindowRect(m_window, &window);
-    croshair->SetPos(Vector2(_width /2, _height/2));
-    croshair->SetScale(0.1);
-    m_GameObjects2D.push_back(croshair);
+    ImageGO2D* logo = new ImageGO2D("logo_small", m_d3dDevice.Get());
+    logo->SetPos(200.0f * Vector2::One);
+    m_GameObjects2D.push_back(logo);
+    ImageGO2D* bug_test = new ImageGO2D("bug_test", m_d3dDevice.Get());
+    bug_test->SetPos(300.0f * Vector2::One);
+    m_GameObjects2D.push_back(bug_test);
 
-    TextGO2D* text = new TextGO2D("000");
-    text->SetPos(Vector2(10 , 10));
-    text->SetScale(0.5);
-    text->SetColour(Color((float*)&Colors::White));
+    TextGO2D* text = new TextGO2D("Test Text");
+    text->SetPos(Vector2(100, 10));
+    text->SetColour(Color((float*)&Colors::Yellow));
     m_GameObjects2D.push_back(text);
-    
 
     //Test Sounds
     Loop* loop = new Loop(m_audioEngine.get(), "NightAmbienceSimple_02");
     loop->SetVolume(0.1f);
     loop->Play();
     m_Sounds.push_back(loop);
+
+    TestSound* TS = new TestSound(m_audioEngine.get(), "Explo1");
+    m_Sounds.push_back(TS);
 }
 
 // Executes the basic game loop.
@@ -194,7 +294,6 @@ void Game::Update(DX::StepTimer const& _timer)
         if (m_GD->m_GS == GS_PLAY_MAIN_CAM)
         {
             m_GD->m_GS = GS_PLAY_TPS_CAM;
-           
         }
         else
         {
@@ -211,6 +310,8 @@ void Game::Update(DX::StepTimer const& _timer)
     {
         (*it)->Tick(m_GD);
     }
+
+    CheckCollision();
 }
 
 // Draws the scene.
@@ -228,7 +329,7 @@ void Game::Render()
     m_DD->m_pd3dImmediateContext = m_d3dContext.Get();
 
     //set which camera to be used
-    m_DD->m_cam = m_FPScam;
+    m_DD->m_cam = m_cam;
     if (m_GD->m_GS == GS_PLAY_TPS_CAM)
     {
         m_DD->m_cam = m_TPScam;
@@ -240,10 +341,7 @@ void Game::Render()
     //Draw 3D Game Obejects
     for (list<GameObject*>::iterator it = m_GameObjects.begin(); it != m_GameObjects.end(); it++)
     {
-        if ((*it)->isVisible)
-        {
-            (*it)->Draw(m_DD);
-        }
+        (*it)->Draw(m_DD);
     }
 
     // Draw sprite batch stuff 
@@ -530,4 +628,17 @@ void Game::ReadInput()
     RECT window;
     GetWindowRect(m_window, &window);
     SetCursorPos((window.left + window.right) >> 1, (window.bottom + window.top) >> 1);
+}
+
+void Game::CheckCollision()
+{
+    for (int i = 0; i < m_PhysicsObjects.size(); i++) for (int j = 0; j < m_ColliderObjects.size(); j++)
+    {
+        if (m_PhysicsObjects[i]->Intersects(*m_ColliderObjects[j])) //std::cout << "Collision Detected!" << std::endl;
+        {
+            XMFLOAT3 eject_vect = Collision::ejectionCMOGO(*m_PhysicsObjects[i], *m_ColliderObjects[j]);
+            auto pos = m_PhysicsObjects[i]->GetPos();
+            m_PhysicsObjects[i]->SetPos(pos - eject_vect);
+        }
+    }
 }

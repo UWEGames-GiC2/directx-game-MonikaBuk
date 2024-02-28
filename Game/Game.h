@@ -11,6 +11,7 @@
 #include "Keyboard.h"
 #include "Mouse.h"
 #include "Audio.h"
+#include "CMOGO.h"
 
 using std::list;
 
@@ -22,7 +23,6 @@ class GameObject;
 class GameObject2D;
 class Camera;
 class TPSCamera;
-class FPSCamera;
 class Light;
 class Sound;
 
@@ -92,10 +92,9 @@ private:
     DrawData2D* m_DD2D = NULL;	    //Data to be passed by game to all 2D Game Objects via Draw 
 
     //Basic 3D renderers
-    FPSCamera* m_FPScam = NULL; //principle camera
+    Camera* m_cam = NULL; //principle camera
     TPSCamera* m_TPScam = NULL;//TPS cam
     Light* m_light = NULL; //base light
-
 
     //required for the CMO model rendering system
     DirectX::CommonStates* m_states = NULL;
@@ -108,6 +107,14 @@ private:
 
     list<GameObject*> m_GameObjects; //data structure to hold pointers to the 3D Game Objects
     list<GameObject2D*> m_GameObjects2D; //data structure to hold pointers to the 2D Game Objects 
+
+    //list<CMOGO*> m_CMOGameObjects; //data structure to hold pointers to all 3D CMO Game Objects
+    //list<CMOGO*> m_PhysicsObjects
+
+    std::vector<CMOGO*> m_ColliderObjects;
+    std::vector<CMOGO*> m_PhysicsObjects;
+
+    void CheckCollision();
                                          
     //sound stuff
 	//This uses a simple system, but a better pipeline can be used using Wave Banks
