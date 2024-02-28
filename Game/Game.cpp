@@ -115,9 +115,8 @@ void Game::Initialize(HWND _window, int _width, int _height)
     m_GameObjects.push_back(cube);
 
     //add Player
-    Player* pPlayer = new Player("Mac10", m_d3dDevice.Get(), m_fxFactory);
+    Player* pPlayer = new Player("cat", m_d3dDevice.Get(), m_fxFactory);
     pPlayer->SetScale(0.7);
-    pPlayer->isVisible = false;
     m_GameObjects.push_back(pPlayer);
     m_PhysicsObjects.push_back(pPlayer);
 
@@ -201,11 +200,13 @@ void Game::Update(DX::StepTimer const& _timer)
         if (m_GD->m_GS == GS_PLAY_MAIN_CAM)
         {
             m_GD->m_GS = GS_PLAY_TPS_CAM;
+            m_GD->gameStateChanged = true;
            
         }
         else
         {
             m_GD->m_GS = GS_PLAY_MAIN_CAM;
+            m_GD->gameStateChanged = true;
         }
     }
 

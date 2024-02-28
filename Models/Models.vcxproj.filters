@@ -23,5 +23,6 @@
     <MeshContentTask Include="Mac10.fbx">
       <Filter>VBFileModels</Filter>
     </MeshContentTask>
+    <MeshContentTask Include="cat.fbx" />
   </ItemGroup>
 </Project>
