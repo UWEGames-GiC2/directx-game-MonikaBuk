@@ -34,6 +34,19 @@ void Player::Tick(GameData* _GD)
 	{
 		m_acc -= forwardMove;
 	}
+	if (_GD->gameStateChanged)
+	{
+		if (_GD->m_GS == GS_PLAY_FPS_CAM)
+		{
+		
+			isVisible = false;
+		}
+		else
+		{
+			isVisible = true;	
+		}
+		_GD->gameStateChanged = false;
+	}
 
 
 

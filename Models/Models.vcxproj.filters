@@ -24,5 +24,8 @@
       <Filter>VBFileModels</Filter>
     </MeshContentTask>
     <MeshContentTask Include="cat.fbx" />
+    <MeshContentTask Include="testwall.fbx" />
+    <MeshContentTask Include="testfloor.fbx" />
+    <MeshContentTask Include="floor.fbx" />
   </ItemGroup>
 </Project>

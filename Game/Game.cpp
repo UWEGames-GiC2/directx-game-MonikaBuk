@@ -65,7 +65,7 @@ void Game::Initialize(HWND _window, int _width, int _height)
 
     //create GameData struct and populate its pointers
     m_GD = new GameData;
-    m_GD->m_GS = GS_PLAY_MAIN_CAM;
+    m_GD->m_GS = GS_PLAY_FPS_CAM;
 
     //set up systems for 2D rendering
     m_DD2D = new DrawData2D();
@@ -96,23 +96,24 @@ void Game::Initialize(HWND _window, int _width, int _height)
     //find how big my window is to correctly calculate my aspect ratio
     float AR = (float)_width / (float)_height;
 
-    //example basic 3D stuff
+  
+    float derekszog = XMConvertToRadians(90);
 
-    //Vertex Buffer Game Objects
-    FileVBGO* terrainBox = new FileVBGO("terrainTex", m_d3dDevice.Get());
-    m_GameObjects.push_back(terrainBox);
+    Terrain* wall1 = new Terrain("testwall", m_d3dDevice.Get(), m_fxFactory, Vector3(100, 0.0f, 75.002f), derekszog, 0.0f, 0.0f, 0.1f * Vector3::One);
+    m_GameObjects.push_back(wall1);
+    Terrain* wall2 = new Terrain("testwall", m_d3dDevice.Get(), m_fxFactory, Vector3(100.0f, 0.0f, 0.0f), derekszog, 0.0f, 0.0f, 0.1f * Vector3::One);;
+    m_GameObjects.push_back(wall2);
+    Terrain* wall3 = new Terrain("testwall", m_d3dDevice.Get(), m_fxFactory, Vector3(100.0f, 0.0f, -75.001f), derekszog, 0.0f, 0.0f, 0.1f * Vector3::One);;
+    m_GameObjects.push_back(wall3);
 
-    FileVBGO* Box = new FileVBGO("cube", m_d3dDevice.Get());
-    m_GameObjects.push_back(Box);
-    Box->SetPos(Vector3(0.0f, 0.0f, -100.0f));
-    Box->SetPitch(XM_PIDIV4);
-    Box->SetScale(20.0f);
+    Terrain* wall4 = new Terrain("testwall", m_d3dDevice.Get(), m_fxFactory, Vector3(100.0f, 0.0f, -75.001f), derekszog, 0.0f, derekszog, 0.1f * Vector3::One);;
+    m_GameObjects.push_back(wall4);
+    Terrain* wall5 = new Terrain("testwall", m_d3dDevice.Get(), m_fxFactory, Vector3(25.0f, 0.0f, -75.001f), derekszog, 0.0f, derekszog, 0.1f * Vector3::One);;
+    m_GameObjects.push_back(wall5);
 
-    VBCube* cube = new VBCube();
-    cube->init(11, m_d3dDevice.Get());
-    cube->SetPos(Vector3(100.0f, 0.0f, 0.0f));
-    cube->SetScale(4.0f);
-    m_GameObjects.push_back(cube);
+    Terrain* floor = new Terrain("floor", m_d3dDevice.Get(), m_fxFactory, Vector3(-75, -50, 150), 0.0f, 0.0f, 0.0f, 0.15f * Vector3::One);
+    m_GameObjects.push_back(floor);
+
 
     //add Player
     Player* pPlayer = new Player("cat", m_d3dDevice.Get(), m_fxFactory);
@@ -197,7 +198,7 @@ void Game::Update(DX::StepTimer const& _timer)
     //see docs here for what's going on: https://github.com/Microsoft/DirectXTK/wiki/Keyboard
     if (m_GD->m_KBS_tracker.pressed.Space)
     {
-        if (m_GD->m_GS == GS_PLAY_MAIN_CAM)
+        if (m_GD->m_GS == GS_PLAY_FPS_CAM)
         {
             m_GD->m_GS = GS_PLAY_TPS_CAM;
             m_GD->gameStateChanged = true;
@@ -205,7 +206,7 @@ void Game::Update(DX::StepTimer const& _timer)
         }
         else
         {
-            m_GD->m_GS = GS_PLAY_MAIN_CAM;
+            m_GD->m_GS = GS_PLAY_FPS_CAM;
             m_GD->gameStateChanged = true;
         }
     }

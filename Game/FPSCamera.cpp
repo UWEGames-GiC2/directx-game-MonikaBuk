@@ -16,23 +16,21 @@ FPSCamera::~FPSCamera()
 
 void FPSCamera::Tick(GameData* _GD)
 {
-    // Get the target object's position and orientation
-    Vector3 targetPos = m_targetObject->GetPos();
-    float yaw = m_targetObject->GetYaw();
-    float pitch = m_targetObject->GetPitch();
-    float roll = m_targetObject->GetRoll();
+	// Get the target object's position and orientation
+	Vector3 targetPos = m_targetObject->GetPos();
+	float yaw = m_targetObject->GetYaw();
+	float pitch = m_targetObject->GetPitch();
+	float roll = m_targetObject->GetRoll();
 
-    // Calculate the rotation matrix based on the target's orientation
-    Matrix rotCam = Matrix::CreateFromYawPitchRoll(yaw, pitch, roll);
+	// Calculate the rotation matrix based on the target's orientation
+	Matrix rotCam = Matrix::CreateFromYawPitchRoll(yaw, pitch, roll);
 
-    // Calculate the camera position relative to the target based on the offset
-    Vector3 cameraOffset = Vector3::Transform(m_dpos, rotCam);
-    m_pos = targetPos + cameraOffset;
+	// Calculate the camera position relative to the target
+	m_pos = targetPos;
 
-    // Set the target position of the camera to be the same as the target object's position
-    m_target = targetPos;
+	// Update the camera's view matrix
+	m_viewMat = Matrix::CreateLookAt(m_pos, m_pos + Vector3::Transform(Vector3::Forward, rotCam), Vector3::Transform(Vector3::Up, rotCam));
 
-    // Set up projection matrix (assuming Camera::Tick updates the projection matrix)
-    Camera::Tick(_GD);
+	// Update the camera's projection matrix (assuming Camera::Tick updates the projection matrix)
+	Camera::Tick(_GD);
 }
-

@@ -150,11 +150,14 @@
   </ItemGroup>
   <ItemGroup>
     <MeshContentTask Include="Bird\BirdModelV1.fbx" />
+    <MeshContentTask Include="floor.fbx" />
     <MeshContentTask Include="Mac10.fbx" />
     <MeshContentTask Include="Table\table.FBX">
       <FileType>Document</FileType>
     </MeshContentTask>
     <MeshContentTask Include="cat.fbx" />
+    <MeshContentTask Include="testfloor.fbx" />
+    <MeshContentTask Include="testwall.fbx" />
     <MeshContentTask Include="Vase\JEMINA vase -up.fbx">
       <FileType>Document</FileType>
     </MeshContentTask>
