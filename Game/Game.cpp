@@ -117,7 +117,7 @@ void Game::Initialize(HWND _window, int _width, int _height)
 
     //add Player
     Player* pPlayer = new Player("cat", m_d3dDevice.Get(), m_fxFactory);
-    pPlayer->SetScale(0.7);
+    pPlayer->SetScale(4);
     m_GameObjects.push_back(pPlayer);
     m_PhysicsObjects.push_back(pPlayer);
 

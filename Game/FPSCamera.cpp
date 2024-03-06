@@ -25,12 +25,8 @@ void FPSCamera::Tick(GameData* _GD)
 	// Calculate the rotation matrix based on the target's orientation
 	Matrix rotCam = Matrix::CreateFromYawPitchRoll(yaw, pitch, roll);
 
-	// Calculate the camera position relative to the target
-	m_pos = targetPos;
+	m_target = m_targetObject->GetPos();
+	m_pos = m_target + Vector3::Transform(m_dpos, rotCam);
 
-	// Update the camera's view matrix
-	m_viewMat = Matrix::CreateLookAt(m_pos, m_pos + Vector3::Transform(Vector3::Forward, rotCam), Vector3::Transform(Vector3::Up, rotCam));
-
-	// Update the camera's projection matrix (assuming Camera::Tick updates the projection matrix)
 	Camera::Tick(_GD);
 }
