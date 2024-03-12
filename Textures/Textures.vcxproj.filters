@@ -8,8 +8,13 @@
     <ImageContentTask Include="metal_03_color_1k.png" />
     <ImageContentTask Include="floor_tiles_06_basecolor_1k.png" />
     <ImageContentTask Include="floor_tiles_06_ambient_occlusion_1k.png" />
+    <ImageContentTask Include="pistol1.png" />
+    <ImageContentTask Include="pistol2.png" />
+    <ImageContentTask Include="pistol3.png" />
+    <ImageContentTask Include="pistol4.png" />
   </ItemGroup>
   <ItemGroup>
     <Image Include="bricks-wall-06_color_1k.png" />
+    <Image Include="pistol5.png" />
   </ItemGroup>
 </Project>
