@@ -159,6 +159,9 @@
     <ClInclude Include="FPSCamera.h">
       <Filter>GameObjects\3D\Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="Weapon.h">
+      <Filter>GameObjects\3D\Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Game.cpp">
@@ -231,6 +234,9 @@
       <Filter>GameObjects\3D\Source Files</Filter>
     </ClCompile>
     <ClCompile Include="FPSCamera.cpp">
+      <Filter>GameObjects\3D\Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Weapon.cpp">
       <Filter>GameObjects\3D\Source Files</Filter>
     </ClCompile>
   </ItemGroup>

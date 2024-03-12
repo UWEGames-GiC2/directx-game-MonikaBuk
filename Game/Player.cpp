@@ -24,7 +24,7 @@ Player::~Player()
 void Player::Tick(GameData* _GD)
 {
 	//TURN AND FORWARD CONTROL HERE
-	Vector3 forwardMove = 40.0f * Vector3::Forward;
+	Vector3 forwardMove = 60.0f * Vector3::Forward;
 	Matrix rotMove = Matrix::CreateRotationY(m_yaw);
 	forwardMove = Vector3::Transform(forwardMove, rotMove);
 	if (_GD->m_KBS.W)
@@ -52,30 +52,27 @@ void Player::Tick(GameData* _GD)
 
 
 	//change orinetation of player
-	Vector3 rightMove = 40.0f * Vector3::Right;
+	Vector3 rightMove = 60.0f * Vector3::Right;
 	rightMove = Vector3::Transform(rightMove, rotMove);
 
 	float rotSpeed = 2.0f * _GD->m_dt;
 	float speed = 10.0f;
 	if (_GD->m_KBS.A)
 	{
-		//m_yaw += rotSpeed;
 		m_acc -= rightMove;
-
 	}
 	if (_GD->m_KBS.D)
 	{
 		m_acc += rightMove;
-		//m_yaw -= rotSpeed;
 	}
 	auto mouse = _GD->m_MS;
 
 	// Check if mouse input is relative for rotation
 	if (mouse.positionMode == Mouse::MODE_RELATIVE)
 	{
-		Vector3 delta = Vector3(static_cast<float>(mouse.x), static_cast<float>(mouse.y), 0.f)
+		Vector3 delta = Vector3(mouse.x, mouse.y, 0.f)
 			* rotSpeed;
-		m_pitch -= delta.y;
+		//m_pitch -= delta.y;
 		auto m_maxrot = XMConvertToRadians(60);
 		if (m_pitch > m_maxrot) m_pitch = m_maxrot;
 		if (m_pitch < -m_maxrot) m_pitch = -m_maxrot;

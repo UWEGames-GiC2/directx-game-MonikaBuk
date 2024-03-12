@@ -2,10 +2,11 @@
 #include "FPSCamera.h"
 
 
-FPSCamera::FPSCamera(float _fieldOfView, float _aspectRatio, float _nearPlaneDistance, float _farPlaneDistance, GameObject* _target, Vector3 _up, Vector3 _dpos)
+FPSCamera::FPSCamera(float _fieldOfView, float _aspectRatio, float _nearPlaneDistance, float _farPlaneDistance, GameObject* _targetPos, GameObject* _targetForRor,  Vector3 _up, Vector3 _dpos)
 	:Camera(_fieldOfView, _aspectRatio, _nearPlaneDistance, _farPlaneDistance, _up)
 {
-	m_targetObject = _target;
+	m_targetPosObject = _targetPos;
+	m_targetRotObject = _targetForRor;
 	m_dpos = _dpos;
 }
 
@@ -16,17 +17,11 @@ FPSCamera::~FPSCamera()
 
 void FPSCamera::Tick(GameData* _GD)
 {
-	// Get the target object's position and orientation
-	Vector3 targetPos = m_targetObject->GetPos();
-	float yaw = m_targetObject->GetYaw();
-	float pitch = m_targetObject->GetPitch();
-	float roll = m_targetObject->GetRoll();
-
-	// Calculate the rotation matrix based on the target's orientation
-	Matrix rotCam = Matrix::CreateFromYawPitchRoll(yaw, pitch, roll);
-
-	m_target = m_targetObject->GetPos();
+	
+	Matrix rotCam = Matrix::CreateFromYawPitchRoll(m_targetPosObject->GetYaw(), m_targetRotObject->GetPitch(), 0.0f);
+	m_target = m_targetPosObject->GetPos();
 	m_pos = m_target + Vector3::Transform(m_dpos, rotCam);
+
 
 	Camera::Tick(_GD);
 }

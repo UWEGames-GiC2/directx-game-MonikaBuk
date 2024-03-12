@@ -14,6 +14,7 @@
 #include "Player.h"
 #include "Light.h"
 #include "GPGO.h"
+#include "Weapon.h"
 
 //VBGO examples
 #include "fileVBGO.h"

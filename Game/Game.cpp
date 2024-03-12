@@ -116,17 +116,21 @@ void Game::Initialize(HWND _window, int _width, int _height)
 
 
     //add Player
-    Player* pPlayer = new Player("cat", m_d3dDevice.Get(), m_fxFactory);
+    Player* pPlayer = new Player("BirdModelV1", m_d3dDevice.Get(), m_fxFactory);
     pPlayer->SetScale(4);
+    pPlayer->SetPos(Vector3(100, 0, 100));
     m_GameObjects.push_back(pPlayer);
     m_PhysicsObjects.push_back(pPlayer);
 
+    Weapon* pWeapon = new Weapon("Mac10", m_d3dDevice.Get(), m_fxFactory, Vector3(0.0f, 0.0f, 0.0f), 0.0f, 0.0f, 0.0f, 0.09f * Vector3::One, *pPlayer);
+    m_GameObjects.push_back(pWeapon);
+
     //create a base camera
-    m_FPScam = new FPSCamera(0.25f * XM_PI, AR, 1.0f, 10000.0f, pPlayer, Vector3::UnitY, Vector3(0.0f, 10.0f, 50.0f));
+    m_FPScam = new FPSCamera(0.25f * XM_PI, AR, 1.0f, 1000.0f, pPlayer, pWeapon,  Vector3::UnitY, Vector3(0.1f,0.1f, 0.1f));
     m_GameObjects.push_back(m_FPScam);
 
     //add a secondary camera
-    m_TPScam = new TPSCamera(0.25f * XM_PI, AR, 1.0f, 10000.0f, pPlayer, Vector3::UnitY, Vector3(0.0f, 10.0f, 100));
+    m_TPScam = new TPSCamera(0.25f * XM_PI, AR, 1.0f, 1000.0f, pPlayer, Vector3::UnitY, Vector3(0.0f, 10.0f, 100));
     m_GameObjects.push_back(m_TPScam);
 
 

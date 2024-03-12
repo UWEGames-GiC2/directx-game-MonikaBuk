@@ -5,13 +5,16 @@
 class FPSCamera : public Camera
 {
 public:
-	FPSCamera(float _fieldOfView, float _aspectRatio, float _nearPlaneDistance, float _farPlaneDistance, GameObject* _target, Vector3 _up, Vector3 _dpos);
+	FPSCamera(float _fieldOfView, float _aspectRatio, float _nearPlaneDistance, float _farPlaneDistance, GameObject* _target, GameObject* _targetForRor, Vector3 _up, Vector3 _dpos);
 	virtual ~FPSCamera();
 
 	virtual void Tick(GameData* _GD) override;
 
 protected:
-	GameObject* m_targetObject; //I'm following this object
+	GameObject* m_targetPosObject;
+	GameObject* m_targetRotObject;
+	
+	//I'm following this object
 	Vector3	m_dpos; //I'll lurk this far behind and away from it
 };
 
