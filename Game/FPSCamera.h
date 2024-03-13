@@ -13,6 +13,10 @@ public:
 protected:
 	GameObject* m_targetPosObject;
 	GameObject* m_targetRotObject;
+	float maxPitch = XMConvertToRadians(90);
+	float minPitch = XMConvertToRadians(0);
+
+	float newPitch = maxPitch / 2;
 	
 	//I'm following this object
 	Vector3	m_dpos; //I'll lurk this far behind and away from it

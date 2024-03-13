@@ -101,19 +101,23 @@ void Game::Initialize(HWND _window, int _width, int _height)
 
     Terrain* wall1 = new Terrain("testwall", m_d3dDevice.Get(), m_fxFactory, Vector3(100, 0.0f, 75.002f), derekszog, 0.0f, 0.0f, 0.1f * Vector3::One);
     m_GameObjects.push_back(wall1);
+    m_ColliderObjects.push_back(wall1);
     Terrain* wall2 = new Terrain("testwall", m_d3dDevice.Get(), m_fxFactory, Vector3(100.0f, 0.0f, 0.0f), derekszog, 0.0f, 0.0f, 0.1f * Vector3::One);;
     m_GameObjects.push_back(wall2);
+    m_ColliderObjects.push_back(wall2);
     Terrain* wall3 = new Terrain("testwall", m_d3dDevice.Get(), m_fxFactory, Vector3(100.0f, 0.0f, -75.001f), derekszog, 0.0f, 0.0f, 0.1f * Vector3::One);;
     m_GameObjects.push_back(wall3);
-
+    m_ColliderObjects.push_back(wall3);
     Terrain* wall4 = new Terrain("testwall", m_d3dDevice.Get(), m_fxFactory, Vector3(100.0f, 0.0f, -75.001f), derekszog, 0.0f, derekszog, 0.1f * Vector3::One);;
     m_GameObjects.push_back(wall4);
+    m_ColliderObjects.push_back(wall4);
     Terrain* wall5 = new Terrain("testwall", m_d3dDevice.Get(), m_fxFactory, Vector3(25.0f, 0.0f, -75.001f), derekszog, 0.0f, derekszog, 0.1f * Vector3::One);;
     m_GameObjects.push_back(wall5);
+    m_ColliderObjects.push_back(wall5);
 
     Terrain* floor = new Terrain("floor", m_d3dDevice.Get(), m_fxFactory, Vector3(-75, -50, 150), 0.0f, 0.0f, 0.0f, 0.15f * Vector3::One);
     m_GameObjects.push_back(floor);
-
+    m_ColliderObjects.push_back(wall5);
 
     //add Player
     Player* pPlayer = new Player("BirdModelV1", m_d3dDevice.Get(), m_fxFactory);
@@ -123,6 +127,7 @@ void Game::Initialize(HWND _window, int _width, int _height)
     m_PhysicsObjects.push_back(pPlayer);
 
     Weapon* pWeapon = new Weapon("Mac10", m_d3dDevice.Get(), m_fxFactory, Vector3(0.0f, 0.0f, 0.0f), 0.0f, 0.0f, 0.0f, 0.09f * Vector3::One, *pPlayer);
+    pWeapon->isVisible = false;
     m_GameObjects.push_back(pWeapon);
 
     //create a base camera
@@ -148,6 +153,11 @@ void Game::Initialize(HWND _window, int _width, int _height)
     croshair->SetPos(Vector2(_width /2, _height/2));
     croshair->SetScale(0.1);
     m_GameObjects2D.push_back(croshair);
+
+    ImageGO2D* weapon = new ImageGO2D("pistol1", m_d3dDevice.Get());
+    weapon->SetPos(Vector2(_width / 1.5f, _height - 130.0f));
+    weapon->SetScale(1.5);
+    m_GameObjects2D.push_back(weapon);
 
     TextGO2D* text = new TextGO2D("000");
     text->SetPos(Vector2(10 , 10));
