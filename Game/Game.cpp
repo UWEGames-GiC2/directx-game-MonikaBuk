@@ -171,6 +171,10 @@ void Game::Initialize(HWND _window, int _width, int _height)
     loop->SetVolume(0.1f);
     loop->Play();
     m_Sounds.push_back(loop);
+
+    TestSound* TS = new TestSound(m_audioEngine.get(), "Explo1");
+    TS->SetVolume(0.1f);
+    m_Sounds.push_back(TS);
 }
 
 // Executes the basic game loop.
@@ -210,7 +214,7 @@ void Game::Update(DX::StepTimer const& _timer)
     ReadInput();
     //upon space bar switch camera state
     //see docs here for what's going on: https://github.com/Microsoft/DirectXTK/wiki/Keyboard
-    if (m_GD->m_KBS_tracker.pressed.Space)
+    if (m_GD->m_KBS_tracker.pressed.T)
     {
         if (m_GD->m_GS == GS_PLAY_FPS_CAM)
         {
@@ -223,7 +227,13 @@ void Game::Update(DX::StepTimer const& _timer)
             m_GD->m_GS = GS_PLAY_FPS_CAM;
             m_GD->gameStateChanged = true;
         }
+        
     }
+    if (m_GD->m_MS_tracker.leftButton == m_GD->m_MS_tracker.PRESSED)
+    {
+        std::cout << "left button pressed\n";
+    }
+ 
 
     //update all objects
     for (list<GameObject*>::iterator it = m_GameObjects.begin(); it != m_GameObjects.end(); it++)
@@ -550,6 +560,8 @@ void Game::ReadInput()
     }
 
     m_GD->m_MS = m_mouse->GetState();
+    m_GD->m_MS_tracker.Update(m_GD->m_MS);
+ 
 
     //lock the cursor to the centre of the window
     RECT window;

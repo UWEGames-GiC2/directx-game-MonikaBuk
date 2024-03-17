@@ -163,6 +163,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="AnimatedImage.h" />
     <ClInclude Include="camera.h" />
     <ClInclude Include="CMOGO.h" />
     <ClInclude Include="ConstantBuffer.h" />
@@ -202,6 +203,7 @@
     <ClInclude Include="Weapon.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="AnimatedImage.cpp" />
     <ClCompile Include="camera.cpp" />
     <ClCompile Include="CMOGO.cpp" />
     <ClCompile Include="fileVBGO.cpp" />

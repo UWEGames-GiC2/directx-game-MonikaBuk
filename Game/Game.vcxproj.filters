@@ -162,6 +162,9 @@
     <ClInclude Include="Weapon.h">
       <Filter>GameObjects\3D\Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="AnimatedImage.h">
+      <Filter>GameObjects\2D\Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Game.cpp">
@@ -238,6 +241,9 @@
     </ClCompile>
     <ClCompile Include="Weapon.cpp">
       <Filter>GameObjects\3D\Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="AnimatedImage.cpp">
+      <Filter>GameObjects\2D\Source Files</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>
