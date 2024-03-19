@@ -127,7 +127,7 @@ void Game::Initialize(HWND _window, int _width, int _height)
     m_PhysicsObjects.push_back(pPlayer);
 
     Weapon* pWeapon = new Weapon("Mac10", m_d3dDevice.Get(), m_fxFactory, Vector3(0.0f, 0.0f, 0.0f), 0.0f, 0.0f, 0.0f, 0.09f * Vector3::One, *pPlayer);
-    pWeapon->isVisible = false;
+    pWeapon->SetVisibility(false);
     m_GameObjects.push_back(pWeapon);
 
     //create a base camera
@@ -168,12 +168,12 @@ void Game::Initialize(HWND _window, int _width, int _height)
 
     //Test Sounds
     Loop* loop = new Loop(m_audioEngine.get(), "NightAmbienceSimple_02");
-    loop->SetVolume(0.1f);
+    loop->SetVolume(0.5f);
     loop->Play();
     m_Sounds.push_back(loop);
 
     TestSound* TS = new TestSound(m_audioEngine.get(), "Explo1");
-    TS->SetVolume(0.1f);
+    TS->SetVolume(0.5f);
     m_Sounds.push_back(TS);
 }
 
@@ -229,10 +229,6 @@ void Game::Update(DX::StepTimer const& _timer)
         }
         
     }
-    if (m_GD->m_MS_tracker.leftButton == m_GD->m_MS_tracker.PRESSED)
-    {
-        std::cout << "left button pressed\n";
-    }
  
 
     //update all objects
@@ -275,7 +271,7 @@ void Game::Render()
     //Draw 3D Game Obejects
     for (list<GameObject*>::iterator it = m_GameObjects.begin(); it != m_GameObjects.end(); it++)
     {
-        if ((*it)->isVisible)
+        if ((*it)->IsVisible())
         {
             (*it)->Draw(m_DD);
         }

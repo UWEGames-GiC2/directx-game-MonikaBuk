@@ -12,7 +12,7 @@ Player::Player(string _fileName, ID3D11Device* _pd3dDevice, IEffectFactory* _EF)
 
 	SetDrag(2);
 	SetPhysicsOn(true);
-	isVisible = false;
+	SetVisibility(false);
 }
 
 Player::~Player()
@@ -40,11 +40,11 @@ void Player::Tick(GameData* _GD)
 		if (_GD->m_GS == GS_PLAY_FPS_CAM)
 		{
 		
-			isVisible = false;
+			SetVisibility(false);
 		}
 		else
 		{
-			isVisible = true;	
+			SetVisibility(true);
 		}
 		_GD->gameStateChanged = false;
 	}
@@ -55,7 +55,7 @@ void Player::Tick(GameData* _GD)
 	Vector3 rightMove = 60.0f * Vector3::Right;
 	rightMove = Vector3::Transform(rightMove, rotMove);
 
-	float rotSpeed = 2.0f * _GD->m_dt;
+	float rotSpeed =  _GD->m_dt;
 	float speed = 10.0f;
 	if (_GD->m_KBS.A)
 	{

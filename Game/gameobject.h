@@ -37,6 +37,7 @@ public:
 	const Matrix&	getWorldTransform() const { return m_worldMat; }
 
 	bool		IsPhysicsOn() { return m_physicsOn; }
+	bool		IsVisible() { return m_visible; }
 	float		GetDrag() { return m_drag; }
 
 	//setters
@@ -54,7 +55,9 @@ public:
 	void		SetPhysicsOn(bool _physics) { m_physicsOn = _physics; }
 	void		TogglePhysics() { m_physicsOn = !m_physicsOn; }
 	void		SetDrag(float _drag) { m_drag = _drag; }
-	bool isVisible = true;
+	void		SetVisibility(bool _visible) { m_visible = _visible; }
+	void		SetAcceleration(Vector3 _acceleration) { m_acc = _acceleration; m_vel = Vector3::Zero;}
+
 
 protected:
 
@@ -65,6 +68,7 @@ protected:
 	Vector3 m_pos;
 	float m_pitch, m_yaw, m_roll;
 	Vector3 m_scale;
+	bool m_visible = true;
 
 	//very basic physics
 	bool m_physicsOn = false;

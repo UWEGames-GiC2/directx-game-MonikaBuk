@@ -19,7 +19,7 @@ FPSCamera::~FPSCamera()
 
 void FPSCamera::Tick(GameData* _GD)
 {
-	float rotSpeed = 0.5f * _GD->m_dt;
+	float rotSpeed = _GD->m_dt;
 	auto mouse = _GD->m_MS;
 	if (mouse.positionMode == Mouse::MODE_RELATIVE)
 	{
