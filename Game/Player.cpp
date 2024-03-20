@@ -66,6 +66,17 @@ void Player::Tick(GameData* _GD)
 		m_acc += rightMove;
 	}
 	auto mouse = _GD->m_MS;
+	if (_GD->m_MS_tracker.leftButton == _GD->m_MS_tracker.PRESSED)
+	{
+		for (size_t i = 0; i < bullets.size(); i++)
+		{
+			if (!bullets[i]->IsShot())
+			{
+				bullets[i]->Fire();
+				break;
+			}
+		}
+	}
 
 	// Check if mouse input is relative for rotation
 	if (mouse.positionMode == Mouse::MODE_RELATIVE)

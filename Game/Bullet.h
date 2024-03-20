@@ -13,13 +13,15 @@ public:
 	~Bullet();
 
 	virtual void Tick(GameData* _GD) override;
-	void Raycast();
 	bool IsShot() { return m_isShot; };
+	void Fire();
+
 
 protected:
 	bool m_isShot = false;
 	float m_lifeTime = 0.0f;
 	FPSCamera* m_camera;
+	Vector3 m_forwardMove;
 
 
 };

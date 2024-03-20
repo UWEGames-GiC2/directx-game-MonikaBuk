@@ -1,6 +1,7 @@
 #ifndef _PLAYER_H_
 #define _PLAYER_H_
 #include "CMOGO.h"
+#include "Bullet.h"
 
 //=================================================================
 //Base Player Class (i.e. a GO the player controls)
@@ -14,6 +15,7 @@ public:
 	~Player();
 
 	virtual void Tick(GameData* _GD) override;
+	vector<Bullet*> bullets;
 
 protected:
 

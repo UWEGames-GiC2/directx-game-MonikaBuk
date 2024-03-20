@@ -17,7 +17,6 @@ void TestSound::Tick(GameData * _GD)
 {
 	if (_GD->m_MS_tracker.leftButton == _GD->m_MS_tracker.PRESSED)
 	{
-		std::cout << "left button pressed";
 		Play();
 	}
 	
