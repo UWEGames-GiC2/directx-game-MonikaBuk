@@ -119,24 +119,46 @@ void Game::Initialize(HWND _window, int _width, int _height)
     m_GameObjects.push_back(floor);
     m_ColliderObjects.push_back(wall5);
 
+
+    Terrain* wall6 = new Terrain("testwall", m_d3dDevice.Get(), m_fxFactory, Vector3(0, 0.0f, 0.0f), derekszog, 0.0f, derekszog, 0.01f * Vector3::One);;
+    m_GameObjects.push_back(wall6);
+    m_ColliderObjects.push_back(wall6);
+
+
+
+ 
+
+
     //add Player
     Player* pPlayer = new Player("BirdModelV1", m_d3dDevice.Get(), m_fxFactory);
     pPlayer->SetScale(4);
     pPlayer->SetPos(Vector3(100, 0, 100));
     m_GameObjects.push_back(pPlayer);
     m_PhysicsObjects.push_back(pPlayer);
+ 
 
     Weapon* pWeapon = new Weapon("Mac10", m_d3dDevice.Get(), m_fxFactory, Vector3(0.0f, 0.0f, 0.0f), 0.0f, 0.0f, 0.0f, 0.09f * Vector3::One, *pPlayer);
     pWeapon->SetVisibility(false);
     m_GameObjects.push_back(pWeapon);
 
     //create a base camera
-    m_FPScam = new FPSCamera(0.25f * XM_PI, AR, 1.0f, 1000.0f, pPlayer, pWeapon,  Vector3::UnitY, Vector3(0.1f,0.1f, 0.1f));
+    m_FPScam = new FPSCamera(0.25f * XM_PI, AR, 1.0f, 1000.0f, pPlayer,  Vector3::UnitY, Vector3(0.1f,0.1f, 0.1f), _width, _height);
     m_GameObjects.push_back(m_FPScam);
 
     //add a secondary camera
     m_TPScam = new TPSCamera(0.25f * XM_PI, AR, 1.0f, 1000.0f, pPlayer, Vector3::UnitY, Vector3(0.0f, 10.0f, 100));
     m_GameObjects.push_back(m_TPScam);
+
+    for (size_t i = 0; i < 20; i++)
+    {
+        Bullet* pBullet = new Bullet("cat", m_d3dDevice.Get(), m_fxFactory, *m_FPScam);
+        pBullet->SetVisibility(false);
+        m_GameObjects.push_back(pBullet);
+        m_PhysicsObjects.push_back(pBullet);
+        p_bullets.push_back(pBullet);
+    }
+    pPlayer->bullets = p_bullets;
+
 
 
     //create DrawData struct and populate its pointers

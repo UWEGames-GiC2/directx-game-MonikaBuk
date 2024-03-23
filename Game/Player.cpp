@@ -2,6 +2,7 @@
 #include "Player.h"
 #include <dinput.h>
 #include "GameData.h"
+#include <iostream>
 
 Player::Player(string _fileName, ID3D11Device* _pd3dDevice, IEffectFactory* _EF) : CMOGO(_fileName, _pd3dDevice, _EF)
 {
@@ -66,6 +67,8 @@ void Player::Tick(GameData* _GD)
 		m_acc += rightMove;
 	}
 	auto mouse = _GD->m_MS;
+
+
 	if (_GD->m_MS_tracker.leftButton == _GD->m_MS_tracker.PRESSED)
 	{
 		for (size_t i = 0; i < bullets.size(); i++)
@@ -73,6 +76,7 @@ void Player::Tick(GameData* _GD)
 			if (!bullets[i]->IsShot())
 			{
 				bullets[i]->Fire();
+				std::cout << bullets[i]->GetPos().x;
 				break;
 			}
 		}

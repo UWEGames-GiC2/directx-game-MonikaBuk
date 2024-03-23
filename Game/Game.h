@@ -12,6 +12,7 @@
 #include "Mouse.h"
 #include "Audio.h"
 #include "CMOGO.h"
+#include "Bullet.h"
 
 using std::list;
 
@@ -115,6 +116,7 @@ private:
 
     std::vector<CMOGO*> m_ColliderObjects;
     std::vector<CMOGO*> m_PhysicsObjects;
+    std::vector<Bullet*> p_bullets;
 
     void CheckCollision();
                                          

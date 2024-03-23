@@ -15,7 +15,7 @@ public:
 	~Player();
 
 	virtual void Tick(GameData* _GD) override;
-	vector<Bullet*> bullets;
+	std::vector<Bullet*> bullets;
 
 protected:
 
