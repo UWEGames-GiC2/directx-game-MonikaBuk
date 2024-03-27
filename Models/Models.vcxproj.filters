@@ -27,5 +27,6 @@
     <MeshContentTask Include="testwall.fbx" />
     <MeshContentTask Include="testfloor.fbx" />
     <MeshContentTask Include="floor.fbx" />
+    <MeshContentTask Include="han.fbx" />
   </ItemGroup>
 </Project>

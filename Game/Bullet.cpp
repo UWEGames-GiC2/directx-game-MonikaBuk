@@ -26,38 +26,28 @@ void Bullet::Tick(GameData* _GD)
 {
 	if (m_isShot)
 	{
-
-		if (!IsVisible())
+		if (firedNow)
 		{
-			/*
-		
 			float yawn = m_camera->GetNewYawn();
 			float pitch = m_camera->GetNewPitch();
-
-			Matrix rotMove = Matrix::CreateFromYawPitchRoll(yawn, pitch, 0);
-			m_forwardMove = Vector3::Transform(m_forwardMove, rotMove);
-		
-		
-			
-
-			
 			SetYaw(yawn);
 			SetPitch(pitch);
-		
-			*/
 			SetDrag(0.01f);
 			m_lifeTime = 10.0f;
 			Vector3 directon = m_camera->GetCenterOfScreen(_GD);
 			SetPhysicsOn(true);
-			m_forwardMove = m_camera->GetForwardVector() * 5;
-			m_pos = (m_camera->GetPos() + m_forwardMove);
+			m_forwardMove = m_camera->GetForwardVector();
+			auto pos = m_camera->GetPos();
+			m_pos = (pos);
 			SetAcceleration(directon * 5000.0f);
-			SetVisibility(true);
-
-
-
+			firedNow = false;
 		}
+
 		m_lifeTime -= _GD->m_dt;
+		if (m_lifeTime <= 9.7f && !IsVisible())
+		{
+			SetVisibility(true);
+		}
 		if (m_lifeTime < 0.0f)
 		{
 			m_isShot = false;
@@ -73,6 +63,7 @@ void Bullet::Tick(GameData* _GD)
 
 void Bullet::Fire()
 {
+	firedNow = true;
 	m_isShot = true;
 }
 

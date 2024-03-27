@@ -11,7 +11,8 @@ Player::Player(string _fileName, ID3D11Device* _pd3dDevice, IEffectFactory* _EF)
 
 	m_pos.y = 10.0f;
 
-	SetDrag(2);
+	SetDrag(4);
+	
 	SetPhysicsOn(true);
 	SetVisibility(false);
 }
@@ -28,6 +29,12 @@ void Player::Tick(GameData* _GD)
 	Vector3 forwardMove = 60.0f * Vector3::Forward;
 	Matrix rotMove = Matrix::CreateRotationY(m_yaw);
 	forwardMove = Vector3::Transform(forwardMove, rotMove);
+	(m_acc.y -= gravity) * _GD->m_dt;
+	if (_GD->m_KBS.Space && isGrounded)
+	{
+		m_vel.y += jumpSpeed;
+		isGrounded = false;
+	}
 	if (_GD->m_KBS.W)
 	{
 		m_acc += forwardMove;
@@ -49,6 +56,9 @@ void Player::Tick(GameData* _GD)
 		}
 		_GD->gameStateChanged = false;
 	}
+	m_acc += Vector3(0, -gravity, 0);
+	m_vel += m_acc * _GD->m_dt;
+	m_pos += m_vel * _GD->m_dt;
 
 
 
@@ -67,7 +77,7 @@ void Player::Tick(GameData* _GD)
 		m_acc += rightMove;
 	}
 	auto mouse = _GD->m_MS;
-
+	
 
 	if (_GD->m_MS_tracker.leftButton == _GD->m_MS_tracker.PRESSED)
 	{
@@ -94,8 +104,6 @@ void Player::Tick(GameData* _GD)
 		m_yaw -= delta.x;
 	}
 
-
-
 	//limit motion of the player
 	float length = m_pos.Length();
 	float maxLength = 500.0f;
@@ -109,3 +117,4 @@ void Player::Tick(GameData* _GD)
 	//apply my base behaviour
 	CMOGO::Tick(_GD);
 }
+

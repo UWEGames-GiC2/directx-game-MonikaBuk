@@ -13,6 +13,8 @@
 #include "Audio.h"
 #include "CMOGO.h"
 #include "Bullet.h"
+#include "Player.h" 
+#include "Terrain.h"
 
 using std::list;
 
@@ -114,11 +116,14 @@ private:
     //list<CMOGO*> m_CMOGameObjects; //data structure to hold pointers to all 3D CMO Game Objects
     //list<CMOGO*> m_PhysicsObjects
 
-    std::vector<CMOGO*> m_ColliderObjects;
+    std::vector<Terrain*> m_ColliderObjects;
     std::vector<CMOGO*> m_PhysicsObjects;
     std::vector<Bullet*> p_bullets;
 
+    Player* pPlayer = NULL;
+
     void CheckCollision();
+    void CheckCollisionGroundWithPlayer();
                                          
     //sound stuff
 	//This uses a simple system, but a better pipeline can be used using Wave Banks

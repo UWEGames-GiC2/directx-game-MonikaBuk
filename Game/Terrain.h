@@ -8,6 +8,13 @@
 
 struct GameData;
 
+enum TerrainType
+{
+	FLOOR = 1,
+	WALL = 2,
+	OTHER = 3
+};
+
 class Terrain : public CMOGO
 {
 public:
@@ -15,8 +22,12 @@ public:
 	~Terrain();
 
 	void Tick(GameData* _GD) override { _GD; };
+	void SetType(TerrainType type) { terrainType = type;}
+	TerrainType GetType() const { return terrainType;}
+	
 
 protected:
+	TerrainType terrainType = OTHER;
 
 };
 

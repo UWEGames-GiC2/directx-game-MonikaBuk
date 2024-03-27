@@ -22,6 +22,7 @@ protected:
 	float m_lifeTime = 0.0f;
 	FPSCamera* m_camera;
 	Vector3 m_forwardMove;
+	bool firedNow = false;
 
 
 };

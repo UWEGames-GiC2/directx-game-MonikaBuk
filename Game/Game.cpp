@@ -99,6 +99,9 @@ void Game::Initialize(HWND _window, int _width, int _height)
   
     float derekszog = XMConvertToRadians(90);
 
+
+    //MAP:
+
     Terrain* wall1 = new Terrain("testwall", m_d3dDevice.Get(), m_fxFactory, Vector3(100, 0.0f, 75.002f), derekszog, 0.0f, 0.0f, 0.1f * Vector3::One);
     m_GameObjects.push_back(wall1);
     m_ColliderObjects.push_back(wall1);
@@ -116,49 +119,37 @@ void Game::Initialize(HWND _window, int _width, int _height)
     m_ColliderObjects.push_back(wall5);
 
     Terrain* floor = new Terrain("floor", m_d3dDevice.Get(), m_fxFactory, Vector3(-75, -50, 150), 0.0f, 0.0f, 0.0f, 0.15f * Vector3::One);
+    floor->SetType(TerrainType::FLOOR);
     m_GameObjects.push_back(floor);
-    m_ColliderObjects.push_back(wall5);
-
-
-    Terrain* wall6 = new Terrain("testwall", m_d3dDevice.Get(), m_fxFactory, Vector3(0, 0.0f, 0.0f), derekszog, 0.0f, derekszog, 0.01f * Vector3::One);;
-    m_GameObjects.push_back(wall6);
-    m_ColliderObjects.push_back(wall6);
-
-
-
- 
-
+    m_ColliderObjects.push_back(floor);
+    
 
     //add Player
-    Player* pPlayer = new Player("BirdModelV1", m_d3dDevice.Get(), m_fxFactory);
-    pPlayer->SetScale(4);
-    pPlayer->SetPos(Vector3(100, 0, 100));
+    pPlayer = new Player("han", m_d3dDevice.Get(), m_fxFactory);
+    pPlayer->SetScale(2);
+    pPlayer->SetPos(Vector3(10, 0, 10));
     m_GameObjects.push_back(pPlayer);
     m_PhysicsObjects.push_back(pPlayer);
  
-
-    Weapon* pWeapon = new Weapon("Mac10", m_d3dDevice.Get(), m_fxFactory, Vector3(0.0f, 0.0f, 0.0f), 0.0f, 0.0f, 0.0f, 0.09f * Vector3::One, *pPlayer);
-    pWeapon->SetVisibility(false);
-    m_GameObjects.push_back(pWeapon);
-
     //create a base camera
     m_FPScam = new FPSCamera(0.25f * XM_PI, AR, 1.0f, 1000.0f, pPlayer,  Vector3::UnitY, Vector3(0.1f,0.1f, 0.1f), _width, _height);
     m_GameObjects.push_back(m_FPScam);
 
     //add a secondary camera
-    m_TPScam = new TPSCamera(0.25f * XM_PI, AR, 1.0f, 1000.0f, pPlayer, Vector3::UnitY, Vector3(0.0f, 10.0f, 100));
+    m_TPScam = new TPSCamera(0.25f * XM_PI, AR, 1.0f, 1000.0f, pPlayer, Vector3::UnitY, Vector3(0.0f, 100.0f, 100));
     m_GameObjects.push_back(m_TPScam);
 
+    //bullets
     for (size_t i = 0; i < 20; i++)
     {
         Bullet* pBullet = new Bullet("cat", m_d3dDevice.Get(), m_fxFactory, *m_FPScam);
         pBullet->SetVisibility(false);
+        pBullet->SetScale(0.2);
         m_GameObjects.push_back(pBullet);
         m_PhysicsObjects.push_back(pBullet);
         p_bullets.push_back(pBullet);
     }
     pPlayer->bullets = p_bullets;
-
 
 
     //create DrawData struct and populate its pointers
@@ -169,16 +160,16 @@ void Game::Initialize(HWND _window, int _width, int _height)
     m_DD->m_light = m_light;
 
     //example basic 2D stuff
-    ImageGO2D* croshair = new ImageGO2D("crosshair", m_d3dDevice.Get());
+    ImageGO2D* croshair = new ImageGO2D("croshair", m_d3dDevice.Get());
     RECT window;
     GetWindowRect(m_window, &window);
     croshair->SetPos(Vector2(_width /2, _height/2));
-    croshair->SetScale(0.1);
+    croshair->SetScale(0.05);
     m_GameObjects2D.push_back(croshair);
 
     ImageGO2D* weapon = new ImageGO2D("pistol1", m_d3dDevice.Get());
-    weapon->SetPos(Vector2(_width / 1.5f, _height - 130.0f));
-    weapon->SetScale(1.5);
+    weapon->SetPos(Vector2(_width / 2, _height - 200.0f));
+    weapon->SetScale(3);
     m_GameObjects2D.push_back(weapon);
 
     TextGO2D* text = new TextGO2D("000");
@@ -264,6 +255,7 @@ void Game::Update(DX::StepTimer const& _timer)
     }
 
     CheckCollision();
+    CheckCollisionGroundWithPlayer();
 }
 
 // Draws the scene.
@@ -596,6 +588,18 @@ void Game::CheckCollision()
             XMFLOAT3 eject_vect = Collision::ejectionCMOGO(*m_PhysicsObjects[i], *m_ColliderObjects[j]);
             auto pos = m_PhysicsObjects[i]->GetPos();
             m_PhysicsObjects[i]->SetPos(pos - eject_vect);
+        }
+    }
+}
+
+
+void Game::CheckCollisionGroundWithPlayer()
+{
+ for (int j = 0; j < m_ColliderObjects.size(); j++)
+    {
+        if (pPlayer->Intersects(*m_ColliderObjects[j]) && m_ColliderObjects[j]->GetType() == TerrainType::FLOOR) //std::cout << "Collision Detected!" << std::endl;
+        {
+            pPlayer->SetIsGrounded(true);
         }
     }
 }

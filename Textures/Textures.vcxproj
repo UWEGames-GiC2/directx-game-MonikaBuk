@@ -157,11 +157,20 @@
     <ImageContentTask Include="metal_03_color_1k.png" />
   </ItemGroup>
   <ItemGroup>
+    <Image Include="1024px-Crosshairs_Red.svg.png" />
     <Image Include="bricks-wall-06_color_1k.png" />
+    <ImageContentTask Include="texture\hair.png" />
+    <ImageContentTask Include="texture\han arm.png" />
+    <ImageContentTask Include="texture\han belt.png" />
+    <ImageContentTask Include="texture\han chest.png" />
+    <ImageContentTask Include="texture\han face.png" />
+    <ImageContentTask Include="texture\han leg.png" />
     <ImageContentTask Include="pistol1.png" />
     <ImageContentTask Include="pistol2.png" />
     <ImageContentTask Include="pistol3.png" />
     <ImageContentTask Include="pistol4.png" />
+    <ImageContentTask Include="croshair.png" />
+    <ImageContentTask Include="LegoUV2.png" />
     <Image Include="pistol5.png" />
     <ImageContentTask Include="floor_tiles_06_ambient_occlusion_1k.png" />
     <ImageContentTask Include="floor_tiles_06_basecolor_1k.png" />

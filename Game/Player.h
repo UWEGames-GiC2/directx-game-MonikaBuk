@@ -16,8 +16,14 @@ public:
 
 	virtual void Tick(GameData* _GD) override;
 	std::vector<Bullet*> bullets;
+	bool GetIsGrounded(){ return isGrounded; }
+	void SetIsGrounded(bool grounded) { isGrounded = grounded; };
+
 
 protected:
+	bool isGrounded;
+	float gravity = 9.8f;
+	float jumpSpeed = 10.0f;
 
 };
 

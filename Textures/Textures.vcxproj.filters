@@ -12,9 +12,18 @@
     <ImageContentTask Include="pistol2.png" />
     <ImageContentTask Include="pistol3.png" />
     <ImageContentTask Include="pistol4.png" />
+    <ImageContentTask Include="croshair.png" />
+    <ImageContentTask Include="LegoUV2.png" />
+    <ImageContentTask Include="texture\han belt.png" />
+    <ImageContentTask Include="texture\hair.png" />
+    <ImageContentTask Include="texture\han arm.png" />
+    <ImageContentTask Include="texture\han chest.png" />
+    <ImageContentTask Include="texture\han face.png" />
+    <ImageContentTask Include="texture\han leg.png" />
   </ItemGroup>
   <ItemGroup>
     <Image Include="bricks-wall-06_color_1k.png" />
     <Image Include="pistol5.png" />
+    <Image Include="1024px-Crosshairs_Red.svg.png" />
   </ItemGroup>
 </Project>
