@@ -64,17 +64,17 @@ void Game::Initialize(HWND _window, int _width, int _height)
     ShowCursor(false);
 
     //create GameData struct and populate its pointers
-    m_GD = new GameData;
+    m_GD = std::make_unique <GameData>();
     m_GD->m_GS = GS_PLAY_FPS_CAM;
 
     //set up systems for 2D rendering
-    m_DD2D = new DrawData2D();
+    m_DD2D = std::make_unique<DrawData2D>();
     m_DD2D->m_Sprites.reset(new SpriteBatch(m_d3dContext.Get()));
     m_DD2D->m_Font.reset(new SpriteFont(m_d3dDevice.Get(), L"..\\Assets\\italic.spritefont"));
     m_states = new CommonStates(m_d3dDevice.Get());
 
     //set up DirectXTK Effects system
-    m_fxFactory = new EffectFactory(m_d3dDevice.Get());
+    m_fxFactory =  new EffectFactory(m_d3dDevice.Get());
     //Tell the fxFactory to look to the correct build directory to pull stuff in from
     ((EffectFactory*)m_fxFactory)->SetDirectory(L"..\\Assets");
     //init render system for VBGOs
@@ -90,7 +90,7 @@ void Game::Initialize(HWND _window, int _width, int _height)
     //create a set of dummy things to show off the engine
 
     //create a base light
-    m_light = new Light(Vector3(0.0f, 100.0f, 160.0f), Color(1.0f, 1.0f, 1.0f, 1.0f), Color(0.4f, 0.1f, 0.1f, 1.0f));
+    m_light = std::make_shared<Light>(Vector3(0.0f, 100.0f, 160.0f), Color(1.0f, 1.0f, 1.0f, 1.0f), Color(0.4f, 0.1f, 0.1f, 1.0f));
     m_GameObjects.push_back(m_light);
 
     //find how big my window is to correctly calculate my aspect ratio
@@ -102,47 +102,47 @@ void Game::Initialize(HWND _window, int _width, int _height)
 
     //MAP:
 
-    Terrain* wall1 = new Terrain("testwall", m_d3dDevice.Get(), m_fxFactory, Vector3(100, 0.0f, 75.002f), derekszog, 0.0f, 0.0f, 0.1f * Vector3::One);
+    std::shared_ptr<Terrain> wall1 = std::make_shared<Terrain>("testwall", m_d3dDevice.Get(), m_fxFactory, Vector3(100, 0.0f, 75.002f), derekszog, 0.0f, 0.0f, 0.1f * Vector3::One);
     m_GameObjects.push_back(wall1);
     m_ColliderObjects.push_back(wall1);
-    Terrain* wall2 = new Terrain("testwall", m_d3dDevice.Get(), m_fxFactory, Vector3(100.0f, 0.0f, 0.0f), derekszog, 0.0f, 0.0f, 0.1f * Vector3::One);;
+    std::shared_ptr<Terrain> wall2 = std::make_shared<Terrain>("testwall", m_d3dDevice.Get(), m_fxFactory, Vector3(100.0f, 0.0f, 0.0f), derekszog, 0.0f, 0.0f, 0.1f * Vector3::One);
     m_GameObjects.push_back(wall2);
     m_ColliderObjects.push_back(wall2);
-    Terrain* wall3 = new Terrain("testwall", m_d3dDevice.Get(), m_fxFactory, Vector3(100.0f, 0.0f, -75.001f), derekszog, 0.0f, 0.0f, 0.1f * Vector3::One);;
+    std::shared_ptr<Terrain> wall3 = std::make_shared<Terrain>("testwall", m_d3dDevice.Get(), m_fxFactory, Vector3(100.0f, 0.0f, -75.001f), derekszog, 0.0f, 0.0f, 0.1f * Vector3::One);
     m_GameObjects.push_back(wall3);
     m_ColliderObjects.push_back(wall3);
-    Terrain* wall4 = new Terrain("testwall", m_d3dDevice.Get(), m_fxFactory, Vector3(100.0f, 0.0f, -75.001f), derekszog, 0.0f, derekszog, 0.1f * Vector3::One);;
+    std::shared_ptr<Terrain> wall4 = std::make_shared<Terrain>("testwall", m_d3dDevice.Get(), m_fxFactory, Vector3(100.0f, 0.0f, -75.001f), derekszog, 0.0f, derekszog, 0.1f * Vector3::One);
     m_GameObjects.push_back(wall4);
     m_ColliderObjects.push_back(wall4);
-    Terrain* wall5 = new Terrain("testwall", m_d3dDevice.Get(), m_fxFactory, Vector3(25.0f, 0.0f, -75.001f), derekszog, 0.0f, derekszog, 0.1f * Vector3::One);;
+    std::shared_ptr<Terrain> wall5 = std::make_shared<Terrain>("testwall", m_d3dDevice.Get(), m_fxFactory, Vector3(25.0f, 0.0f, -75.001f), derekszog, 0.0f, derekszog, 0.1f * Vector3::One);
     m_GameObjects.push_back(wall5);
     m_ColliderObjects.push_back(wall5);
 
-    Terrain* floor = new Terrain("floor", m_d3dDevice.Get(), m_fxFactory, Vector3(-75, -50, 150), 0.0f, 0.0f, 0.0f, 0.15f * Vector3::One);
+    std::shared_ptr<Terrain> floor = std::make_shared<Terrain>("floor", m_d3dDevice.Get(), m_fxFactory, Vector3(-75, -50, 150), 0.0f, 0.0f, 0.0f, 0.15f * Vector3::One);
     floor->SetType(TerrainType::FLOOR);
     m_GameObjects.push_back(floor);
     m_ColliderObjects.push_back(floor);
     
 
     //add Player
-    pPlayer = new Player("han", m_d3dDevice.Get(), m_fxFactory);
-    pPlayer->SetScale(2);
+    pPlayer = std::make_shared<Player>("han", m_d3dDevice.Get(), m_fxFactory);
+    pPlayer->SetScale(1.5);
     pPlayer->SetPos(Vector3(10, 0, 10));
     m_GameObjects.push_back(pPlayer);
     m_PhysicsObjects.push_back(pPlayer);
  
     //create a base camera
-    m_FPScam = new FPSCamera(0.25f * XM_PI, AR, 1.0f, 1000.0f, pPlayer,  Vector3::UnitY, Vector3(0.1f,0.1f, 0.1f), _width, _height);
+    m_FPScam = std::make_shared <FPSCamera>(0.25f * XM_PI, AR, 1.0f, 1000.0f, pPlayer,  Vector3::UnitY, Vector3(0.0f,0.0f, 0.01f), _width, _height);
     m_GameObjects.push_back(m_FPScam);
 
     //add a secondary camera
-    m_TPScam = new TPSCamera(0.25f * XM_PI, AR, 1.0f, 1000.0f, pPlayer, Vector3::UnitY, Vector3(0.0f, 100.0f, 100));
+    m_TPScam = std::make_shared <TPSCamera>(0.25f * XM_PI, AR, 1.0f, 1000.0f, pPlayer, Vector3::UnitY, Vector3(0.0f, 300.0f, 300.0f));
     m_GameObjects.push_back(m_TPScam);
 
     //bullets
     for (size_t i = 0; i < 20; i++)
     {
-        Bullet* pBullet = new Bullet("cat", m_d3dDevice.Get(), m_fxFactory, *m_FPScam);
+        std::shared_ptr<Bullet> pBullet = std::make_shared<Bullet>("cat", m_d3dDevice.Get(), m_fxFactory, *m_FPScam);
         pBullet->SetVisibility(false);
         pBullet->SetScale(0.2);
         m_GameObjects.push_back(pBullet);
@@ -153,26 +153,26 @@ void Game::Initialize(HWND _window, int _width, int _height)
 
 
     //create DrawData struct and populate its pointers
-    m_DD = new DrawData;
-    m_DD->m_pd3dImmediateContext = nullptr;
+    m_DD = std::make_shared<DrawData>();
+    m_DD->m_pd3dImmediateContext =nullptr;
     m_DD->m_states = m_states;
     m_DD->m_cam = m_FPScam;
     m_DD->m_light = m_light;
 
     //example basic 2D stuff
-    ImageGO2D* croshair = new ImageGO2D("croshair", m_d3dDevice.Get());
+    std::shared_ptr<ImageGO2D> croshair = std::make_shared<ImageGO2D>("croshair", m_d3dDevice.Get());
     RECT window;
     GetWindowRect(m_window, &window);
     croshair->SetPos(Vector2(_width /2, _height/2));
     croshair->SetScale(0.05);
     m_GameObjects2D.push_back(croshair);
 
-    ImageGO2D* weapon = new ImageGO2D("pistol1", m_d3dDevice.Get());
+    std::shared_ptr<ImageGO2D> weapon =  std::make_shared<ImageGO2D>("pistol1", m_d3dDevice.Get());
     weapon->SetPos(Vector2(_width / 2, _height - 200.0f));
     weapon->SetScale(3);
     m_GameObjects2D.push_back(weapon);
 
-    TextGO2D* text = new TextGO2D("000");
+    std::shared_ptr<TextGO2D> text = std::make_shared<TextGO2D>("000");
     text->SetPos(Vector2(10 , 10));
     text->SetScale(0.5);
     text->SetColour(Color((float*)&Colors::White));
@@ -220,7 +220,7 @@ void Game::Update(DX::StepTimer const& _timer)
         //update sounds playing
         for (list<Sound*>::iterator it = m_Sounds.begin(); it != m_Sounds.end(); it++)
         {
-            (*it)->Tick(m_GD);
+            (*it)->Tick(m_GD.get());
         }
     }
 
@@ -245,13 +245,13 @@ void Game::Update(DX::StepTimer const& _timer)
  
 
     //update all objects
-    for (list<GameObject*>::iterator it = m_GameObjects.begin(); it != m_GameObjects.end(); it++)
+    for (std::vector<std::shared_ptr<GameObject>>::iterator it = m_GameObjects.begin(); it != m_GameObjects.end(); it++)
     {
-        (*it)->Tick(m_GD);
+        (*it)->Tick(m_GD.get());
     }
-    for (list<GameObject2D*>::iterator it = m_GameObjects2D.begin(); it != m_GameObjects2D.end(); it++)
+    for (std::vector<std::shared_ptr<GameObject2D>>::iterator it = m_GameObjects2D.begin(); it != m_GameObjects2D.end(); it++)
     {
-        (*it)->Tick(m_GD);
+        (*it)->Tick(m_GD.get());
     }
 
     CheckCollision();
@@ -280,22 +280,22 @@ void Game::Render()
     }
 
     //update the constant buffer for the rendering of VBGOs
-    VBGO::UpdateConstantBuffer(m_DD);
+    VBGO::UpdateConstantBuffer(m_DD.get());
 
     //Draw 3D Game Obejects
-    for (list<GameObject*>::iterator it = m_GameObjects.begin(); it != m_GameObjects.end(); it++)
+    for (std::vector<std::shared_ptr<GameObject>>::iterator it = m_GameObjects.begin(); it != m_GameObjects.end(); it++)
     {
         if ((*it)->IsVisible())
         {
-            (*it)->Draw(m_DD);
+            (*it)->Draw(m_DD.get());
         }
     }
 
     // Draw sprite batch stuff 
     m_DD2D->m_Sprites->Begin(SpriteSortMode_Deferred, m_states->NonPremultiplied());
-    for (list<GameObject2D*>::iterator it = m_GameObjects2D.begin(); it != m_GameObjects2D.end(); it++)
+    for (std::vector<std::shared_ptr<GameObject2D>>::iterator it = m_GameObjects2D.begin(); it != m_GameObjects2D.end(); it++)
     {
-        (*it)->Draw(m_DD2D);
+        (*it)->Draw(m_DD2D.get());
     }
     m_DD2D->m_Sprites->End();
 

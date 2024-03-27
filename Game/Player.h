@@ -15,7 +15,7 @@ public:
 	~Player();
 
 	virtual void Tick(GameData* _GD) override;
-	std::vector<Bullet*> bullets;
+	std::vector<std::shared_ptr<Bullet>> bullets;
 	bool GetIsGrounded(){ return isGrounded; }
 	void SetIsGrounded(bool grounded) { isGrounded = grounded; };
 

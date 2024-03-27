@@ -6,7 +6,7 @@
 
 
 
-FPSCamera::FPSCamera(float _fieldOfView, float _aspectRatio, float _nearPlaneDistance, float _farPlaneDistance, GameObject* _targetPos,  Vector3 _up, Vector3 _dpos, float _width, float _height)
+FPSCamera::FPSCamera(float _fieldOfView, float _aspectRatio, float _nearPlaneDistance, float _farPlaneDistance, std::shared_ptr<GameObject> _targetPos,  Vector3 _up, Vector3 _dpos, float _width, float _height)
 	:Camera(_fieldOfView, _aspectRatio, _nearPlaneDistance, _farPlaneDistance, _up)
 {
 	m_targetPosObject = _targetPos;
@@ -39,8 +39,10 @@ void FPSCamera::Tick(GameData* _GD)
 	newYawn = m_targetPosObject->GetYaw();
 	rotCam = Matrix::CreateFromYawPitchRoll(newYawn - offsetX, newPitch + offsetY, 0.0f);
 	m_target = m_targetPosObject->GetPos();
-	m_pos = m_target + Vector3::Transform(m_dpos, rotCam);
-	
+	m_target.y += 70;
+	Vector3 pos = m_target + Vector3::Transform(m_dpos, rotCam);
+	m_pos = pos;
+
 
 
 	Camera::Tick(_GD);
@@ -48,13 +50,7 @@ void FPSCamera::Tick(GameData* _GD)
 
 Vector3 FPSCamera::GetCenterOfScreen(GameData* _GD)
 {
-	POINT p;
-
-		if (GetCursorPos(&p))
-		{
-			//cursor position now in p.x and p.y
-		}
-
+	
 	DirectX::XMVECTOR mouseNear = DirectX::XMVectorSet((float)m_width/2, m_height/2, 0.0f, 0.0f);
 	DirectX::XMVECTOR mouseFar = DirectX::XMVectorSet((float)m_width/2, m_height / 2, 1.0f, 0.0f);
 	DirectX::XMVECTOR unprojectedNear = DirectX::XMVector3Unproject(mouseNear, 0, 0, m_width, m_height, m_nearPlaneDistance, m_farPlaneDistance,

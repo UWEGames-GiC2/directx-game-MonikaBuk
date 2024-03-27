@@ -12,3 +12,15 @@ GameObject2D::GameObject2D()
 	m_rotation = 0.0f;
 	m_scale = Vector2::One;
 }
+
+void GameObject2D::Tick(GameData* _GD)
+{
+	if (m_visibilityChanged)
+	{
+
+	}
+}
+
+void GameObject2D::Draw(DrawData2D* _DD)
+{
+}

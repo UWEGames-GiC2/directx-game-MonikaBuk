@@ -29,7 +29,7 @@ void Player::Tick(GameData* _GD)
 	Vector3 forwardMove = 60.0f * Vector3::Forward;
 	Matrix rotMove = Matrix::CreateRotationY(m_yaw);
 	forwardMove = Vector3::Transform(forwardMove, rotMove);
-	(m_acc.y -= gravity) * _GD->m_dt;
+	m_acc.y = (m_acc.y - gravity) * _GD->m_dt;
 	if (_GD->m_KBS.Space && isGrounded)
 	{
 		m_vel.y += jumpSpeed;

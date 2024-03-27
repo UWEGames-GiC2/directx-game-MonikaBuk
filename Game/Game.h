@@ -91,36 +91,36 @@ private:
     DX::StepTimer                                   m_timer;
 
     //Scarle Added stuff
-    GameData* m_GD = NULL;			//Data to be shared to all Game Objects as they are ticked
-    DrawData* m_DD = NULL;			//Data to be shared to all 3D Game Objects as they are drawn
-    DrawData2D* m_DD2D = NULL;	    //Data to be passed by game to all 2D Game Objects via Draw 
+    std::shared_ptr<GameData> m_GD = NULL;			//Data to be shared to all Game Objects as they are ticked
+    std::shared_ptr<DrawData> m_DD = NULL;			//Data to be shared to all 3D Game Objects as they are drawn
+    std::shared_ptr<DrawData2D> m_DD2D = NULL;	    //Data to be passed by game to all 2D Game Objects via Draw 
 
     //Basic 3D renderers
-    FPSCamera* m_FPScam = NULL; //principle camera
-    TPSCamera* m_TPScam = NULL;//TPS cam
-    Light* m_light = NULL; //base light
+    std::shared_ptr<FPSCamera> m_FPScam = NULL; //principle camera
+    std::shared_ptr <TPSCamera> m_TPScam = NULL;//TPS cam
+    std::shared_ptr<Light> m_light = NULL; //base light
 
 
     //required for the CMO model rendering system
     DirectX::CommonStates* m_states = NULL;
-    DirectX::IEffectFactory* m_fxFactory = NULL;
+   DirectX::IEffectFactory* m_fxFactory = NULL;
 
     //basic keyboard and mouse input system
     void ReadInput(); //Get current Mouse and Keyboard states
     std::unique_ptr<DirectX::Keyboard> m_keyboard;
     std::unique_ptr<DirectX::Mouse> m_mouse;
 
-    list<GameObject*> m_GameObjects; //data structure to hold pointers to the 3D Game Objects
-    list<GameObject2D*> m_GameObjects2D; //data structure to hold pointers to the 2D Game Objects 
+    std::vector < std::shared_ptr<GameObject>> m_GameObjects; //data structure to hold pointers to the 3D Game Objects
+    std::vector < std::shared_ptr<GameObject2D>> m_GameObjects2D; //data structure to hold pointers to the 2D Game Objects 
 
     //list<CMOGO*> m_CMOGameObjects; //data structure to hold pointers to all 3D CMO Game Objects
     //list<CMOGO*> m_PhysicsObjects
 
-    std::vector<Terrain*> m_ColliderObjects;
-    std::vector<CMOGO*> m_PhysicsObjects;
-    std::vector<Bullet*> p_bullets;
+    std::vector <std::shared_ptr<Terrain>> m_ColliderObjects;
+    std::vector < std::shared_ptr<CMOGO>> m_PhysicsObjects;
+    std::vector < std::shared_ptr<Bullet>> p_bullets;
 
-    Player* pPlayer = NULL;
+    std::shared_ptr <Player> pPlayer = NULL;
 
     void CheckCollision();
     void CheckCollisionGroundWithPlayer();

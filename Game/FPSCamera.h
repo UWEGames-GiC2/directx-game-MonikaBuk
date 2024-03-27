@@ -5,7 +5,7 @@
 class FPSCamera : public Camera
 {
 public:
-	FPSCamera(float _fieldOfView, float _aspectRatio, float _nearPlaneDistance, float _farPlaneDistance, GameObject* _target, Vector3 _up, Vector3 _dpos, float _width, float _height);
+	FPSCamera(float _fieldOfView, float _aspectRatio, float _nearPlaneDistance, float _farPlaneDistance, std::shared_ptr<GameObject> _targetPos, Vector3 _up, Vector3 _dpos, float _width, float _height);
 	virtual ~FPSCamera();
 
 	virtual void Tick(GameData* _GD) override;
@@ -20,8 +20,7 @@ public:
 	Vector3 GetCenterOfScreen(GameData* _GD);
 
 protected:
-	GameObject* m_targetPosObject;
-	GameObject* m_targetRotObject;
+	std::shared_ptr<GameObject> m_targetPosObject;
 	float maxPitch = XMConvertToRadians(90);
 	float minPitch = XMConvertToRadians(0);
 	POINT GetCursorPosition(POINT cursorPos);
