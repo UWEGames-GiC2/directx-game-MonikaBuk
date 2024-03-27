@@ -16,9 +16,9 @@ public:
 	Light(Vector3 _pos, Color _colour, Color _ambientColour);
 	~Light();
 
-	virtual void Draw(DrawData* _DD) override { _DD; }; //draws nothing
+	virtual void Draw(DrawData* _DrawData) override { _DrawData; }; //draws nothing
 
-	virtual void Tick(GameData* _GD) override;
+	virtual void Tick(GameData* _GameData) override;
 
 	//getters
 	Color GetColour() { return m_colour; }

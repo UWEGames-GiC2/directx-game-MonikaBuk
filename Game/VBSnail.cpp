@@ -8,7 +8,7 @@
 
 using namespace std;
 
-VBSnail::VBSnail(ID3D11Device* _GD, std::string _filename, int _sections, float _scale, float _rot, float _step, Color _col1, Color _col2)
+VBSnail::VBSnail(ID3D11Device* _GameData, std::string _filename, int _sections, float _scale, float _rot, float _step, Color _col1, Color _col2)
 {
 	m_fudge = Matrix::CreateTranslation(-3.0f,-3.0f, 0.0f);
 	int width = 0;
@@ -115,8 +115,8 @@ VBSnail::VBSnail(ID3D11Device* _GD, std::string _filename, int _sections, float 
 	}
 
 
-	BuildIB(_GD, indices);
-	BuildVB(_GD, numVerts, vertices);
+	BuildIB(_GameData, indices);
+	BuildVB(_GameData, numVerts, vertices);
 
 	delete[] vertices; //these are all no longer needed as this is now in the Vertex Buffer
 	delete[] transforms;
@@ -139,20 +139,20 @@ VBSnail::VBSnail(ID3D11Device* _GD, std::string _filename, int _sections, float 
 	rasterDesc.SlopeScaledDepthBias = 0.0f;
 
 	// Create the rasterizer state from the description we just filled out.
-	HRESULT hr = _GD->CreateRasterizerState(&rasterDesc, &m_pRasterState);
+	HRESULT hr = _GameData->CreateRasterizerState(&rasterDesc, &m_pRasterState);
 
 	//use the 2 sided version
 	ID3DBlob* pPixelShaderBuffer = NULL;
 	hr = CompileShaderFromFile(Helper::charToWChar("../Assets/shader.fx"), "PS2", "ps_4_0_level_9_1", &pPixelShaderBuffer);
-	_GD->CreatePixelShader(pPixelShaderBuffer->GetBufferPointer(), pPixelShaderBuffer->GetBufferSize(), NULL, &m_pPixelShader);
+	_GameData->CreatePixelShader(pPixelShaderBuffer->GetBufferPointer(), pPixelShaderBuffer->GetBufferSize(), NULL, &m_pPixelShader);
 }
 
 
 
-void VBSnail::Tick(GameData* _GD)
+void VBSnail::Tick(GameData* _GameData)
 {
-	//m_pitch += _GD->m_dt;
-	//m_yaw -= _GD->m_dt;
-	//m_roll += 0.5f * _GD->m_dt;
-	VBGO::Tick(_GD);
+	//m_pitch += _GameData->m_DeltaTime;
+	//m_yaw -= _GameData->m_DeltaTime;
+	//m_roll += 0.5f * _GameData->m_DeltaTime;
+	VBGO::Tick(_GameData);
 }

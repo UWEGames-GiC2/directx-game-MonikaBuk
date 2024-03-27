@@ -10,6 +10,6 @@ public:
 	TestSound(AudioEngine* _audEngine, string _filename);
 	~TestSound();
 
-	virtual void Tick(GameData* _GD);
+	virtual void Tick(GameData* _GameData);
 };
 

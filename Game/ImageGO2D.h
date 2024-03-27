@@ -12,11 +12,11 @@
 class ImageGO2D :public GameObject2D
 {
 public:
-	ImageGO2D(string _fileName, ID3D11Device* _GD);
+	ImageGO2D(string _fileName, ID3D11Device* _GameData);
 	virtual ~ImageGO2D();
 
-	virtual void Tick(GameData* _GD);
-	virtual void Draw(DrawData2D* _DD);
+	virtual void Tick(GameData* _GameData);
+	virtual void Draw(DrawData2D* _DrawData);
 protected:
 
 	ID3D11ShaderResourceView* m_pTextureRV;

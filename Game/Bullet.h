@@ -12,7 +12,7 @@ public:
 	Bullet(string _fileName, ID3D11Device* _pd3dDevice, IEffectFactory* _EF, FPSCamera& camera);
 	~Bullet();
 
-	virtual void Tick(GameData* _GD) override;
+	virtual void Tick(GameData* _GameData) override;
 	bool IsShot() { return m_isShot; };
 	void Fire();
 

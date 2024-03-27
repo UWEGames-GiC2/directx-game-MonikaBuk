@@ -32,8 +32,8 @@ public:
 	GameObject2D();
 	virtual ~GameObject2D() {};
 
-	virtual void Tick(GameData* _GD);
-	virtual void Draw(DrawData2D* _DD);
+	virtual void Tick(GameData* _GameData);
+	virtual void Draw(DrawData2D* _DrawData);
 
 	 
 

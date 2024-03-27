@@ -20,12 +20,12 @@ GameObject::~GameObject()
 
 }
 
-void GameObject::Tick(GameData* _GD)
+void GameObject::Tick(GameData* _GameData)
 {
 	if (m_physicsOn)
 	{
-		Vector3 newVel = m_vel + _GD->m_dt * (m_acc - m_drag*m_vel);
-		Vector3 newPos = m_pos + _GD->m_dt * m_vel;
+		Vector3 newVel = m_vel + _GameData->m_DeltaTime * (m_acc - m_drag*m_vel);
+		Vector3 newPos = m_pos + _GameData->m_DeltaTime * m_vel;
 
 		m_vel = newVel;
 		m_pos = newPos;

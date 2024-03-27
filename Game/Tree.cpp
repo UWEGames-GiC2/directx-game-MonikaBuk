@@ -21,20 +21,20 @@ Tree::~Tree()
 }
 
 
-void Tree::Tick(GameData* _GD)
+void Tree::Tick(GameData* _GameData)
 {
 	//update all tree parts
 	for (list<TreeBit *>::iterator it = m_Tree.begin(); it != m_Tree.end(); it++)
 	{
-		(*it)->Tick(_GD);
+		(*it)->Tick(_GameData);
 	}
 }
 
-void Tree::Draw(DrawData* _DD)
+void Tree::Draw(DrawData* _DrawData)
 {
 	//draw all tree parts
 	for (list<TreeBit *>::iterator it = m_Tree.begin(); it != m_Tree.end(); it++)
 	{
-		(*it)->Draw(_DD);
+		(*it)->Draw(_DrawData);
 	}
 }

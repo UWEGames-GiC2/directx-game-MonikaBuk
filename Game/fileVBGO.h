@@ -10,7 +10,7 @@
 class FileVBGO : public VBGO
 {
 public:
-	FileVBGO(std::string _fileName, ID3D11Device* _GD);
+	FileVBGO(std::string _fileName, ID3D11Device* _GameData);
 	virtual ~FileVBGO();
 
 private:

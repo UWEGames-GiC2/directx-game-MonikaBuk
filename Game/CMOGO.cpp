@@ -92,6 +92,7 @@ CMOGO::CMOGO(string _fileName, ID3D11Device* _pd3dDevice, IEffectFactory* _EF) :
 
 	m_collider.Center = { centerX, centerY, centerZ };
 	m_collider.Extents = { extX, extY, extZ };
+
 }
 
 CMOGO::~CMOGO()
@@ -107,29 +108,29 @@ CMOGO::~CMOGO()
 	}
 }
 
-void CMOGO::Tick(GameData* _GD)
+void CMOGO::Tick(GameData* _GameData)
 {
-	GameObject::Tick(_GD);
+	GameObject::Tick(_GameData);
 }
 
-void CMOGO::Draw(DrawData* _DD)
+void CMOGO::Draw(DrawData* _DrawData)
 {
 	//a dirty hack as the CMO model drawer breaks the depth stencil state
 	ID3D11DepthStencilState *DSS = nullptr;
 	UINT ref;
 
 	//pick up a copy of the current state...
-	_DD->m_pd3dImmediateContext->OMGetDepthStencilState(&DSS, &ref);
+	_DrawData->m_pd3dImmediateContext->OMGetDepthStencilState(&DSS, &ref);
 
-	m_model->Draw(_DD->m_pd3dImmediateContext, *_DD->m_states, //graphics device and CommonStates reuqired by model system
+	m_model->Draw(_DrawData->m_pd3dImmediateContext, *_DrawData->m_states, //graphics device and CommonStates reuqired by model system
 		m_worldMat, //world transform to poisiton this model in the world
-		_DD->m_cam->GetView(), _DD->m_cam->GetProj(), //veiw and projection matrix of the camera
+		_DrawData->m_cam->GetView(), _DrawData->m_cam->GetProj(), //veiw and projection matrix of the camera
 		false, //NO! I don't want wireframe
-		[&](){_DD->m_pd3dImmediateContext->RSSetState(s_pRasterState);} //this VERY weird construction creates a function on the fly to set up the render states correctly else the model system overrides them BADLY
+		[&](){_DrawData->m_pd3dImmediateContext->RSSetState(s_pRasterState);} //this VERY weird construction creates a function on the fly to set up the render states correctly else the model system overrides them BADLY
 		);
 
 	//...and put the depth stencil state back again
-	_DD->m_pd3dImmediateContext->OMSetDepthStencilState(DSS, ref);
+	_DrawData->m_pd3dImmediateContext->OMSetDepthStencilState(DSS, ref);
 
 	//clear this copy away
 	if (DSS) 

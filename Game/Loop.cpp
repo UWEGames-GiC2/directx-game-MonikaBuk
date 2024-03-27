@@ -32,9 +32,9 @@ void Loop::Play()
 }
 
 
-void Loop::Tick(GameData* _GD)
+void Loop::Tick(GameData* _GameData)
 {
-	_GD;
+	_GameData;
 	m_loop->SetVolume(m_volume);
 	m_loop->SetPitch(m_pitch);
 	m_loop->SetPan(m_pan);

@@ -21,10 +21,10 @@ Weapon::~Weapon()
 	//Nothing additional here but add this just in case
 }
 
-void Weapon::Tick(GameData* _GD)
+void Weapon::Tick(GameData* _GameData)
 {
-	float rotSpeed = 2.0f * _GD->m_dt;
-	auto mouse = _GD->m_MS;
+	float rotSpeed = 2.0f * _GameData->m_DeltaTime;
+	auto mouse = _GameData->m_Mouse;
 	if (mouse.positionMode == Mouse::MODE_RELATIVE)
 	{
 		Vector3 delta = Vector3(mouse.x, mouse.y, 0.f)
@@ -45,7 +45,7 @@ void Weapon::Tick(GameData* _GD)
   
 
     // Call the Tick function of the base class
-    CMOGO::Tick(_GD);
+    CMOGO::Tick(_GameData);
 }
 
 

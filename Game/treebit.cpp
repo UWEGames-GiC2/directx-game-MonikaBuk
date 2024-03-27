@@ -33,9 +33,9 @@ TreeBit::~TreeBit()
 }
 
 
-void TreeBit::Tick(GameData* _GD)
+void TreeBit::Tick(GameData* _GameData)
 {
-	CMOGO::Tick(_GD);
+	CMOGO::Tick(_GameData);
 	if (m_parent)
 	{
 		//as should all be ticked in generational order

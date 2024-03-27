@@ -91,9 +91,9 @@ private:
     DX::StepTimer                                   m_timer;
 
     //Scarle Added stuff
-    std::shared_ptr<GameData> m_GD = NULL;			//Data to be shared to all Game Objects as they are ticked
-    std::shared_ptr<DrawData> m_DD = NULL;			//Data to be shared to all 3D Game Objects as they are drawn
-    std::shared_ptr<DrawData2D> m_DD2D = NULL;	    //Data to be passed by game to all 2D Game Objects via Draw 
+    std::shared_ptr<GameData> m_GameData = NULL;			//Data to be shared to all Game Objects as they are ticked
+    std::shared_ptr<DrawData> m_DrawData = NULL;			//Data to be shared to all 3D Game Objects as they are drawn
+    std::shared_ptr<DrawData2D> m_DrawData2D = NULL;	    //Data to be passed by game to all 2D Game Objects via Draw 
 
     //Basic 3D renderers
     std::shared_ptr<FPSCamera> m_FPScam = NULL; //principle camera

@@ -15,15 +15,15 @@ public:
 	VBGO();
 	virtual ~VBGO();
 
-	virtual void Tick(GameData* _GD) override;
-	virtual void Draw(DrawData* _DD) override;
+	virtual void Tick(GameData* _GameData) override;
+	virtual void Draw(DrawData* _DrawData) override;
 
 	//set up and then destroy all static default render stuff for VBGOs
-	static void Init(ID3D11Device* _GD);//Graphics Device NOT GameData
+	static void Init(ID3D11Device* _GameData);//Graphics Device NOT GameData
 	static void CleanUp();
 
 	//Update static const buffer required for deafult rendering
-	static void UpdateConstantBuffer(DrawData* _DD);
+	static void UpdateConstantBuffer(DrawData* _DrawData);
 
 protected:
 
@@ -69,10 +69,10 @@ protected:
 	ID3D11RasterizerState*  m_pRasterState;
 
 	//once populated build an Index Buffer
-	void BuildIB(ID3D11Device* _GD, void* _indices);
+	void BuildIB(ID3D11Device* _GameData, void* _indices);
 
 	//once populated build a Vertex Buffer
-	void BuildVB(ID3D11Device* _GD, int _numVerts, void* _vertices);
+	void BuildVB(ID3D11Device* _GameData, int _numVerts, void* _vertices);
 
 	static HRESULT CompileShaderFromFile(WCHAR* _szFileName, LPCSTR _szEntryPoint, LPCSTR _szShaderModel, ID3DBlob** _ppBlobOut);
 

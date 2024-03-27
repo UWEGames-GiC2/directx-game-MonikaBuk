@@ -20,10 +20,10 @@ FPSCamera::~FPSCamera()
 	 
 }
 
-void FPSCamera::Tick(GameData* _GD)
+void FPSCamera::Tick(GameData* _GameData)
 {
-	float rotSpeed = _GD->m_dt;
-	auto mouse = _GD->m_MS;
+	float rotSpeed = _GameData->m_DeltaTime;
+	auto mouse = _GameData->m_Mouse;
 	float offsetX = XMConvertToRadians(35.5);
 	float offsetY = XMConvertToRadians(40);
 
@@ -45,10 +45,10 @@ void FPSCamera::Tick(GameData* _GD)
 
 
 
-	Camera::Tick(_GD);
+	Camera::Tick(_GameData);
 }
 
-Vector3 FPSCamera::GetCenterOfScreen(GameData* _GD)
+Vector3 FPSCamera::GetCenterOfScreen(GameData* _GameData)
 {
 	
 	DirectX::XMVECTOR mouseNear = DirectX::XMVectorSet((float)m_width/2, m_height/2, 0.0f, 0.0f);

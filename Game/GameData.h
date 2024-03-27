@@ -13,15 +13,15 @@ using namespace DirectX;
 
 struct GameData
 {
-	float m_dt;  //time step since last frame
-	GameState m_GS; //global GameState
+	float m_DeltaTime;  //time step since last frame
+	GameState m_GameState; //global GameState
 	bool gameStateChanged = false;
 
 	//player input
-	Keyboard::State m_KBS;
-	Mouse::State m_MS;
-	Mouse::ButtonStateTracker m_MS_tracker;
-	Keyboard::KeyboardStateTracker m_KBS_tracker;
+	Keyboard::State m_KeyBoardState;
+	Mouse::State m_Mouse;
+	Mouse::ButtonStateTracker m_Mouse_tracker;
+	Keyboard::KeyboardStateTracker m_KeyBoardState_tracker;
 
 
 };

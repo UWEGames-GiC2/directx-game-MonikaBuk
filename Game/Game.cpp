@@ -64,13 +64,13 @@ void Game::Initialize(HWND _window, int _width, int _height)
     ShowCursor(false);
 
     //create GameData struct and populate its pointers
-    m_GD = std::make_unique <GameData>();
-    m_GD->m_GS = GS_PLAY_FPS_CAM;
+    m_GameData = std::make_unique <GameData>();
+    m_GameData->m_GameState = GS_PLAY_FPS_CAM;
 
     //set up systems for 2D rendering
-    m_DD2D = std::make_unique<DrawData2D>();
-    m_DD2D->m_Sprites.reset(new SpriteBatch(m_d3dContext.Get()));
-    m_DD2D->m_Font.reset(new SpriteFont(m_d3dDevice.Get(), L"..\\Assets\\italic.spritefont"));
+    m_DrawData2D = std::make_unique<DrawData2D>();
+    m_DrawData2D->m_Sprites.reset(new SpriteBatch(m_d3dContext.Get()));
+    m_DrawData2D->m_Font.reset(new SpriteFont(m_d3dDevice.Get(), L"..\\Assets\\italic.spritefont"));
     m_states = new CommonStates(m_d3dDevice.Get());
 
     //set up DirectXTK Effects system
@@ -153,11 +153,11 @@ void Game::Initialize(HWND _window, int _width, int _height)
 
 
     //create DrawData struct and populate its pointers
-    m_DD = std::make_shared<DrawData>();
-    m_DD->m_pd3dImmediateContext =nullptr;
-    m_DD->m_states = m_states;
-    m_DD->m_cam = m_FPScam;
-    m_DD->m_light = m_light;
+    m_DrawData = std::make_shared<DrawData>();
+    m_DrawData->m_pd3dImmediateContext =nullptr;
+    m_DrawData->m_states = m_states;
+    m_DrawData->m_cam = m_FPScam;
+    m_DrawData->m_light = m_light;
 
     //example basic 2D stuff
     std::shared_ptr<ImageGO2D> croshair = std::make_shared<ImageGO2D>("croshair", m_d3dDevice.Get());
@@ -205,7 +205,7 @@ void Game::Tick()
 void Game::Update(DX::StepTimer const& _timer)
 {
     float elapsedTime = float(_timer.GetElapsedSeconds());
-    m_GD->m_dt = elapsedTime;
+    m_GameData->m_DeltaTime = elapsedTime;
 
     //this will update the audio engine but give us chance to do somehting else if that isn't working
     if (!m_audioEngine->Update())
@@ -220,25 +220,25 @@ void Game::Update(DX::StepTimer const& _timer)
         //update sounds playing
         for (list<Sound*>::iterator it = m_Sounds.begin(); it != m_Sounds.end(); it++)
         {
-            (*it)->Tick(m_GD.get());
+            (*it)->Tick(m_GameData.get());
         }
     }
 
     ReadInput();
     //upon space bar switch camera state
     //see docs here for what's going on: https://github.com/Microsoft/DirectXTK/wiki/Keyboard
-    if (m_GD->m_KBS_tracker.pressed.T)
+    if (m_GameData->m_KeyBoardState_tracker.pressed.T)
     {
-        if (m_GD->m_GS == GS_PLAY_FPS_CAM)
+        if (m_GameData->m_GameState == GS_PLAY_FPS_CAM)
         {
-            m_GD->m_GS = GS_PLAY_TPS_CAM;
-            m_GD->gameStateChanged = true;
+            m_GameData->m_GameState = GS_PLAY_TPS_CAM;
+            m_GameData->gameStateChanged = true;
            
         }
         else
         {
-            m_GD->m_GS = GS_PLAY_FPS_CAM;
-            m_GD->gameStateChanged = true;
+            m_GameData->m_GameState = GS_PLAY_FPS_CAM;
+            m_GameData->gameStateChanged = true;
         }
         
     }
@@ -247,11 +247,11 @@ void Game::Update(DX::StepTimer const& _timer)
     //update all objects
     for (std::vector<std::shared_ptr<GameObject>>::iterator it = m_GameObjects.begin(); it != m_GameObjects.end(); it++)
     {
-        (*it)->Tick(m_GD.get());
+        (*it)->Tick(m_GameData.get());
     }
     for (std::vector<std::shared_ptr<GameObject2D>>::iterator it = m_GameObjects2D.begin(); it != m_GameObjects2D.end(); it++)
     {
-        (*it)->Tick(m_GD.get());
+        (*it)->Tick(m_GameData.get());
     }
 
     CheckCollision();
@@ -270,34 +270,34 @@ void Game::Render()
     Clear();
     
     //set immediate context of the graphics device
-    m_DD->m_pd3dImmediateContext = m_d3dContext.Get();
+    m_DrawData->m_pd3dImmediateContext = m_d3dContext.Get();
 
     //set which camera to be used
-    m_DD->m_cam = m_FPScam;
-    if (m_GD->m_GS == GS_PLAY_TPS_CAM)
+    m_DrawData->m_cam = m_FPScam;
+    if (m_GameData->m_GameState == GS_PLAY_TPS_CAM)
     {
-        m_DD->m_cam = m_TPScam;
+        m_DrawData->m_cam = m_TPScam;
     }
 
     //update the constant buffer for the rendering of VBGOs
-    VBGO::UpdateConstantBuffer(m_DD.get());
+    VBGO::UpdateConstantBuffer(m_DrawData.get());
 
     //Draw 3D Game Obejects
     for (std::vector<std::shared_ptr<GameObject>>::iterator it = m_GameObjects.begin(); it != m_GameObjects.end(); it++)
     {
         if ((*it)->IsVisible())
         {
-            (*it)->Draw(m_DD.get());
+            (*it)->Draw(m_DrawData.get());
         }
     }
 
     // Draw sprite batch stuff 
-    m_DD2D->m_Sprites->Begin(SpriteSortMode_Deferred, m_states->NonPremultiplied());
+    m_DrawData2D->m_Sprites->Begin(SpriteSortMode_Deferred, m_states->NonPremultiplied());
     for (std::vector<std::shared_ptr<GameObject2D>>::iterator it = m_GameObjects2D.begin(); it != m_GameObjects2D.end(); it++)
     {
-        (*it)->Draw(m_DD2D.get());
+        (*it)->Draw(m_DrawData2D.get());
     }
-    m_DD2D->m_Sprites->End();
+    m_DrawData2D->m_Sprites->End();
 
     //drawing text screws up the Depth Stencil State, this puts it back again!
     m_d3dContext->OMSetDepthStencilState(m_states->DepthDefault(), 0);
@@ -561,16 +561,16 @@ void Game::OnDeviceLost()
 
 void Game::ReadInput()
 {
-    m_GD->m_KBS = m_keyboard->GetState();
-    m_GD->m_KBS_tracker.Update(m_GD->m_KBS);
+    m_GameData->m_KeyBoardState = m_keyboard->GetState();
+    m_GameData->m_KeyBoardState_tracker.Update(m_GameData->m_KeyBoardState);
     //quit game on hiting escape
-    if (m_GD->m_KBS.Escape)
+    if (m_GameData->m_KeyBoardState.Escape)
     {
         ExitGame();
     }
 
-    m_GD->m_MS = m_mouse->GetState();
-    m_GD->m_MS_tracker.Update(m_GD->m_MS);
+    m_GameData->m_Mouse = m_mouse->GetState();
+    m_GameData->m_Mouse_tracker.Update(m_GameData->m_Mouse);
  
 
     //lock the cursor to the centre of the window

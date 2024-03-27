@@ -10,7 +10,7 @@
 using namespace DirectX;
 using namespace std;
 
-FileVBGO::FileVBGO(string _fileName, ID3D11Device* _GD)
+FileVBGO::FileVBGO(string _fileName, ID3D11Device* _GameData)
 {
 	string useFileName = "../Models/" + _fileName + ".txt";
 	//open file
@@ -36,7 +36,7 @@ FileVBGO::FileVBGO(string _fileName, ID3D11Device* _GD)
 		fullfilename += ".dds";
 
 		//load texture 
-		HRESULT hr = CreateDDSTextureFromFile(_GD, Helper::charToWChar(fullfilename.c_str()), nullptr, &m_pTextureRV);	
+		HRESULT hr = CreateDDSTextureFromFile(_GameData, Helper::charToWChar(fullfilename.c_str()), nullptr, &m_pTextureRV);	
 		assert(hr == S_OK);
 	}
 	else
@@ -94,8 +94,8 @@ FileVBGO::FileVBGO(string _fileName, ID3D11Device* _GD)
 		vertices[V3].Norm = norm;
 	}
 
-	BuildIB(_GD, indices);
-	BuildVB(_GD, numVerts, vertices);
+	BuildIB(_GameData, indices);
+	BuildVB(_GameData, numVerts, vertices);
 
 	//tidy up
 	meshFile.close();

@@ -23,29 +23,29 @@ Player::~Player()
 }
 
 
-void Player::Tick(GameData* _GD)
+void Player::Tick(GameData* _GameData)
 {
 	//TURN AND FORWARD CONTROL HERE
 	Vector3 forwardMove = 60.0f * Vector3::Forward;
 	Matrix rotMove = Matrix::CreateRotationY(m_yaw);
 	forwardMove = Vector3::Transform(forwardMove, rotMove);
-	m_acc.y = (m_acc.y - gravity) * _GD->m_dt;
-	if (_GD->m_KBS.Space && isGrounded)
+	m_acc.y = (m_acc.y - gravity) * _GameData->m_DeltaTime;
+	if (_GameData->m_KeyBoardState.Space && isGrounded)
 	{
 		m_vel.y += jumpSpeed;
 		isGrounded = false;
 	}
-	if (_GD->m_KBS.W)
+	if (_GameData->m_KeyBoardState.W)
 	{
 		m_acc += forwardMove;
 	}
-	if (_GD->m_KBS.S)
+	if (_GameData->m_KeyBoardState.S)
 	{
 		m_acc -= forwardMove;
 	}
-	if (_GD->gameStateChanged)
+	if (_GameData->gameStateChanged)
 	{
-		if (_GD->m_GS == GS_PLAY_FPS_CAM)
+		if (_GameData->m_GameState == GS_PLAY_FPS_CAM)
 		{
 		
 			SetVisibility(false);
@@ -54,11 +54,11 @@ void Player::Tick(GameData* _GD)
 		{
 			SetVisibility(true);
 		}
-		_GD->gameStateChanged = false;
+		_GameData->gameStateChanged = false;
 	}
 	m_acc += Vector3(0, -gravity, 0);
-	m_vel += m_acc * _GD->m_dt;
-	m_pos += m_vel * _GD->m_dt;
+	m_vel += m_acc * _GameData->m_DeltaTime;
+	m_pos += m_vel * _GameData->m_DeltaTime;
 
 
 
@@ -66,20 +66,20 @@ void Player::Tick(GameData* _GD)
 	Vector3 rightMove = 60.0f * Vector3::Right;
 	rightMove = Vector3::Transform(rightMove, rotMove);
 
-	float rotSpeed =  _GD->m_dt;
+	float rotSpeed =  _GameData->m_DeltaTime;
 	float speed = 10.0f;
-	if (_GD->m_KBS.A)
+	if (_GameData->m_KeyBoardState.A)
 	{
 		m_acc -= rightMove;
 	}
-	if (_GD->m_KBS.D)
+	if (_GameData->m_KeyBoardState.D)
 	{
 		m_acc += rightMove;
 	}
-	auto mouse = _GD->m_MS;
+	auto mouse = _GameData->m_Mouse;
 	
 
-	if (_GD->m_MS_tracker.leftButton == _GD->m_MS_tracker.PRESSED)
+	if (_GameData->m_Mouse_tracker.leftButton == _GameData->m_Mouse_tracker.PRESSED)
 	{
 		for (size_t i = 0; i < bullets.size(); i++)
 		{
@@ -115,6 +115,6 @@ void Player::Tick(GameData* _GD)
 	}
 
 	//apply my base behaviour
-	CMOGO::Tick(_GD);
+	CMOGO::Tick(_GameData);
 }
 

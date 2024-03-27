@@ -15,10 +15,10 @@ public:
 	virtual ~VBMarchCubes() {};
 
 	//initialise the Veretx and Index buffers for this function
-	void init(Vector3 _size, float _isolevel, Vector3 _scale, Vector3 _origin, ID3D11Device* _GD);
-	void init(Vector3 _min,Vector3 _max,Vector3 _size, float _isoLevel, ID3D11Device* _GD); //2
+	void init(Vector3 _size, float _isolevel, Vector3 _scale, Vector3 _origin, ID3D11Device* _GameData);
+	void init(Vector3 _min,Vector3 _max,Vector3 _size, float _isoLevel, ID3D11Device* _GameData); //2
 
-	void Tick(GameData* _GD) override;
+	void Tick(GameData* _GameData) override;
 
 protected:
 	float function(Vector3 _pos);

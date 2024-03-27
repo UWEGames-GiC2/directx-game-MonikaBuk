@@ -14,7 +14,7 @@ public:
 	Player(string _fileName, ID3D11Device* _pd3dDevice, IEffectFactory* _EF);
 	~Player();
 
-	virtual void Tick(GameData* _GD) override;
+	virtual void Tick(GameData* _GameData) override;
 	std::vector<std::shared_ptr<Bullet>> bullets;
 	bool GetIsGrounded(){ return isGrounded; }
 	void SetIsGrounded(bool grounded) { isGrounded = grounded; };

@@ -13,9 +13,9 @@ TestSound::~TestSound()
 {
 }
 
-void TestSound::Tick(GameData * _GD)
+void TestSound::Tick(GameData * _GameData)
 {
-	if (_GD->m_MS_tracker.leftButton == _GD->m_MS_tracker.PRESSED)
+	if (_GameData->m_Mouse_tracker.leftButton == _GameData->m_Mouse_tracker.PRESSED)
 	{
 		Play();
 	}

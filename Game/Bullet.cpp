@@ -22,7 +22,7 @@ Bullet::~Bullet()
 {
 }
 
-void Bullet::Tick(GameData* _GD)
+void Bullet::Tick(GameData* _GameData)
 {
 	if (m_isShot)
 	{
@@ -34,7 +34,7 @@ void Bullet::Tick(GameData* _GD)
 			SetPitch(pitch);
 			SetDrag(0.01f);
 			m_lifeTime = 10.0f;
-			Vector3 directon = m_camera->GetCenterOfScreen(_GD);
+			Vector3 directon = m_camera->GetCenterOfScreen(_GameData);
 			SetPhysicsOn(true);
 			m_forwardMove = m_camera->GetForwardVector();
 			auto pos = m_camera->GetPos();
@@ -43,7 +43,7 @@ void Bullet::Tick(GameData* _GD)
 			firedNow = false;
 		}
 
-		m_lifeTime -= _GD->m_dt;
+		m_lifeTime -= _GameData->m_DeltaTime;
 		if (m_lifeTime <= 9.7f && !IsVisible())
 		{
 			SetVisibility(true);
@@ -58,7 +58,7 @@ void Bullet::Tick(GameData* _GD)
 		}
 		
 	}
-	CMOGO::Tick(_GD);
+	CMOGO::Tick(_GameData);
 }
 
 void Bullet::Fire()

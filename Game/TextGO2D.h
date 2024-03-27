@@ -12,8 +12,8 @@ class TextGO2D :public GameObject2D
 public:
 	TextGO2D(string _text);
 
-	virtual void Tick(GameData* _GD);
-	virtual void Draw(DrawData2D* _DD);
+	virtual void Tick(GameData* _GameData);
+	virtual void Draw(DrawData2D* _DrawData);
 protected:
 	string m_text;
 };

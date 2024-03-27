@@ -72,16 +72,16 @@ VBGO::~VBGO()
 	DESTROY(m_pRasterState);
 }
 
-void VBGO::Tick(GameData* _GD)
+void VBGO::Tick(GameData* _GameData)
 {
-	GameObject::Tick(_GD);
+	GameObject::Tick(_GameData);
 }
 
-void VBGO::Draw(DrawData* _DD)
+void VBGO::Draw(DrawData* _DrawData)
 {
 	//set raster state
 	ID3D11RasterizerState* useRasterS = m_pRasterState ? m_pRasterState : s_pRasterState;
-	_DD->m_pd3dImmediateContext->RSSetState(useRasterS);
+	_DrawData->m_pd3dImmediateContext->RSSetState(useRasterS);
 
 	//set standard Constant Buffer to match this object
 	s_pCB->world = m_worldMat.Transpose();
@@ -90,47 +90,47 @@ void VBGO::Draw(DrawData* _DD)
 	//Set vertex buffer
 	UINT stride = sizeof(myVertex);
 	UINT offset = 0;
-	_DD->m_pd3dImmediateContext->IASetVertexBuffers(0, 1, &m_VertexBuffer, &stride, &offset);
+	_DrawData->m_pd3dImmediateContext->IASetVertexBuffers(0, 1, &m_VertexBuffer, &stride, &offset);
 
 	// Set index buffer
-	_DD->m_pd3dImmediateContext->IASetIndexBuffer(m_IndexBuffer, m_IndexFormat, 0);
+	_DrawData->m_pd3dImmediateContext->IASetIndexBuffer(m_IndexBuffer, m_IndexFormat, 0);
 
 	//update the Constant Buffer in classes that inherit from this then push to the GPU here
 	ID3D11Buffer* useCB = m_pConstantBuffer ? m_pConstantBuffer : s_pConstantBuffer;
 	void* useCBData = m_pCB ? m_pCB : s_pCB;
 
-	_DD->m_pd3dImmediateContext->UpdateSubresource(useCB, 0, NULL, useCBData, 0, 0);
-	_DD->m_pd3dImmediateContext->VSSetConstantBuffers(0, 1, &useCB);
-	_DD->m_pd3dImmediateContext->PSSetConstantBuffers(0, 1, &useCB);
+	_DrawData->m_pd3dImmediateContext->UpdateSubresource(useCB, 0, NULL, useCBData, 0, 0);
+	_DrawData->m_pd3dImmediateContext->VSSetConstantBuffers(0, 1, &useCB);
+	_DrawData->m_pd3dImmediateContext->PSSetConstantBuffers(0, 1, &useCB);
 
 	//unless it has it own set them to the static defaults
 
 	//set primitive type used
-	_DD->m_pd3dImmediateContext->IASetPrimitiveTopology(m_topology);
+	_DrawData->m_pd3dImmediateContext->IASetPrimitiveTopology(m_topology);
 
 	//set  vertex layout
 	//note that if you do use this you'll need to change the stride and offset above
 	ID3D11InputLayout* useLayout = m_pVertexLayout ? m_pVertexLayout : s_pVertexLayout;
-	_DD->m_pd3dImmediateContext->IASetInputLayout(useLayout);
+	_DrawData->m_pd3dImmediateContext->IASetInputLayout(useLayout);
 
 	//set Vertex Shader
 	ID3D11VertexShader* useVS = m_pVertexShader ? m_pVertexShader : s_pVertexShader;
-	_DD->m_pd3dImmediateContext->VSSetShader(useVS, NULL, 0);
+	_DrawData->m_pd3dImmediateContext->VSSetShader(useVS, NULL, 0);
 
 	//set Pixel Shader
 	ID3D11PixelShader* usePS = m_pPixelShader ? m_pPixelShader : s_pPixelShader;
-	_DD->m_pd3dImmediateContext->PSSetShader(usePS, NULL, 0);
+	_DrawData->m_pd3dImmediateContext->PSSetShader(usePS, NULL, 0);
 
 	//set Texture
 	ID3D11ShaderResourceView* useTex = m_pTextureRV ? m_pTextureRV : s_pTextureRV;
-	_DD->m_pd3dImmediateContext->PSSetShaderResources(0, 1, &useTex);
+	_DrawData->m_pd3dImmediateContext->PSSetShaderResources(0, 1, &useTex);
 
 	//set sampler
 	ID3D11SamplerState* useSample = m_pSampler ? m_pSampler : s_pSampler;
-	_DD->m_pd3dImmediateContext->PSSetSamplers(0, 1, &useSample);
+	_DrawData->m_pd3dImmediateContext->PSSetSamplers(0, 1, &useSample);
 
 	//and draw
-	_DD->m_pd3dImmediateContext->DrawIndexed(3 * m_numPrims, 0, 0);//number here will need to change depending on the primative topology!
+	_DrawData->m_pd3dImmediateContext->DrawIndexed(3 * m_numPrims, 0, 0);//number here will need to change depending on the primative topology!
 }
 
 //--------------------------------------------------------------------------------------
@@ -162,26 +162,26 @@ HRESULT VBGO::CompileShaderFromFile(WCHAR* _szFileName, LPCSTR _szEntryPoint, LP
 	return S_OK;
 }
 
-void VBGO::Init(ID3D11Device* _GD)
+void VBGO::Init(ID3D11Device* _GameData)
 {
 	//set up all static stuff
 
 	//default vertex shader
 	ID3DBlob* pVertexShaderBuffer = NULL;
 	HRESULT hr = CompileShaderFromFile(Helper::charToWChar("../Assets/shader.fx"), "VS", "vs_4_0_level_9_1", &pVertexShaderBuffer);
-	_GD->CreateVertexShader(pVertexShaderBuffer->GetBufferPointer(), pVertexShaderBuffer->GetBufferSize(), NULL, &s_pVertexShader);
+	_GameData->CreateVertexShader(pVertexShaderBuffer->GetBufferPointer(), pVertexShaderBuffer->GetBufferSize(), NULL, &s_pVertexShader);
 
 	//default pixelshader
 	ID3DBlob* pPixelShaderBuffer = NULL;
 	hr = CompileShaderFromFile(Helper::charToWChar("../Assets/shader.fx"), "PS", "ps_4_0_level_9_1", &pPixelShaderBuffer);
-	_GD->CreatePixelShader(pPixelShaderBuffer->GetBufferPointer(), pPixelShaderBuffer->GetBufferSize(), NULL, &s_pPixelShader);
+	_GameData->CreatePixelShader(pPixelShaderBuffer->GetBufferPointer(), pPixelShaderBuffer->GetBufferSize(), NULL, &s_pPixelShader);
 
 	//default vertex layout
-	_GD->CreateInputLayout(myVertexLayout, ARRAYSIZE(myVertexLayout), pVertexShaderBuffer->GetBufferPointer(),
+	_GameData->CreateInputLayout(myVertexLayout, ARRAYSIZE(myVertexLayout), pVertexShaderBuffer->GetBufferPointer(),
 		pVertexShaderBuffer->GetBufferSize(), &s_pVertexLayout);
 
 	//default texture (white square)
-	hr = CreateDDSTextureFromFile(_GD, L"../Assets/white.dds", nullptr, &s_pTextureRV);
+	hr = CreateDDSTextureFromFile(_GameData, L"../Assets/white.dds", nullptr, &s_pTextureRV);
 
 	//deafult const buffer
 	//GPU side
@@ -191,7 +191,7 @@ void VBGO::Init(ID3D11Device* _GD)
 	bd.ByteWidth = sizeof(ConstantBuffer);
 	bd.BindFlags = D3D11_BIND_CONSTANT_BUFFER;
 	bd.CPUAccessFlags = 0;
-	hr = _GD->CreateBuffer(&bd, NULL, &s_pConstantBuffer);
+	hr = _GameData->CreateBuffer(&bd, NULL, &s_pConstantBuffer);
 	//CPU side
 	s_pCB = new ConstantBuffer();
 	ZeroMemory(s_pCB, sizeof(ConstantBuffer));
@@ -209,7 +209,7 @@ void VBGO::Init(ID3D11Device* _GD)
 	SamDesc.BorderColor[0] = SamDesc.BorderColor[1] = SamDesc.BorderColor[2] = SamDesc.BorderColor[3] = 0;
 	SamDesc.MinLOD = 0;
 	SamDesc.MaxLOD = D3D11_FLOAT32_MAX;
-	hr = _GD->CreateSamplerState(&SamDesc, &s_pSampler);
+	hr = _GameData->CreateSamplerState(&SamDesc, &s_pSampler);
 
 	//Setup Raster State
 	D3D11_RASTERIZER_DESC rasterDesc;
@@ -225,19 +225,19 @@ void VBGO::Init(ID3D11Device* _GD)
 	rasterDesc.SlopeScaledDepthBias = 0.0f;
 
 	// Create the rasterizer state from the description we just filled out.
-	hr = _GD->CreateRasterizerState(&rasterDesc, &s_pRasterState);
+	hr = _GameData->CreateRasterizerState(&rasterDesc, &s_pRasterState);
 }
 
-void VBGO::UpdateConstantBuffer(DrawData* _DD)
+void VBGO::UpdateConstantBuffer(DrawData* _DrawData)
 {
 	//you'll need your own version of this if you use a different Constant Buffer
-	s_pCB->view = _DD->m_cam->GetView().Transpose();
-	s_pCB->projection = _DD->m_cam->GetProj().Transpose();
-	if (_DD->m_light)
+	s_pCB->view = _DrawData->m_cam->GetView().Transpose();
+	s_pCB->projection = _DrawData->m_cam->GetProj().Transpose();
+	if (_DrawData->m_light)
 	{
-		s_pCB->lightCol = _DD->m_light->GetColour();
-		s_pCB->lightPos = _DD->m_light->GetPos();
-		s_pCB->ambientCol = _DD->m_light->GetAmbCol();
+		s_pCB->lightCol = _DrawData->m_light->GetColour();
+		s_pCB->lightPos = _DrawData->m_light->GetPos();
+		s_pCB->ambientCol = _DrawData->m_light->GetAmbCol();
 	}
 }
 
@@ -258,7 +258,7 @@ void VBGO::CleanUp()
 	DESTROY(s_pRasterState);
 }
 
-void VBGO::BuildIB(ID3D11Device* _GD, void* _indices)
+void VBGO::BuildIB(ID3D11Device* _GameData, void* _indices)
 {
 	//structures from creating buffers
 	D3D11_BUFFER_DESC bd;
@@ -272,10 +272,10 @@ void VBGO::BuildIB(ID3D11Device* _GD, void* _indices)
 	bd.BindFlags = D3D11_BIND_INDEX_BUFFER;
 	bd.CPUAccessFlags = 0;
 	InitData.pSysMem = _indices;
-	hr = _GD->CreateBuffer(&bd, &InitData, &m_IndexBuffer);
+	hr = _GameData->CreateBuffer(&bd, &InitData, &m_IndexBuffer);
 }
 
-void VBGO::BuildVB(ID3D11Device* _GD, int _numVerts, void* _vertices)
+void VBGO::BuildVB(ID3D11Device* _GameData, int _numVerts, void* _vertices)
 {
 	//structures from creating buffers
 	D3D11_BUFFER_DESC bd;
@@ -290,5 +290,5 @@ void VBGO::BuildVB(ID3D11Device* _GD, int _numVerts, void* _vertices)
 	bd.CPUAccessFlags = 0;
 	ZeroMemory(&InitData, sizeof(InitData));
 	InitData.pSysMem = _vertices;
-	hr = _GD->CreateBuffer(&bd, &InitData, &m_VertexBuffer);
+	hr = _GameData->CreateBuffer(&bd, &InitData, &m_VertexBuffer);
 }

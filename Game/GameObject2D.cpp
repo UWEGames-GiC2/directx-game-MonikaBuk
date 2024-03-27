@@ -13,7 +13,7 @@ GameObject2D::GameObject2D()
 	m_scale = Vector2::One;
 }
 
-void GameObject2D::Tick(GameData* _GD)
+void GameObject2D::Tick(GameData* _GameData)
 {
 	if (m_visibilityChanged)
 	{
@@ -21,6 +21,6 @@ void GameObject2D::Tick(GameData* _GD)
 	}
 }
 
-void GameObject2D::Draw(DrawData2D* _DD)
+void GameObject2D::Draw(DrawData2D* _DrawData)
 {
 }

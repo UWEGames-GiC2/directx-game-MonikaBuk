@@ -92,12 +92,12 @@ GPGO::GPGO(ID3D11DeviceContext* _pd3dImmediateContext, GPGO_TYPE _type, float* _
 	}
 }
 
-void GPGO::Tick(GameData* _GD)
+void GPGO::Tick(GameData* _GameData)
 {
-	GameObject::Tick(_GD);
+	GameObject::Tick(_GameData);
 }
 
-void GPGO::Draw(DrawData* _DD)
+void GPGO::Draw(DrawData* _DrawData)
 {
-	shape->Draw(m_worldMat,_DD->m_cam->GetView(),_DD->m_cam->GetProj(),m_colour);
+	shape->Draw(m_worldMat,_DrawData->m_cam->GetView(),_DrawData->m_cam->GetProj(),m_colour);
 }

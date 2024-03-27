@@ -25,8 +25,8 @@ class GPGO :    public GameObject
 {
 public:
 	GPGO(ID3D11DeviceContext* _pd3dImmediateContext,GPGO_TYPE _type, float* _colour = (float*)&Colors::AntiqueWhite, float* _params = nullptr);
-	virtual void Tick(GameData* _GD);
-	virtual void Draw(DrawData* _DD);
+	virtual void Tick(GameData* _GameData);
+	virtual void Draw(DrawData* _DrawData);
 
 	GPGO_TYPE GetType() { return m_type; }
 

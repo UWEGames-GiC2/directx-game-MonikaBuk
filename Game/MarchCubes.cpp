@@ -420,14 +420,14 @@ Vector3 corners[8]
 };
 
 
-void VBMarchCubes::init(Vector3 _min, Vector3 _max, Vector3 _size, float _isoLevel, ID3D11Device* _GD)
+void VBMarchCubes::init(Vector3 _min, Vector3 _max, Vector3 _size, float _isoLevel, ID3D11Device* _GameData)
 {
 	Vector3 origin = _min;
 	Vector3 scale = (_max - _min) / _size;
-	init(_size, _isoLevel, scale, origin, _GD);
+	init(_size, _isoLevel, scale, origin, _GameData);
 }
 
-void VBMarchCubes::init(Vector3 _size, float _isolevel, Vector3 _scale, Vector3 _origin, ID3D11Device* _GD)
+void VBMarchCubes::init(Vector3 _size, float _isolevel, Vector3 _scale, Vector3 _origin, ID3D11Device* _GameData)
 {
 	m_scale = Vector3(1.0f / _scale.x, 1.0f / _scale.y, 1.0f / _scale.z);
 	std::vector<myVertex> m_vertices;
@@ -491,7 +491,7 @@ void VBMarchCubes::init(Vector3 _size, float _isolevel, Vector3 _scale, Vector3 
 		m_vertices[i].Color = Color(1.0, 0.0, 0.0, 1.0);
 	}
 
-	BuildIB(_GD, indices);
+	BuildIB(_GameData, indices);
 
 	//structures from creating buffers
 	D3D11_BUFFER_DESC bd;
@@ -505,11 +505,11 @@ void VBMarchCubes::init(Vector3 _size, float _isolevel, Vector3 _scale, Vector3 
 	bd.BindFlags = D3D11_BIND_INDEX_BUFFER;
 	bd.CPUAccessFlags = 0;
 	InitData.pSysMem = indices;
-	hr = _GD->CreateBuffer(&bd, &InitData, &m_IndexBuffer);
+	hr = _GameData->CreateBuffer(&bd, &InitData, &m_IndexBuffer);
 
 	m_IndexFormat = DXGI_FORMAT_R32_UINT;
 
-	BuildVB(_GD, numVerts, &m_vertices[0]);
+	BuildVB(_GameData, numVerts, &m_vertices[0]);
 
 	if (false)
 	{
@@ -547,12 +547,12 @@ void VBMarchCubes::init(Vector3 _size, float _isolevel, Vector3 _scale, Vector3 
 	rasterDesc.SlopeScaledDepthBias = 0.0f;
 
 	// Create the rasterizer state from the description we just filled out.
-	hr = _GD->CreateRasterizerState(&rasterDesc, &m_pRasterState);
+	hr = _GameData->CreateRasterizerState(&rasterDesc, &m_pRasterState);
 
 	//use the 2 sided version
 	ID3DBlob* pPixelShaderBuffer = NULL;
 	hr = CompileShaderFromFile(Helper::charToWChar("../Assets/shader.fx"), "PS2", "ps_4_0_level_9_1", &pPixelShaderBuffer);
-	_GD->CreatePixelShader(pPixelShaderBuffer->GetBufferPointer(), pPixelShaderBuffer->GetBufferSize(), NULL, &m_pPixelShader);
+	_GameData->CreatePixelShader(pPixelShaderBuffer->GetBufferPointer(), pPixelShaderBuffer->GetBufferSize(), NULL, &m_pPixelShader);
 
 }
 
@@ -566,7 +566,7 @@ float VBMarchCubes::function(Vector3 _pos)
 	//VBMC->init(Vector3(-8.5, -8.5, -17), Vector3(8.5, 8.5,23), Vector3(100, 100, 100), 0.01, _pd3dDevice);
 }
 
-void VBMarchCubes::Tick(GameData* _GD)
+void VBMarchCubes::Tick(GameData* _GameData)
 {
-	VBGO::Tick(_GD);
+	VBGO::Tick(_GameData);
 }
