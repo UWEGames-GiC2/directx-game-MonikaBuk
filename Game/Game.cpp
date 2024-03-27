@@ -102,23 +102,23 @@ void Game::Initialize(HWND _window, int _width, int _height)
 
     //MAP:
 
-    std::shared_ptr<Terrain> wall1 = std::make_shared<Terrain>("testwall", m_d3dDevice.Get(), m_fxFactory, Vector3(100, 0.0f, 75.002f), derekszog, 0.0f, 0.0f, 0.1f * Vector3::One);
+    std::shared_ptr<Terrain> wall1 = std::make_shared<Terrain>("testwall", m_d3dDevice.Get(), m_fxFactory, Vector3(100, 40.0f, 75.002f), derekszog, 0.0f, 0.0f, 0.1f * Vector3::One);
     m_GameObjects.push_back(wall1);
     m_ColliderObjects.push_back(wall1);
-    std::shared_ptr<Terrain> wall2 = std::make_shared<Terrain>("testwall", m_d3dDevice.Get(), m_fxFactory, Vector3(100.0f, 0.0f, 0.0f), derekszog, 0.0f, 0.0f, 0.1f * Vector3::One);
+    std::shared_ptr<Terrain> wall2 = std::make_shared<Terrain>("testwall", m_d3dDevice.Get(), m_fxFactory, Vector3(100.0f, 40.0f, 0.0f), derekszog, 0.0f, 0.0f, 0.1f * Vector3::One);
     m_GameObjects.push_back(wall2);
     m_ColliderObjects.push_back(wall2);
-    std::shared_ptr<Terrain> wall3 = std::make_shared<Terrain>("testwall", m_d3dDevice.Get(), m_fxFactory, Vector3(100.0f, 0.0f, -75.001f), derekszog, 0.0f, 0.0f, 0.1f * Vector3::One);
+    std::shared_ptr<Terrain> wall3 = std::make_shared<Terrain>("testwall", m_d3dDevice.Get(), m_fxFactory, Vector3(100.0f, 40.0f, -75.001f), derekszog, 0.0f, 0.0f, 0.1f * Vector3::One);
     m_GameObjects.push_back(wall3);
     m_ColliderObjects.push_back(wall3);
-    std::shared_ptr<Terrain> wall4 = std::make_shared<Terrain>("testwall", m_d3dDevice.Get(), m_fxFactory, Vector3(100.0f, 0.0f, -75.001f), derekszog, 0.0f, derekszog, 0.1f * Vector3::One);
+    std::shared_ptr<Terrain> wall4 = std::make_shared<Terrain>("testwall", m_d3dDevice.Get(), m_fxFactory, Vector3(100.0f, 40.0f, -75.001f), derekszog, 0.0f, derekszog, 0.1f * Vector3::One);
     m_GameObjects.push_back(wall4);
     m_ColliderObjects.push_back(wall4);
-    std::shared_ptr<Terrain> wall5 = std::make_shared<Terrain>("testwall", m_d3dDevice.Get(), m_fxFactory, Vector3(25.0f, 0.0f, -75.001f), derekszog, 0.0f, derekszog, 0.1f * Vector3::One);
+    std::shared_ptr<Terrain> wall5 = std::make_shared<Terrain>("testwall", m_d3dDevice.Get(), m_fxFactory, Vector3(25.0f, 40.0f, -75.001f), derekszog, 0.0f, derekszog, 0.1f * Vector3::One);
     m_GameObjects.push_back(wall5);
     m_ColliderObjects.push_back(wall5);
 
-    std::shared_ptr<Terrain> floor = std::make_shared<Terrain>("floor", m_d3dDevice.Get(), m_fxFactory, Vector3(-75, -50, 150), 0.0f, 0.0f, 0.0f, 0.15f * Vector3::One);
+    std::shared_ptr<Terrain> floor = std::make_shared<Terrain>("floor", m_d3dDevice.Get(), m_fxFactory, Vector3(-75, 0, 150), 0.0f, 0.0f, 0.0f, 0.15f * Vector3::One);
     floor->SetType(TerrainType::FLOOR);
     m_GameObjects.push_back(floor);
     m_ColliderObjects.push_back(floor);
@@ -126,13 +126,12 @@ void Game::Initialize(HWND _window, int _width, int _height)
 
     //add Player
     pPlayer = std::make_shared<Player>("han", m_d3dDevice.Get(), m_fxFactory);
-    pPlayer->SetScale(1.5);
     pPlayer->SetPos(Vector3(10, 0, 10));
     m_GameObjects.push_back(pPlayer);
     m_PhysicsObjects.push_back(pPlayer);
  
     //create a base camera
-    m_FPScam = std::make_shared <FPSCamera>(0.25f * XM_PI, AR, 1.0f, 1000.0f, pPlayer,  Vector3::UnitY, Vector3(0.0f,0.0f, 0.01f), _width, _height);
+    m_FPScam = std::make_shared <FPSCamera>(0.4f * XM_PI, AR, 1.0f, 1000.0f, pPlayer,  Vector3::UnitY, Vector3(0.0f,0.0f, 0.01f), _width, _height);
     m_GameObjects.push_back(m_FPScam);
 
     //add a secondary camera
@@ -144,7 +143,7 @@ void Game::Initialize(HWND _window, int _width, int _height)
     {
         std::shared_ptr<Bullet> pBullet = std::make_shared<Bullet>("cat", m_d3dDevice.Get(), m_fxFactory, *m_FPScam);
         pBullet->SetVisibility(false);
-        pBullet->SetScale(0.2);
+        pBullet->SetScale(0.5);
         m_GameObjects.push_back(pBullet);
         m_PhysicsObjects.push_back(pBullet);
         p_bullets.push_back(pBullet);
@@ -168,8 +167,8 @@ void Game::Initialize(HWND _window, int _width, int _height)
     m_GameObjects2D.push_back(croshair);
 
     std::shared_ptr<ImageGO2D> weapon =  std::make_shared<ImageGO2D>("pistol1", m_d3dDevice.Get());
-    weapon->SetPos(Vector2(_width / 2, _height - 200.0f));
-    weapon->SetScale(3);
+    weapon->SetPos(Vector2(_width / 1.5, _height - 150));
+    weapon->SetScale(2.5);
     m_GameObjects2D.push_back(weapon);
 
     std::shared_ptr<TextGO2D> text = std::make_shared<TextGO2D>("000");

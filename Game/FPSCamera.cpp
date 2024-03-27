@@ -39,7 +39,7 @@ void FPSCamera::Tick(GameData* _GameData)
 	newYawn = m_targetPosObject->GetYaw();
 	rotCam = Matrix::CreateFromYawPitchRoll(newYawn - offsetX, newPitch + offsetY, 0.0f);
 	m_target = m_targetPosObject->GetPos();
-	m_target.y += 70;
+	m_target.y += 50;
 	Vector3 pos = m_target + Vector3::Transform(m_dpos, rotCam);
 	m_pos = pos;
 

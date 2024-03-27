@@ -8,13 +8,10 @@ Player::Player(string _fileName, ID3D11Device* _pd3dDevice, IEffectFactory* _EF)
 {
 	//any special set up for Player goes here
 	m_fudge = Matrix::CreateRotationY(XM_PI);
-
-	m_pos.y = 10.0f;
-
 	SetDrag(4);
-	
 	SetPhysicsOn(true);
 	SetVisibility(false);
+	isGrounded = true;
 }
 
 Player::~Player()
@@ -35,6 +32,9 @@ void Player::Tick(GameData* _GameData)
 		m_vel.y += jumpSpeed;
 		isGrounded = false;
 	}
+	if (m_vel.y < 0) {
+		m_acc.y -= gravity * 200.0f * _GameData->m_DeltaTime;
+	}
 	if (_GameData->m_KeyBoardState.W)
 	{
 		m_acc += forwardMove;
@@ -47,7 +47,7 @@ void Player::Tick(GameData* _GameData)
 	{
 		if (_GameData->m_GameState == GS_PLAY_FPS_CAM)
 		{
-		
+
 			SetVisibility(false);
 		}
 		else
@@ -59,8 +59,6 @@ void Player::Tick(GameData* _GameData)
 	m_acc += Vector3(0, -gravity, 0);
 	m_vel += m_acc * _GameData->m_DeltaTime;
 	m_pos += m_vel * _GameData->m_DeltaTime;
-
-
 
 	//change orinetation of player
 	Vector3 rightMove = 60.0f * Vector3::Right;
@@ -95,12 +93,8 @@ void Player::Tick(GameData* _GameData)
 	// Check if mouse input is relative for rotation
 	if (mouse.positionMode == Mouse::MODE_RELATIVE)
 	{
-		Vector3 delta = Vector3(mouse.x, mouse.y, 0.f)
+		Vector3 delta = Vector3(mouse.x, 0.0f, 0.f)
 			* rotSpeed;
-		//m_pitch -= delta.y;
-		auto m_maxrot = XMConvertToRadians(60);
-		if (m_pitch > m_maxrot) m_pitch = m_maxrot;
-		if (m_pitch < -m_maxrot) m_pitch = -m_maxrot;
 		m_yaw -= delta.x;
 	}
 
