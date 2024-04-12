@@ -125,13 +125,13 @@ void Game::Initialize(HWND _window, int _width, int _height)
     
 
     //add Player
-    pPlayer = std::make_shared<Player>("han", m_d3dDevice.Get(), m_fxFactory);
-    pPlayer->SetPos(Vector3(10, 0, 10));
+    pPlayer = std::make_shared<Player>("Test", m_d3dDevice.Get(), m_fxFactory);
+    pPlayer->SetPos(Vector3(20, 20, 20));
     m_GameObjects.push_back(pPlayer);
     m_PhysicsObjects.push_back(pPlayer);
  
     //create a base camera
-    m_FPScam = std::make_shared <FPSCamera>(0.4f * XM_PI, AR, 1.0f, 1000.0f, pPlayer,  Vector3::UnitY, Vector3(0.0f,0.0f, 0.01f), _width, _height);
+    m_FPScam = std::make_shared <FPSCamera>(0.4f * XM_PI, AR, 1.0f, 1000.0f, pPlayer,  Vector3::UnitY, Vector3(0.0f,0.0f, 0.001f), _width, _height);
     m_GameObjects.push_back(m_FPScam);
 
     //add a secondary camera
@@ -164,12 +164,12 @@ void Game::Initialize(HWND _window, int _width, int _height)
     GetWindowRect(m_window, &window);
     croshair->SetPos(Vector2(_width /2, _height/2));
     croshair->SetScale(0.05);
-    m_GameObjects2D.push_back(croshair);
+    m_FPS_GameObjects2D.push_back(croshair);
 
     std::shared_ptr<ImageGO2D> weapon =  std::make_shared<ImageGO2D>("pistol1", m_d3dDevice.Get());
     weapon->SetPos(Vector2(_width / 1.5, _height - 150));
     weapon->SetScale(2.5);
-    m_GameObjects2D.push_back(weapon);
+    m_FPS_GameObjects2D.push_back(weapon);
 
     std::shared_ptr<TextGO2D> text = std::make_shared<TextGO2D>("000");
     text->SetPos(Vector2(10 , 10));
@@ -296,8 +296,17 @@ void Game::Render()
     {
         (*it)->Draw(m_DrawData2D.get());
     }
-    m_DrawData2D->m_Sprites->End();
+   
 
+    if (m_GameData->m_GameState == GS_PLAY_FPS_CAM)
+    {
+        for (std::vector<std::shared_ptr<GameObject2D>>::iterator it = m_FPS_GameObjects2D.begin(); it != m_FPS_GameObjects2D.end(); it++)
+        {
+            (*it)->Draw(m_DrawData2D.get());
+        }
+        
+    }
+    m_DrawData2D->m_Sprites->End();
     //drawing text screws up the Depth Stencil State, this puts it back again!
     m_d3dContext->OMSetDepthStencilState(m_states->DepthDefault(), 0);
 

@@ -12,16 +12,6 @@ using namespace DirectX;
 using namespace SimpleMath;
 using namespace std;
 
-enum VisibleState
-{
-	MENU = 1,
-	FPS_ONLY = 2,
-	TPS_ONLY = 3,
-	GAME = 4,
-	GAME_WON = 5,
-	GAME_LOSE = 6,
-	ALL = 7
-};
 
 struct GameData;
 struct DrawData2D;
@@ -45,17 +35,17 @@ public:
 	void SetScale(Vector2 _scale) { m_scale = _scale; }
 	void SetScale(float _scale) { m_scale = _scale * Vector2::One; }
 	void SetOrigin(Vector2 _origin) { m_origin = _origin; }
-	void SetVisibilityState(VisibleState _state) { m_visibilityState = _state; m_visibilityChanged = true;}
-
+	bool SetVisibility(bool visiblity) { m_isVisible = visiblity;}
 protected:
+
 	Vector2 m_pos;
 	float m_rotation;
 	Vector2 m_scale;
 	Color m_colour;
 	Vector2 m_origin;
 	bool m_isVisible;
-	VisibleState m_visibilityState;
-	bool m_visibilityChanged = true;
+
+	bool m_visibilityChanged = false;
 
 };
 

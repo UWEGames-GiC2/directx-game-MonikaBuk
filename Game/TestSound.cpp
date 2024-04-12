@@ -15,9 +15,12 @@ TestSound::~TestSound()
 
 void TestSound::Tick(GameData * _GameData)
 {
-	if (_GameData->m_Mouse_tracker.leftButton == _GameData->m_Mouse_tracker.PRESSED)
+	if (_GameData->m_GameState == GS_PLAY_FPS_CAM)
 	{
-		Play();
+		if (_GameData->m_Mouse_tracker.leftButton == _GameData->m_Mouse_tracker.PRESSED)
+		{
+			Play();
+		}
 	}
 	
 }

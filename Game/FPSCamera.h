@@ -35,7 +35,7 @@ protected:
 
 	float newYawn;
 
-	Vector3	m_forwardVector;
+	Vector3	m_forwardVector = Vector3::Forward;
 	
 	//I'm following this object
 	Vector3	m_dpos; //I'll lurk this far behind and away from it

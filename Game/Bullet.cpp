@@ -28,18 +28,31 @@ void Bullet::Tick(GameData* _GameData)
 	{
 		if (firedNow)
 		{
+			Vector3 directon;
+				
 			float yawn = m_camera->GetNewYawn();
 			float pitch = m_camera->GetNewPitch();
 			SetYaw(yawn);
 			SetPitch(pitch);
+			if (_GameData->m_GameState == GameState::GS_PLAY_FPS_CAM)
+			{
+				directon = m_camera->GetCenterOfScreen(_GameData);
+			}
+			else 
+			{
+				directon = Vector3::Forward;
+				Matrix  rot = Matrix::CreateRotationY(yawn);
+				directon = Vector3::Transform(directon, rot);
+			}
+		
 			SetDrag(0.01f);
 			m_lifeTime = 10.0f;
-			Vector3 directon = m_camera->GetCenterOfScreen(_GameData);
+			
 			SetPhysicsOn(true);
-			m_forwardMove = m_camera->GetForwardVector();
 			auto pos = m_camera->GetPos();
 			m_pos = (pos);
 			SetAcceleration(directon * 5000.0f);
+		}
 			firedNow = false;
 		}
 
@@ -57,7 +70,7 @@ void Bullet::Tick(GameData* _GameData)
 			SetPhysicsOn(false);
 		}
 		
-	}
+	
 	CMOGO::Tick(_GameData);
 }
 

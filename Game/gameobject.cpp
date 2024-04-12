@@ -34,7 +34,9 @@ void GameObject::Tick(GameData* _GameData)
 	//build up the world matrix depending on the new position of the GameObject
 	//the assumption is that this class will be inherited by the class that ACTUALLY changes this
 	Matrix  scaleMat = Matrix::CreateScale(m_scale);
-	m_rotMat = Matrix::CreateFromYawPitchRoll(m_yaw, m_pitch, m_roll); //possible not the best way of doing this!
+	Quaternion rotationQuaternion = Quaternion::CreateFromYawPitchRoll(m_yaw, m_pitch, m_roll);
+	rotationQuaternion.Normalize();
+	m_rotMat = Matrix::CreateFromQuaternion(rotationQuaternion);
 	Matrix  transMat = Matrix::CreateTranslation(m_pos);
 
 	m_worldMat = m_fudge * scaleMat * m_rotMat * transMat;

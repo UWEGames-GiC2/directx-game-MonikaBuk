@@ -15,12 +15,12 @@ GameObject2D::GameObject2D()
 
 void GameObject2D::Tick(GameData* _GameData)
 {
-	if (m_visibilityChanged)
-	{
-
-	}
+	
 }
 
 void GameObject2D::Draw(DrawData2D* _DrawData)
 {
+	
 }
+
+

@@ -28,5 +28,6 @@
     <MeshContentTask Include="testfloor.fbx" />
     <MeshContentTask Include="floor.fbx" />
     <MeshContentTask Include="han.fbx" />
+    <MeshContentTask Include="C:\Users\monik\Desktop\Test.fbx" />
   </ItemGroup>
 </Project>

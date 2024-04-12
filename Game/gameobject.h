@@ -32,6 +32,7 @@ public:
 	float		GetPitch() { return m_pitch; }
 	float		GetYaw() { return m_yaw; }
 	float		GetRoll() { return m_roll; }
+	//Vector3		GetForwardVector() { return Vector3::Forward; }
 
 	Matrix&			getWorldTransform()		  { return m_worldMat; }
 	const Matrix&	getWorldTransform() const { return m_worldMat; }
@@ -67,6 +68,7 @@ protected:
 	Matrix m_fudge;
 	Vector3 m_pos;
 	float m_pitch, m_yaw, m_roll;
+	Vector3 m_forwardVecor;
 	Vector3 m_scale;
 	bool m_visible = true;
 

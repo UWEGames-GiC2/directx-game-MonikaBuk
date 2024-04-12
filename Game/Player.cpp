@@ -56,6 +56,7 @@ void Player::Tick(GameData* _GameData)
 		}
 		_GameData->gameStateChanged = false;
 	}
+	
 	m_acc += Vector3(0, -gravity, 0);
 	m_vel += m_acc * _GameData->m_DeltaTime;
 	m_pos += m_vel * _GameData->m_DeltaTime;
@@ -64,7 +65,7 @@ void Player::Tick(GameData* _GameData)
 	Vector3 rightMove = 60.0f * Vector3::Right;
 	rightMove = Vector3::Transform(rightMove, rotMove);
 
-	float rotSpeed =  _GameData->m_DeltaTime;
+	float rotSpeed =  _GameData->m_DeltaTime /2 ;
 	float speed = 10.0f;
 	if (_GameData->m_KeyBoardState.A)
 	{
@@ -93,9 +94,9 @@ void Player::Tick(GameData* _GameData)
 	// Check if mouse input is relative for rotation
 	if (mouse.positionMode == Mouse::MODE_RELATIVE)
 	{
-		Vector3 delta = Vector3(mouse.x, 0.0f, 0.f)
+		float delta = mouse.x
 			* rotSpeed;
-		m_yaw -= delta.x;
+		m_yaw -= delta;
 	}
 
 	//limit motion of the player

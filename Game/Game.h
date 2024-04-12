@@ -112,6 +112,7 @@ private:
 
     std::vector < std::shared_ptr<GameObject>> m_GameObjects; //data structure to hold pointers to the 3D Game Objects
     std::vector < std::shared_ptr<GameObject2D>> m_GameObjects2D; //data structure to hold pointers to the 2D Game Objects 
+    std::vector < std::shared_ptr<GameObject2D>> m_FPS_GameObjects2D;
 
     //list<CMOGO*> m_CMOGameObjects; //data structure to hold pointers to all 3D CMO Game Objects
     //list<CMOGO*> m_PhysicsObjects
