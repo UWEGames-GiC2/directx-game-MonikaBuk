@@ -13,6 +13,7 @@ GameObject::GameObject()
 
 	m_worldMat = Matrix::Identity;
 	m_fudge = Matrix::Identity;
+	
 }
 
 GameObject::~GameObject()

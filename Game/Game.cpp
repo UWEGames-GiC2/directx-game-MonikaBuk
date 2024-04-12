@@ -166,8 +166,17 @@ void Game::Initialize(HWND _window, int _width, int _height)
     croshair->SetScale(0.05);
     m_FPS_GameObjects2D.push_back(croshair);
 
-    std::shared_ptr<ImageGO2D> weapon =  std::make_shared<ImageGO2D>("pistol1", m_d3dDevice.Get());
-    weapon->SetPos(Vector2(_width / 1.5, _height - 150));
+
+    std::vector<string> frameFileNames;
+
+    frameFileNames.push_back(std::string("pistol1"));
+    frameFileNames.push_back(std::string("pistol2"));
+    frameFileNames.push_back(std::string("pistol3"));
+    frameFileNames.push_back(std::string("pistol4"));
+
+    std::shared_ptr<AnimatedImage> weapon =  std::make_shared<AnimatedImage>(frameFileNames, m_d3dDevice.Get(), 20, false);
+    weapon->SetPos(Vector2(_width / 1.5, _height - 200));
+    weapon->SetRot(0.2);
     weapon->SetScale(2.5);
     m_FPS_GameObjects2D.push_back(weapon);
 
@@ -216,6 +225,7 @@ void Game::Update(DX::StepTimer const& _timer)
     }
     else
     {
+        std::cout << "sound \n";
         //update sounds playing
         for (list<Sound*>::iterator it = m_Sounds.begin(); it != m_Sounds.end(); it++)
         {
@@ -244,14 +254,25 @@ void Game::Update(DX::StepTimer const& _timer)
  
 
     //update all objects
+    std::cout << "this shit sucks  3d \n";
     for (std::vector<std::shared_ptr<GameObject>>::iterator it = m_GameObjects.begin(); it != m_GameObjects.end(); it++)
     {
         (*it)->Tick(m_GameData.get());
     }
+    std::cout << "this shit sucks  2d \n";
     for (std::vector<std::shared_ptr<GameObject2D>>::iterator it = m_GameObjects2D.begin(); it != m_GameObjects2D.end(); it++)
     {
         (*it)->Tick(m_GameData.get());
     }
+    std::cout << "this shit sucks  2danim \n";
+    if (m_GameData->m_GameState == GS_PLAY_FPS_CAM)
+    {
+        for (std::vector<std::shared_ptr<GameObject2D>>::iterator it = m_FPS_GameObjects2D.begin(); it != m_FPS_GameObjects2D.end(); it++)
+        {
+            (*it)->Tick(m_GameData.get());
+        }
+    }
+
 
     CheckCollision();
     CheckCollisionGroundWithPlayer();

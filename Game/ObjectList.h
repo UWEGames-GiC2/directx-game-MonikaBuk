@@ -29,6 +29,7 @@
 #include "GameObject2D.h"
 #include "ImageGO2D.h"
 #include "TextGO2D.h"
+#include "AnimatedImage.h"
 
 //Sounds
 #include "TestSound.h"

@@ -15,8 +15,9 @@ public:
 	ImageGO2D(string _fileName, ID3D11Device* _GameData);
 	virtual ~ImageGO2D();
 
-	virtual void Tick(GameData* _GameData);
-	virtual void Draw(DrawData2D* _DrawData);
+
+	virtual void Tick(GameData* _GameData)override;
+	virtual void Draw(DrawData2D* _DrawData)override;
 protected:
 
 	ID3D11ShaderResourceView* m_pTextureRV;
