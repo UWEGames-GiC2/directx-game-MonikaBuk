@@ -15,6 +15,8 @@
 #include "Bullet.h"
 #include "Player.h" 
 #include "Terrain.h"
+#include "AnimatedObject3D.h"
+#include "Enemy.h"
 
 using std::list;
 
@@ -120,11 +122,14 @@ private:
     std::vector <std::shared_ptr<Terrain>> m_ColliderObjects;
     std::vector < std::shared_ptr<CMOGO>> m_PhysicsObjects;
     std::vector < std::shared_ptr<Bullet>> p_bullets;
+    std::vector < std::shared_ptr<Enemy>> m_Eniemies;
 
     std::shared_ptr <Player> pPlayer = NULL;
 
     void CheckCollision();
     void CheckCollisionGroundWithPlayer();
+
+    void CheckCollisionEnemyBullet();
                                          
     //sound stuff
 	//This uses a simple system, but a better pipeline can be used using Wave Banks

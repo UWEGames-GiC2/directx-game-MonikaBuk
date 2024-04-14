@@ -129,6 +129,20 @@ void Game::Initialize(HWND _window, int _width, int _height)
     pPlayer->SetPos(Vector3(20, 20, 20));
     m_GameObjects.push_back(pPlayer);
     m_PhysicsObjects.push_back(pPlayer);
+
+    std::shared_ptr<Enemy> test = std::make_shared<Enemy>("test", m_d3dDevice.Get(), m_fxFactory, Vector3(-30, 20, 120), 0.0f, 0.0f, 0.0f, 1.0f * Vector3::One);
+    m_GameObjects.push_back(test);
+    m_PhysicsObjects.push_back(test);
+    m_Eniemies.push_back(test);
+    m_ColliderObjects.push_back(test);
+
+    //rendering bad even if found the bones
+    /*
+    std::shared_ptr<AnimatedObject3D> asd = std::make_shared<AnimatedObject3D>("test1", m_d3dDevice.Get(), m_fxFactory);
+    asd->SetPos(Vector3(20, 20, 20));
+    m_GameObjects.push_back(asd);
+ //   m_PhysicsObjects.push_back(asd);
+ */
  
     //create a base camera
     m_FPScam = std::make_shared <FPSCamera>(0.4f * XM_PI, AR, 1.0f, 1000.0f, pPlayer,  Vector3::UnitY, Vector3(0.0f,0.0f, 0.001f), _width, _height);
@@ -158,7 +172,7 @@ void Game::Initialize(HWND _window, int _width, int _height)
     m_DrawData->m_cam = m_FPScam;
     m_DrawData->m_light = m_light;
 
-    //example basic 2D stuff
+    // 2D images
     std::shared_ptr<ImageGO2D> croshair = std::make_shared<ImageGO2D>("croshair", m_d3dDevice.Get());
     RECT window;
     GetWindowRect(m_window, &window);
@@ -167,19 +181,19 @@ void Game::Initialize(HWND _window, int _width, int _height)
     m_FPS_GameObjects2D.push_back(croshair);
 
 
+    //weapon frames 
     std::vector<string> frameFileNames;
-
     frameFileNames.push_back(std::string("pistol1"));
     frameFileNames.push_back(std::string("pistol2"));
     frameFileNames.push_back(std::string("pistol3"));
     frameFileNames.push_back(std::string("pistol4"));
-
     std::shared_ptr<AnimatedImage> weapon =  std::make_shared<AnimatedImage>(frameFileNames, m_d3dDevice.Get(), 20, false);
     weapon->SetPos(Vector2(_width / 1.5, _height - 200));
     weapon->SetRot(0.2);
     weapon->SetScale(2.5);
     m_FPS_GameObjects2D.push_back(weapon);
 
+    //Text
     std::shared_ptr<TextGO2D> text = std::make_shared<TextGO2D>("000");
     text->SetPos(Vector2(10 , 10));
     text->SetScale(0.5);
@@ -225,7 +239,7 @@ void Game::Update(DX::StepTimer const& _timer)
     }
     else
     {
-        std::cout << "sound \n";
+      
         //update sounds playing
         for (list<Sound*>::iterator it = m_Sounds.begin(); it != m_Sounds.end(); it++)
         {
@@ -254,17 +268,17 @@ void Game::Update(DX::StepTimer const& _timer)
  
 
     //update all objects
-    std::cout << "this shit sucks  3d \n";
+  
     for (std::vector<std::shared_ptr<GameObject>>::iterator it = m_GameObjects.begin(); it != m_GameObjects.end(); it++)
     {
         (*it)->Tick(m_GameData.get());
     }
-    std::cout << "this shit sucks  2d \n";
+
     for (std::vector<std::shared_ptr<GameObject2D>>::iterator it = m_GameObjects2D.begin(); it != m_GameObjects2D.end(); it++)
     {
         (*it)->Tick(m_GameData.get());
     }
-    std::cout << "this shit sucks  2danim \n";
+
     if (m_GameData->m_GameState == GS_PLAY_FPS_CAM)
     {
         for (std::vector<std::shared_ptr<GameObject2D>>::iterator it = m_FPS_GameObjects2D.begin(); it != m_FPS_GameObjects2D.end(); it++)
@@ -276,6 +290,7 @@ void Game::Update(DX::StepTimer const& _timer)
 
     CheckCollision();
     CheckCollisionGroundWithPlayer();
+    CheckCollisionEnemyBullet();
 }
 
 // Draws the scene.
@@ -631,4 +646,21 @@ void Game::CheckCollisionGroundWithPlayer()
             pPlayer->SetIsGrounded(true);
         }
     }
+}
+
+void Game::CheckCollisionEnemyBullet()
+{
+    for (int i = 0; i < m_Eniemies.size(); i++)
+    {
+        for (int j = 0; j < p_bullets.size(); j++)
+        {
+            if (p_bullets[j]->Intersects(*m_Eniemies[i]))  //std::cout << "Collision Detected!" << std::endl;
+            {
+                m_Eniemies[i]->SetVisibility(false);
+                p_bullets[j]->SetVisibility(false);
+                break;
+            }
+        }
+    }
+    
 }

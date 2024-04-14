@@ -16,6 +16,8 @@
 #include "GPGO.h"
 #include "Weapon.h"
 #include "Bullet.h"
+#include "AnimatedObject3D.h"
+#include "Enemy.h"
 //VBGO examples
 #include "fileVBGO.h"
 #include "VBCube.h"

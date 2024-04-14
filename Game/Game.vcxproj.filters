@@ -166,6 +166,12 @@
       <Filter>GameObjects\2D\Header Files</Filter>
     </ClInclude>
     <ClInclude Include="Bullet.h">
+      <Filter>GameObjects\3D\Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="AnimatedObject3D.h">
+      <Filter>Base\Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Enemy.h">
       <Filter>Base\Header Files</Filter>
     </ClInclude>
   </ItemGroup>
@@ -249,6 +255,12 @@
       <Filter>GameObjects\2D\Source Files</Filter>
     </ClCompile>
     <ClCompile Include="Bullet.cpp">
+      <Filter>GameObjects\3D\Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="AnimatedObject3D.cpp">
+      <Filter>Base\Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Enemy.cpp">
       <Filter>Base\Source Files</Filter>
     </ClCompile>
   </ItemGroup>

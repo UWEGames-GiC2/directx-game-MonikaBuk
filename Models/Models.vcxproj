@@ -153,16 +153,21 @@
     <MeshContentTask Include="C:\Users\monik\Desktop\Test.fbx" />
     <MeshContentTask Include="floor.fbx" />
     <MeshContentTask Include="han.fbx" />
+    <MeshContentTask Include="icant.fbx" />
     <MeshContentTask Include="Mac10.fbx" />
     <MeshContentTask Include="Table\table.FBX">
       <FileType>Document</FileType>
     </MeshContentTask>
     <MeshContentTask Include="cat.fbx" />
+    <MeshContentTask Include="test1.fbx" />
     <MeshContentTask Include="testfloor.fbx" />
     <MeshContentTask Include="testwall.fbx" />
     <MeshContentTask Include="Vase\JEMINA vase -up.fbx">
       <FileType>Document</FileType>
     </MeshContentTask>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="tank.sdkmesh" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

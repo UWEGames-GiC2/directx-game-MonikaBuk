@@ -164,12 +164,14 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClInclude Include="AnimatedImage.h" />
+    <ClInclude Include="AnimatedObject3D.h" />
     <ClInclude Include="Bullet.h" />
     <ClInclude Include="camera.h" />
     <ClInclude Include="CMOGO.h" />
     <ClInclude Include="ConstantBuffer.h" />
     <ClInclude Include="DrawData.h" />
     <ClInclude Include="DrawData2D.h" />
+    <ClInclude Include="Enemy.h" />
     <ClInclude Include="fileVBGO.h" />
     <ClInclude Include="FPSCamera.h" />
     <ClInclude Include="framework.h" />
@@ -205,9 +207,11 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="AnimatedImage.cpp" />
+    <ClCompile Include="AnimatedObject3D.cpp" />
     <ClCompile Include="Bullet.cpp" />
     <ClCompile Include="camera.cpp" />
     <ClCompile Include="CMOGO.cpp" />
+    <ClCompile Include="Enemy.cpp" />
     <ClCompile Include="fileVBGO.cpp" />
     <ClCompile Include="FPSCamera.cpp" />
     <ClCompile Include="Game.cpp" />

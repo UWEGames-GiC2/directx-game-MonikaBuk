@@ -29,5 +29,10 @@
     <MeshContentTask Include="floor.fbx" />
     <MeshContentTask Include="han.fbx" />
     <MeshContentTask Include="C:\Users\monik\Desktop\Test.fbx" />
+    <MeshContentTask Include="icant.fbx" />
+    <MeshContentTask Include="test1.fbx" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="tank.sdkmesh" />
   </ItemGroup>
 </Project>

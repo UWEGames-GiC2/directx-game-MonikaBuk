@@ -24,7 +24,6 @@ AnimatedImage::AnimatedImage(vector<std::string> frameFileNames, ID3D11Device* d
         }
 
         else {
-            // Create a shared pointer for the texture and add it to m_animationFrames
             m_animationFrames.push_back(std::shared_ptr<ID3D11ShaderResourceView>(srv, [](ID3D11ShaderResourceView* p) { p->Release(); }));
         }
     }
