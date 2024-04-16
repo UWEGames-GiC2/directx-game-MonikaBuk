@@ -130,6 +130,8 @@ private:
     void CheckCollisionGroundWithPlayer();
 
     void CheckCollisionEnemyBullet();
+
+    void RemoveEnemyFromAllContainers(std::shared_ptr<GameObject> enemy);
                                          
     //sound stuff
 	//This uses a simple system, but a better pipeline can be used using Wave Banks

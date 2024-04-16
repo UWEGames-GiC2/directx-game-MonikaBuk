@@ -67,6 +67,7 @@ CMOGO::CMOGO(string _fileName, ID3D11Device* _pd3dDevice, IEffectFactory* _EF) :
 		bbVerts[8 * i + 7] = bbox.Center + XMFLOAT3(+1, +1, +1) * bbox_ext;
 	}
 
+
 	// Set up minmax floats
 	auto minmax_x = std::minmax_element(bbVerts.begin(), bbVerts.end(), [](const XMFLOAT3& a, const XMFLOAT3& b) { return a.x < b.x; });
 	auto minmax_y = std::minmax_element(bbVerts.begin(), bbVerts.end(), [](const XMFLOAT3& a, const XMFLOAT3& b) { return a.y < b.y; });

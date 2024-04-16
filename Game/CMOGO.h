@@ -27,6 +27,7 @@ public:
 
 	BoundingOrientedBox&		getCollider()		noexcept { return m_collider; }
 	const BoundingOrientedBox&	getCollider() const noexcept { return m_collider; }
+	XMFLOAT3 GetSize() { return m_size;}
 
 protected:
 	unique_ptr<Model>  m_model;
@@ -35,6 +36,7 @@ protected:
 	//needs a slightly different raster state that the VBGOs so create one and let them all use it
 	static ID3D11RasterizerState*  s_pRasterState;
 	static int m_count;
+	XMFLOAT3 m_size;
 	DirectX::ModelBone::TransformArray m_drawBones;
 	DirectX::ModelBone::TransformArray m_animBones;
 };

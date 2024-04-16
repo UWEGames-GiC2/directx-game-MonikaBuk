@@ -130,11 +130,14 @@ void Game::Initialize(HWND _window, int _width, int _height)
     m_GameObjects.push_back(pPlayer);
     m_PhysicsObjects.push_back(pPlayer);
 
-    std::shared_ptr<Enemy> test = std::make_shared<Enemy>("test", m_d3dDevice.Get(), m_fxFactory, Vector3(-30, 20, 120), 0.0f, 0.0f, 0.0f, 1.0f * Vector3::One);
+
+
+    std::shared_ptr<Enemy> test = std::make_shared<Enemy>("test", m_d3dDevice.Get(), m_fxFactory, Vector3(40, 20, 25), 0.0f, 0.0f, 0.0f, 1.0f * Vector3::One, pPlayer);
+    std::cout << std::to_string(test->GetPos().x) << ":x" << std::to_string(test->GetPos().z) << ":z\n";
     m_GameObjects.push_back(test);
     m_PhysicsObjects.push_back(test);
     m_Eniemies.push_back(test);
-    m_ColliderObjects.push_back(test);
+
 
     //rendering bad even if found the bones
     /*
@@ -650,17 +653,52 @@ void Game::CheckCollisionGroundWithPlayer()
 
 void Game::CheckCollisionEnemyBullet()
 {
-    for (int i = 0; i < m_Eniemies.size(); i++)
+    for (int i = 0; i < m_Eniemies.size(); )
     {
-        for (int j = 0; j < p_bullets.size(); j++)
+        bool enemyErased = false;
+        for (int j = 0; j < p_bullets.size() && !enemyErased; j++)
         {
-            if (p_bullets[j]->Intersects(*m_Eniemies[i]))  //std::cout << "Collision Detected!" << std::endl;
+            if (p_bullets[j]->Intersects(*m_Eniemies[i]))
             {
+                std::cout << "Collision Detected!" << std::endl;
+
                 m_Eniemies[i]->SetVisibility(false);
                 p_bullets[j]->SetVisibility(false);
-                break;
+
+         
+               RemoveEnemyFromAllContainers(m_Eniemies[i]);
+
+             
+                m_Eniemies.erase(m_Eniemies.begin() + i);
+
+           
+                enemyErased = true;
             }
         }
+        if (!enemyErased)
+        {
+            i++;
+        }
     }
-    
 }
+
+void Game::RemoveEnemyFromAllContainers(std::shared_ptr<GameObject> enemy)
+{
+
+    auto itCollider = std::find(m_ColliderObjects.begin(), m_ColliderObjects.end(), enemy);
+    if (itCollider != m_ColliderObjects.end()) {
+        m_ColliderObjects.erase(itCollider);
+    }
+
+    auto itPhysics = std::find(m_PhysicsObjects.begin(), m_PhysicsObjects.end(), enemy);
+    if (itPhysics != m_PhysicsObjects.end()) {
+        m_PhysicsObjects.erase(itPhysics);
+    }
+
+    auto itGameObjects = std::find(m_GameObjects.begin(), m_GameObjects.end(), enemy);
+    if (itGameObjects != m_GameObjects.end()) {
+        m_GameObjects.erase(itGameObjects);
+    }
+}
+
+

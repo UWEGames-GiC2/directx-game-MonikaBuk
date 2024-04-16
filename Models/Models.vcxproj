@@ -151,6 +151,7 @@
   <ItemGroup>
     <MeshContentTask Include="Bird\BirdModelV1.fbx" />
     <MeshContentTask Include="C:\Users\monik\Desktop\Test.fbx" />
+    <MeshContentTask Include="cube.fbx" />
     <MeshContentTask Include="floor.fbx" />
     <MeshContentTask Include="han.fbx" />
     <MeshContentTask Include="icant.fbx" />
