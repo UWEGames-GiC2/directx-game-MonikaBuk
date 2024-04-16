@@ -26,6 +26,7 @@
 #include "VBPillow.h"
 #include "VBSnail.h"
 #include "MarchCubes.h"
+#include "Map.h"
 
 //2D Game Objects
 #include "GameObject2D.h"

@@ -10,6 +10,9 @@
     <Text Include="terrainTex.txt">
       <Filter>VBFileModels</Filter>
     </Text>
+    <Text Include="map.txt">
+      <Filter>VBFileModels</Filter>
+    </Text>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="VBFileModels">

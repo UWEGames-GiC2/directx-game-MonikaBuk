@@ -101,7 +101,7 @@ void Game::Initialize(HWND _window, int _width, int _height)
 
 
     //MAP:
-
+    /*
     std::shared_ptr<Terrain> wall1 = std::make_shared<Terrain>("testwall", m_d3dDevice.Get(), m_fxFactory, Vector3(100, 40.0f, 75.002f), derekszog, 0.0f, 0.0f, 0.1f * Vector3::One);
     m_GameObjects.push_back(wall1);
     m_ColliderObjects.push_back(wall1);
@@ -117,16 +117,45 @@ void Game::Initialize(HWND _window, int _width, int _height)
     std::shared_ptr<Terrain> wall5 = std::make_shared<Terrain>("testwall", m_d3dDevice.Get(), m_fxFactory, Vector3(25.0f, 40.0f, -75.001f), derekszog, 0.0f, derekszog, 0.1f * Vector3::One);
     m_GameObjects.push_back(wall5);
     m_ColliderObjects.push_back(wall5);
+    */
 
-    std::shared_ptr<Terrain> floor = std::make_shared<Terrain>("floor", m_d3dDevice.Get(), m_fxFactory, Vector3(-75, 0, 150), 0.0f, 0.0f, 0.0f, 0.15f * Vector3::One);
+  
+    std::shared_ptr<Terrain> floor = std::make_shared<Terrain>("floor", m_d3dDevice.Get(), m_fxFactory, Vector3(-150, 0, 150), 0.0f, 0.0f, 0.0f, 0.15f * Vector3::One);
     floor->SetType(TerrainType::FLOOR);
     m_GameObjects.push_back(floor);
     m_ColliderObjects.push_back(floor);
-    
+
+    std::shared_ptr<Terrain> cube = std::make_shared<Terrain>("cube", m_d3dDevice.Get(), m_fxFactory, Vector3(25.0f, 40.0f, -75.001f), derekszog, 0.0f, derekszog, 1.0f * Vector3::One);
+    m_GameObjects.push_back(cube);
+    cube->SetVisibility(false);
+
+    std::shared_ptr<GameMap> map = std::make_shared<GameMap>("map", 5, 5, cube->GetSize());
+    m_GameObjects.push_back(map);
+
+    const DirectX::XMFLOAT3 basePosition = {-500.0f, -120.0f, -75.0f };
+    for (int y = 0; y < map->MAP_HEIGHT; ++y) {
+        for (int x = 0; x < map->MAP_WIDTH; ++x) {
+            // Compute the position for each cube based on its map coordinates
+            float posX = basePosition.x + x * cube->GetSize().x;
+            float posY = basePosition.y;  
+            float posZ = basePosition.z + y * cube->GetSize().x;
+
+            if (map->map[y][x] == 1) {
+                // If the map value is 1, elevate the cube
+                posY += cube->GetSize().y;  
+                std::shared_ptr<Terrain> cube = std::make_shared<Terrain>(
+                    "cube", m_d3dDevice.Get(), m_fxFactory,
+                    DirectX::XMFLOAT3(posX, posY, posZ),
+                    derekszog, 0.0f, 0.0f, 1.0f * DirectX::XMVectorSet(1.0f, 1.0f, 1.0f, 1.0f));
+                m_GameObjects.push_back(cube);
+                m_ColliderObjects.push_back(cube);
+            }
+        }
+    }
 
     //add Player
     pPlayer = std::make_shared<Player>("Test", m_d3dDevice.Get(), m_fxFactory);
-    pPlayer->SetPos(Vector3(20, 20, 20));
+    pPlayer->SetPos(Vector3(20, 80, 20));
     m_GameObjects.push_back(pPlayer);
     m_PhysicsObjects.push_back(pPlayer);
 

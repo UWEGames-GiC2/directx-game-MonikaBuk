@@ -93,6 +93,12 @@ CMOGO::CMOGO(string _fileName, ID3D11Device* _pd3dDevice, IEffectFactory* _EF) :
 
 	m_collider.Center = { centerX, centerY, centerZ };
 	m_collider.Extents = { extX, extY, extZ };
+
+	XMFLOAT3 halfExtents = m_collider.Extents;
+
+	// Double the extents to get the full size
+	m_size = XMFLOAT3(halfExtents.x * 2.0f, halfExtents.y * 2.0f, halfExtents.z * 2.0f);
+
 	DirectX::ModelBone::TransformArray m_drawBones;
 	DirectX::ModelBone::TransformArray m_animBones;
 

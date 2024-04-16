@@ -145,6 +145,7 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <Text Include="cube.txt" />
+    <Text Include="map.txt" />
     <Text Include="shell.txt" />
     <Text Include="terrainTex.txt" />
   </ItemGroup>
