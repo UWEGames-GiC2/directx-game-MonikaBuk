@@ -53,7 +53,6 @@ AnimatedObject3D::AnimatedObject3D(std::string _fileName, ID3D11Device* _pd3dDev
 		if (_wcsicmp(it.name.c_str(), L"DEF-PELVIS") == 0)
 		{
 			// Need to recenter the model.
-			std::cout << "fuck";
 			m_animBones[index] = XMMatrixIdentity();
 		}
 

@@ -34,11 +34,11 @@ void FPSCamera::Tick(GameData* _GameData)
 	if (mouse.positionMode == Mouse::MODE_RELATIVE)
 	{
 		newPitch -= (mouse.y * rotSpeed) ;
-		if (m_pitch > maxPitch)
+		if (newPitch > maxPitch)
 		{
 			newPitch = maxPitch;
 		}
-		if (m_pitch < minPitch)
+		if (newPitch < minPitch)
 		{
 			newPitch = minPitch;
 		}
@@ -46,7 +46,7 @@ void FPSCamera::Tick(GameData* _GameData)
 	newYawn = m_targetPosObject->GetYaw();
 	rotCam = Matrix::CreateFromYawPitchRoll(newYawn , newPitch - offsetY, 0.0f);
 	m_target = m_targetPosObject->GetPos();
-	m_target.y += 10;
+	m_target.y += 30;
 	Vector3 pos = m_target + Vector3::Transform(m_dpos, rotCam);
 	m_pos = pos;
 

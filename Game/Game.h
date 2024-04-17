@@ -124,6 +124,7 @@ private:
     std::vector < std::shared_ptr<CMOGO>> m_PhysicsObjects;
     std::vector < std::shared_ptr<Bullet>> p_bullets;
     std::vector < std::shared_ptr<Enemy>> m_Eniemies;
+    std::vector <std::shared_ptr<Terrain>> m_Map;
 
     std::shared_ptr <Player> pPlayer = NULL;
 
@@ -133,6 +134,8 @@ private:
     void CheckCollisionEnemyBullet();
 
     void RemoveEnemyFromAllContainers(std::shared_ptr<GameObject> gameObject);
+
+    void CheckCollisionMapWithPlayer();
                                          
     //sound stuff
 	//This uses a simple system, but a better pipeline can be used using Wave Banks

@@ -8,7 +8,7 @@ Player::Player(string _fileName, ID3D11Device* _pd3dDevice, IEffectFactory* _EF)
 {
 	//any special set up for Player goes here
 	m_fudge = Matrix::CreateRotationY(XM_PI);
-	SetDrag(4);
+	SetDrag(5);
 	SetPhysicsOn(true);
 	SetVisibility(false);
 	isGrounded = true;
@@ -23,7 +23,7 @@ Player::~Player()
 void Player::Tick(GameData* _GameData)
 {
 	//TURN AND FORWARD CONTROL HERE
-	Vector3 forwardMove = 60.0f * Vector3::Forward;
+	Vector3 forwardMove = moveSpeed * Vector3::Forward;
 	Matrix rotMove = Matrix::CreateRotationY(m_yaw);
 	forwardMove = Vector3::Transform(forwardMove, rotMove);
 	m_acc.y = (m_acc.y - gravity) * _GameData->m_DeltaTime;
@@ -62,11 +62,10 @@ void Player::Tick(GameData* _GameData)
 	m_pos += m_vel * _GameData->m_DeltaTime;
 
 	//change orinetation of player
-	Vector3 rightMove = 60.0f * Vector3::Right;
+	Vector3 rightMove = moveSpeed * Vector3::Right;
 	rightMove = Vector3::Transform(rightMove, rotMove);
 
 	float rotSpeed =  _GameData->m_DeltaTime /2 ;
-	float speed = 10.0f;
 	if (_GameData->m_KeyBoardState.A)
 	{
 		m_acc -= rightMove;
@@ -99,15 +98,6 @@ void Player::Tick(GameData* _GameData)
 		m_yaw -= delta;
 	}
 
-	//limit motion of the player
-	float length = m_pos.Length();
-	float maxLength = 500.0f;
-	if (length > maxLength)
-	{
-		m_pos.Normalize();
-		m_pos *= maxLength;
-		m_vel *= -0.9; //VERY simple bounce back
-	}
 
 	//apply my base behaviour
 	CMOGO::Tick(_GameData);

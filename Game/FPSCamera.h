@@ -21,8 +21,8 @@ public:
 
 protected:
 	std::shared_ptr<GameObject> m_targetPosObject;
-	float maxPitch = XMConvertToRadians(90);
-	float minPitch = XMConvertToRadians(0);
+	float maxPitch = XMConvertToRadians(65);
+	float minPitch = XMConvertToRadians(15);
 	POINT GetCursorPosition(POINT cursorPos);
 
 	float m_width;

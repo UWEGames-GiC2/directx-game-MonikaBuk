@@ -23,7 +23,8 @@ public:
 protected:
 	bool isGrounded;
 	float gravity = 9.8f;
-	float jumpSpeed = 50.0f;
+	float jumpSpeed = 90.0f;
+	float moveSpeed = 170.0f;
 
 };
 

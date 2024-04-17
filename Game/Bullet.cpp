@@ -40,7 +40,7 @@ void Bullet::Tick(GameData* _GameData)
 			}
 			else 
 			{
-				directon = Vector3::Forward;
+				directon = Vector3::Forward;  
 				Matrix  rot = Matrix::CreateRotationY(yawn);
 				directon = Vector3::Transform(directon, rot);
 			}

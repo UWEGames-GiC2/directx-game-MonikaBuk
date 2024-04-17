@@ -7,6 +7,14 @@
 #include <string>
 #include <DirectXMath.h> 
 
+
+struct node
+{
+    int x;
+    int y;
+    int value;
+};
+
 class GameMap : public GameObject
 {
 public:
