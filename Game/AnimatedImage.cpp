@@ -6,7 +6,7 @@
 #include "helper.h"
 #include <iostream>
 
-AnimatedImage::AnimatedImage(vector<std::string> frameFileNames, ID3D11Device* device, float frameRate, bool shoudLoop)
+AnimatedImage::AnimatedImage(const vector<std::string>& frameFileNames, ID3D11Device* device, float frameRate, bool shoudLoop)
     : ImageGO2D(frameFileNames[0], device),
     m_currentFrameIndex(0),
     m_frameRate(frameRate),

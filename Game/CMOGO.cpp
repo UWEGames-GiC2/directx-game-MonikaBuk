@@ -9,7 +9,7 @@
 #include "Helper.h"
 
 #include <iostream>
-
+#include <sstream>
 #include <DirectXCollision.h>
 
 using namespace DirectX;
@@ -18,7 +18,7 @@ ID3D11RasterizerState*  CMOGO::s_pRasterState = nullptr;
 int CMOGO::m_count = 0;
 
 using namespace DirectX;
-CMOGO::CMOGO(string _fileName, ID3D11Device* _pd3dDevice, IEffectFactory* _EF) :m_model(nullptr)
+CMOGO::CMOGO(const string& _fileName, ID3D11Device* _pd3dDevice, IEffectFactory* _EF) :m_model(nullptr)
 {
 	//if we've not created it yet do so now
 	if (!s_pRasterState)
@@ -41,9 +41,11 @@ CMOGO::CMOGO(string _fileName, ID3D11Device* _pd3dDevice, IEffectFactory* _EF) :
 		assert(hr == S_OK);
 	}
 
-	string filePath = "../Assets/" + _fileName + ".cmo";
+	stringstream ss;
+	ss << "../Assets/" << _fileName << ".cmo";
+	//string filePath = "../Assets/" + _fileName + ".cmo";
 
-	wchar_t* file = Helper::charToWChar(filePath.c_str());
+	wchar_t* file = Helper::charToWChar(ss.str().c_str());
 
 	m_model = Model::CreateFromCMO(_pd3dDevice, file, *_EF);
 

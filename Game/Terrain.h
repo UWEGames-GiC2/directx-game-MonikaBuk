@@ -18,7 +18,7 @@ enum TerrainType
 class Terrain : public CMOGO
 {
 public:
-	Terrain(string _fileName, ID3D11Device* _pd3dDevice, IEffectFactory* _EF, Vector3 _pos, float _pitch, float _yaw, float _roll, Vector3 _scale);
+	Terrain(const std::string& _fileName, ID3D11Device* _pd3dDevice, IEffectFactory* _EF, Vector3 _pos, float _pitch, float _yaw, float _roll, Vector3 _scale);
 	~Terrain();
 
 	void Tick(GameData* _GameData) override { _GameData; };

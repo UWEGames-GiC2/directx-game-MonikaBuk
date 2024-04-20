@@ -111,18 +111,19 @@ void Game::Initialize(HWND _window, int _width, int _height)
     m_GameObjects.push_back(cube);
     cube->SetVisibility(false);
 
-    std::shared_ptr<GameMap> map = std::make_shared<GameMap>("map", 9, 10, cube->GetSize());
+    std::shared_ptr<GameMap> map = std::make_shared<GameMap>("map", 7, 7, cube->GetSize());
     m_GameObjects.push_back(map);
 
     Vector3 playerSpawn;
+    vector<Vector3> enemySpawnPoses;
     float mapwidth = map->MAP_WIDTH * cube->GetSize().x;
-    const DirectX::XMFLOAT3 basePosition = {- mapwidth / 2, cube->GetSize().y /2, -mapwidth /2  };
+    map->basePosition = { - mapwidth / 2, cube->GetSize().y /2, -mapwidth /2  };
     for (int y = 0; y < map->MAP_HEIGHT; ++y) {
         for (int x = 0; x < map->MAP_WIDTH; ++x) {
-            // Compute the position for each cube based on its map coordinates
-            float posX = basePosition.x + x * cube->GetSize().x;
-            float posY = basePosition.y;
-            float posZ = basePosition.z + y * cube->GetSize().x;
+
+            float posX = map->basePosition.x + x * cube->GetSize().x;
+            float posY = map->basePosition.y;
+            float posZ = map->basePosition.z + y * cube->GetSize().x;
 
             std::shared_ptr<Terrain> cube = std::make_shared<Terrain>(
                 "cube", m_d3dDevice.Get(), m_fxFactory,
@@ -130,17 +131,12 @@ void Game::Initialize(HWND _window, int _width, int _height)
                 derekszog, 0.0f, 0.0f, 1.0f * DirectX::XMVectorSet(1.0f, 1.0f, 1.0f, 1.0f));
 
             if (map->map[y][x] == 1) {
-                // If the map value is 1, elevate the cube
-           
                 m_GameObjects.push_back(cube);
                 m_ColliderObjects.push_back(cube);
             }
             else
             {
-           
-       
                 cube->SetVisibility(false);
-                std::cout << "am i doing shit";
                 m_PhysicsObjects.push_back(cube);
             }
 
@@ -148,7 +144,12 @@ void Game::Initialize(HWND _window, int _width, int _height)
             {
                 playerSpawn = cube->GetPos();
             }
-
+            else if (map->map[y][x] == 2)
+            {
+                Vector3 newSpawnPos = cube->GetPos();
+                newSpawnPos.y -= 40;
+                enemySpawnPoses.push_back(newSpawnPos);
+            }
             m_GameObjects.push_back(cube);
             cube->xAssignedForMap = x;
             cube->yAssignedForMap = y;
@@ -156,8 +157,7 @@ void Game::Initialize(HWND _window, int _width, int _height)
 
         }
     }
-
-   // playerSpawn = Vector3(500, 100, 110);
+ 
 
     //add Player
     pPlayer = std::make_shared<Player>("Test", m_d3dDevice.Get(), m_fxFactory);
@@ -165,16 +165,26 @@ void Game::Initialize(HWND _window, int _width, int _height)
     m_GameObjects.push_back(pPlayer);
     m_PhysicsObjects.push_back(pPlayer);
 
+    for (int j = 0; j < enemySpawnPoses.size(); ++j)
+    {
+
+        std::shared_ptr<Enemy> test = std::make_shared<Enemy>("test", m_d3dDevice.Get(), m_fxFactory, enemySpawnPoses[j], 0.0f, 0.0f, 0.0f, 1.4f * Vector3::One, pPlayer, map);
+        m_GameObjects.push_back(test);
+        m_PhysicsObjects.push_back(test);
+        m_Eniemies.push_back(test);
+        for (size_t i = 0; i < 2; i++)
+        {
+            std::shared_ptr<EnemyBullets> pEnemyBullet = std::make_shared<EnemyBullets>("cube", m_d3dDevice.Get(), m_fxFactory, test);
+            pEnemyBullet->SetVisibility(false);
+            pEnemyBullet->SetScale(0.02);
+            m_GameObjects.push_back(pEnemyBullet);
+            m_PhysicsObjects.push_back(pEnemyBullet);
+            test->bullets.push_back(pEnemyBullet);
+        }
+
+    }
 
 
-    std::shared_ptr<Enemy> test = std::make_shared<Enemy>("test", m_d3dDevice.Get(), m_fxFactory, Vector3(40, 80, 25), 0.0f, 0.0f, 0.0f, 1.0f * Vector3::One, pPlayer);
-    std::cout << std::to_string(test->GetPos().x) << ":x" << std::to_string(test->GetPos().z) << ":z\n";
-    m_GameObjects.push_back(test);
-    m_PhysicsObjects.push_back(test);
-    m_Eniemies.push_back(test);
-
-
-    //rendering bad even if found the bones
    /*
     std::shared_ptr<AnimatedObject3D> asd = std::make_shared<AnimatedObject3D>("test1", m_d3dDevice.Get(), m_fxFactory);
     asd->SetPos(Vector3(20, 20, 20));
@@ -183,19 +193,19 @@ void Game::Initialize(HWND _window, int _width, int _height)
 
  
     //create a base camera
-    m_FPScam = std::make_shared <FPSCamera>(0.25f * XM_PI, AR, 1.0f, 1000.0f, pPlayer,  Vector3::UnitY, Vector3(0.0f,0.0f, 0.001f), _width, _height);
+    m_FPScam = std::make_shared <FPSCamera>(0.25f * XM_PI, AR, 1.0f, 900.0f, pPlayer,  Vector3::UnitY, Vector3(0.0f,0.0f, 0.001f), _width, _height);
     m_GameObjects.push_back(m_FPScam);
 
     //add a secondary camera
-    m_TPScam = std::make_shared <TPSCamera>(0.25f * XM_PI, AR, 1.0f, 1000.0f, pPlayer, Vector3::UnitY, Vector3(0.0f, 300.0f, 300.0f));
+    m_TPScam = std::make_shared <TPSCamera>(0.25f * XM_PI, AR, 1.0f, 1000.0f, pPlayer, Vector3::UnitY, Vector3(0.0f, 200.0f, 0.0f));
     m_GameObjects.push_back(m_TPScam);
 
     //bullets
     for (size_t i = 0; i < 20; i++)
     {
-        std::shared_ptr<Bullet> pBullet = std::make_shared<Bullet>("cat", m_d3dDevice.Get(), m_fxFactory, *m_FPScam);
+        std::shared_ptr<Bullet> pBullet = std::make_shared<Bullet>("cube", m_d3dDevice.Get(), m_fxFactory, *m_FPScam);
         pBullet->SetVisibility(false);
-        pBullet->SetScale(0.5);
+        pBullet->SetScale(0.02);
         m_GameObjects.push_back(pBullet);
         m_PhysicsObjects.push_back(pBullet);
         p_bullets.push_back(pBullet);
@@ -330,6 +340,7 @@ void Game::Update(DX::StepTimer const& _timer)
     CheckCollisionGroundWithPlayer();
     CheckCollisionEnemyBullet();
     CheckCollisionMapWithPlayer();
+    CheckCollisionMapWithEnemies();
 }
 
 // Draws the scene.
@@ -659,18 +670,44 @@ void Game::ReadInput()
     //lock the cursor to the centre of the window
     RECT window;
     GetWindowRect(m_window, &window);
-    SetCursorPos((window.left + window.right) >> 1, (window.bottom + window.top) >> 1);
+   // SetCursorPos((window.left + window.right) >> 1, (window.bottom + window.top) >> 1);
 }
 
 void Game::CheckCollision()
 {
     for (int i = 0; i < m_PhysicsObjects.size(); i++) for (int j = 0; j < m_ColliderObjects.size(); j++)
     {
-        if (m_PhysicsObjects[i]->Intersects(*m_ColliderObjects[j])) //std::cout << "Collision Detected!" << std::endl;
-        {
-            XMFLOAT3 eject_vect = Collision::ejectionCMOGO(*m_PhysicsObjects[i], *m_ColliderObjects[j]);
-            auto pos = m_PhysicsObjects[i]->GetPos();
-            m_PhysicsObjects[i]->SetPos(pos - eject_vect);
+        float distanceToTarget = (pPlayer->GetPos() - m_ColliderObjects[j]->GetPos()).Length();
+        distanceToTarget = abs(distanceToTarget);
+        if (m_ColliderObjects[j]->GetType() == TerrainType::FLOOR || distanceToTarget < 300 ) {
+            if (m_PhysicsObjects[i]->Intersects(*m_ColliderObjects[j])) //std::cout << "Collision Detected!" << std::endl;
+            {
+                XMFLOAT3 eject_vect = Collision::ejectionCMOGO(*m_PhysicsObjects[i], *m_ColliderObjects[j]);
+                auto pos = m_PhysicsObjects[i]->GetPos();
+                m_PhysicsObjects[i]->SetPos(pos - eject_vect);
+            }
+        }
+    }
+
+    for (size_t i = 0; i < m_Eniemies.size(); i++) {
+        for (size_t j = i + 1; j < m_Eniemies.size(); j++) {
+            // Safely get references to the enemies
+            auto& enemy_i = *m_Eniemies[i];
+            auto& enemy_j = *m_Eniemies[j];
+
+            // Compute the distance
+            auto diff = enemy_i.GetPos() - enemy_j.GetPos();
+            float distanceToTarget = diff.Length();
+
+            // Check distance and intersection
+            if (distanceToTarget < 300 && enemy_i.Intersects(enemy_j)) {
+                // Calculate the ejection vector
+                XMFLOAT3 eject_vect = Collision::ejectionCMOGO(enemy_i, enemy_j);
+
+                // Adjust positions
+                enemy_i.SetPos(enemy_i.GetPos() - eject_vect);
+                enemy_j.SetPos(enemy_j.GetPos() + eject_vect);
+            }
         }
     }
 }
@@ -694,7 +731,7 @@ void Game::CheckCollisionEnemyBullet()
         bool enemyErased = false;
         for (int j = 0; j < p_bullets.size() && !enemyErased; j++)
         {
-            if (p_bullets[j]->Intersects(*m_Eniemies[i]))
+            if (p_bullets[j]->IsVisible() && p_bullets[j]->Intersects(*m_Eniemies[i]))
             {
                 std::cout << "Collision Detected!" << std::endl;
 
@@ -742,10 +779,29 @@ void Game::CheckCollisionMapWithPlayer()
 {
     for (int j = 0; j < m_Map.size(); j++)
     {
-        if (pPlayer->Intersects(*m_Map[j])) //std::cout << "Collision witg map Detected!" << std::endl;
-        {   
-            std::cout << m_Map[j]->xAssignedForMap;
-            std::cout << m_Map[j]->yAssignedForMap << "\n";
+     {
+            if (pPlayer->Intersects(*m_Map[j])) 
+            {
+                pPlayer->tilePos.x = m_Map[j]->xAssignedForMap;
+                pPlayer->tilePos.y = m_Map[j]->yAssignedForMap;
+            }
+        }
+    }
+}
+
+void Game::CheckCollisionMapWithEnemies()
+{
+    for (int i = 0; i < m_Eniemies.size(); ++i)
+    {
+        for (int j = 0; j < m_Map.size(); ++j)
+        {
+            if (m_Eniemies[i]->Intersects(*m_Map[j]))
+            {
+                // Update the tile position of the current enemy
+                m_Eniemies[i]->tilePos.x = m_Map[j]->xAssignedForMap;
+                m_Eniemies[i]->tilePos.y = m_Map[j]->yAssignedForMap;
+                break;
+            }
         }
     }
 }

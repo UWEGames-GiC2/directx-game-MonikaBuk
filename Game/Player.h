@@ -11,20 +11,20 @@ class Player : public CMOGO
 {
 
 public:
-	Player(string _fileName, ID3D11Device* _pd3dDevice, IEffectFactory* _EF);
+	Player(const std::string& _fileName, ID3D11Device* _pd3dDevice, IEffectFactory* _EF);
 	~Player();
 
 	virtual void Tick(GameData* _GameData) override;
 	std::vector<std::shared_ptr<Bullet>> bullets;
 	bool GetIsGrounded(){ return isGrounded; }
 	void SetIsGrounded(bool grounded) { isGrounded = grounded; };
-
+	Vector2 tilePos;
 
 protected:
 	bool isGrounded;
 	float gravity = 9.8f;
-	float jumpSpeed = 90.0f;
-	float moveSpeed = 170.0f;
+	float jumpSpeed = 200.0f;
+	float moveSpeed = 10000;
 
 };
 

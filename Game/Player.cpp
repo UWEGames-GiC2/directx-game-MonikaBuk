@@ -3,12 +3,13 @@
 #include <dinput.h>
 #include "GameData.h"
 #include <iostream>
+#include "Model.h"
 
-Player::Player(string _fileName, ID3D11Device* _pd3dDevice, IEffectFactory* _EF) : CMOGO(_fileName, _pd3dDevice, _EF)
+Player::Player(const std::string& _fileName, ID3D11Device* _pd3dDevice, IEffectFactory* _EF) : CMOGO(_fileName, _pd3dDevice, _EF)
 {
 	//any special set up for Player goes here
 	m_fudge = Matrix::CreateRotationY(XM_PI);
-	SetDrag(5);
+	SetDrag(2);
 	SetPhysicsOn(true);
 	SetVisibility(false);
 	isGrounded = true;
@@ -26,22 +27,23 @@ void Player::Tick(GameData* _GameData)
 	Vector3 forwardMove = moveSpeed * Vector3::Forward;
 	Matrix rotMove = Matrix::CreateRotationY(m_yaw);
 	forwardMove = Vector3::Transform(forwardMove, rotMove);
-	m_acc.y = (m_acc.y - gravity) * _GameData->m_DeltaTime;
+	float dt = _GameData->m_DeltaTime;
+	m_acc.y = (m_acc.y - gravity) * dt;
 	if (_GameData->m_KeyBoardState.Space && isGrounded)
 	{
 		m_vel.y += jumpSpeed;
 		isGrounded = false;
 	}
 	if (m_vel.y < 0) {
-		m_acc.y -= gravity * 200.0f * _GameData->m_DeltaTime;
+		m_acc.y -= gravity * 1000.0f * _GameData->m_DeltaTime;
 	}
 	if (_GameData->m_KeyBoardState.W)
 	{
-		m_acc += forwardMove;
+		m_acc += forwardMove * dt;
 	}
 	if (_GameData->m_KeyBoardState.S)
 	{
-		m_acc -= forwardMove;
+		m_acc -= forwardMove * dt;
 	}
 	if (_GameData->gameStateChanged)
 	{
@@ -65,17 +67,15 @@ void Player::Tick(GameData* _GameData)
 	Vector3 rightMove = moveSpeed * Vector3::Right;
 	rightMove = Vector3::Transform(rightMove, rotMove);
 
-	float rotSpeed =  _GameData->m_DeltaTime /2 ;
+
 	if (_GameData->m_KeyBoardState.A)
 	{
-		m_acc -= rightMove;
+		m_acc -= rightMove * dt;
 	}
 	if (_GameData->m_KeyBoardState.D)
 	{
-		m_acc += rightMove;
+		m_acc += rightMove *dt;
 	}
-	auto mouse = _GameData->m_Mouse;
-	
 
 	if (_GameData->m_Mouse_tracker.leftButton == _GameData->m_Mouse_tracker.PRESSED)
 	{
@@ -90,12 +90,12 @@ void Player::Tick(GameData* _GameData)
 		}
 	}
 
-	// Check if mouse input is relative for rotation
+	float rotSpeed = _GameData->m_DeltaTime;
+	auto mouse = _GameData->m_Mouse;
 	if (mouse.positionMode == Mouse::MODE_RELATIVE)
 	{
-		float delta = mouse.x
-			* rotSpeed;
-		m_yaw -= delta;
+		m_yaw -= (mouse.x * rotSpeed);
+		
 	}
 
 

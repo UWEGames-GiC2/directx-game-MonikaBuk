@@ -17,7 +17,7 @@ struct GameData;
 class CMOGO : public GameObject
 {
 public:
-	CMOGO(string _fileName, ID3D11Device* _pd3dDevice, IEffectFactory* _EF);
+	CMOGO(const string& _fileName, ID3D11Device* _pd3dDevice, IEffectFactory* _EF);
 	virtual ~CMOGO();
 
 	virtual void Tick(GameData* _GameData) override;

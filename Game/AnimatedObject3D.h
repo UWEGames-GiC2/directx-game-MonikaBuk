@@ -8,7 +8,7 @@
 class AnimatedObject3D: public GameObject
 {
 public:
-	AnimatedObject3D(std::string _fileName, ID3D11Device* _pd3dDevice, IEffectFactory* _EF);
+	AnimatedObject3D(const std::string& _fileName, ID3D11Device* _pd3dDevice, IEffectFactory* _EF);
 	virtual ~AnimatedObject3D();
 
 	virtual void Tick(GameData* _GameData) override;

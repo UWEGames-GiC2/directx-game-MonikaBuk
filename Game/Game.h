@@ -17,7 +17,8 @@
 #include "Terrain.h"
 #include "AnimatedObject3D.h"
 #include "Enemy.h"
-#include "Map.h"
+#include "GameMap.h"
+#include "EnemyBullets.h"
 
 using std::list;
 
@@ -136,6 +137,8 @@ private:
     void RemoveEnemyFromAllContainers(std::shared_ptr<GameObject> gameObject);
 
     void CheckCollisionMapWithPlayer();
+
+    void CheckCollisionMapWithEnemies();
                                          
     //sound stuff
 	//This uses a simple system, but a better pipeline can be used using Wave Banks

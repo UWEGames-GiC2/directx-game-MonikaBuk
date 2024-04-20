@@ -5,7 +5,7 @@
 #include <string>
 #include <sstream>
 
-Bullet::Bullet(string _fileName, ID3D11Device* _pd3dDevice, IEffectFactory* _EF, FPSCamera& camera) : CMOGO(_fileName, _pd3dDevice, _EF)
+Bullet::Bullet(const std::string& _fileName, ID3D11Device* _pd3dDevice, IEffectFactory* _EF, FPSCamera& camera) : CMOGO(_fileName, _pd3dDevice, _EF)
 {
 	m_fudge = Matrix::CreateRotationY(XM_PI);
 	m_camera = &camera;
@@ -14,6 +14,8 @@ Bullet::Bullet(string _fileName, ID3D11Device* _pd3dDevice, IEffectFactory* _EF,
 	SetDrag(0);
 	SetPhysicsOn(false);
 	SetVisibility(false);
+	static int asd = 0;
+	std::cout << asd;
 	
 
 }

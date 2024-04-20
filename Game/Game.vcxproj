@@ -172,6 +172,7 @@
     <ClInclude Include="DrawData.h" />
     <ClInclude Include="DrawData2D.h" />
     <ClInclude Include="Enemy.h" />
+    <ClInclude Include="EnemyBullets.h" />
     <ClInclude Include="fileVBGO.h" />
     <ClInclude Include="FPSCamera.h" />
     <ClInclude Include="framework.h" />
@@ -185,7 +186,7 @@
     <ClInclude Include="ImageGO2D.h" />
     <ClInclude Include="Light.h" />
     <ClInclude Include="Loop.h" />
-    <ClInclude Include="Map.h" />
+    <ClInclude Include="GameMap.h" />
     <ClInclude Include="MarchCubes.h" />
     <ClInclude Include="ObjectList.h" />
     <ClInclude Include="Pathfinding.h" />
@@ -214,6 +215,7 @@
     <ClCompile Include="camera.cpp" />
     <ClCompile Include="CMOGO.cpp" />
     <ClCompile Include="Enemy.cpp" />
+    <ClCompile Include="EnemyBullets.cpp" />
     <ClCompile Include="fileVBGO.cpp" />
     <ClCompile Include="FPSCamera.cpp" />
     <ClCompile Include="Game.cpp" />
@@ -223,7 +225,7 @@
     <ClCompile Include="ImageGO2D.cpp" />
     <ClCompile Include="light.cpp" />
     <ClCompile Include="Loop.cpp" />
-    <ClCompile Include="Map.cpp" />
+    <ClCompile Include="GameMap.cpp" />
     <ClCompile Include="MarchCubes.cpp" />
     <ClCompile Include="Pathfinding.cpp" />
     <ClCompile Include="pch.cpp">

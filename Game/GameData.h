@@ -9,6 +9,7 @@
 #include "Keyboard.h"
 #include "Mouse.h"
 
+
 using namespace DirectX;
 
 struct GameData
@@ -22,6 +23,9 @@ struct GameData
 	Mouse::State m_Mouse;
 	Mouse::ButtonStateTracker m_Mouse_tracker;
 	Keyboard::KeyboardStateTracker m_KeyBoardState_tracker;
+
+	//map
+
 
 
 };

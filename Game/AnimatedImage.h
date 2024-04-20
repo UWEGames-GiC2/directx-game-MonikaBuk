@@ -13,7 +13,7 @@ private:
     float m_frameRate;
     float m_frameTimer;
 public:
-    AnimatedImage(std::vector<std::string> frameFileNames, ID3D11Device* device, float frameRate, bool shouldLoop);
+    AnimatedImage(const vector<std::string>& frameFileNames, ID3D11Device* device, float frameRate, bool shouldLoop);
     ~AnimatedImage();
     virtual void Tick(GameData* _GameData)override;
     virtual void Draw(DrawData2D* _DrawData)override;

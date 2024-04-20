@@ -1,10 +1,13 @@
 #include "pch.h"
 #include "Enemy.h"
 #include <iostream>
+#include "GameData.h"
 
 
 
-Enemy::Enemy(string _fileName, ID3D11Device* _pd3dDevice, IEffectFactory* _EF, Vector3 _pos, float _pitch, float _yaw, float _roll, Vector3 _scale, std::shared_ptr<Player> _target) : CMOGO(_fileName, _pd3dDevice, _EF)
+
+Enemy::Enemy(const std::string& _fileName, ID3D11Device* _pd3dDevice, IEffectFactory* _EF, Vector3 _pos, float _pitch, float _yaw, float _roll, Vector3 _scale, std::shared_ptr<Player> _target, std::shared_ptr<GameMap> _map)
+    : CMOGO(_fileName, _pd3dDevice, _EF)
 {
 	m_pos = _pos;
 	m_pitch = _pitch;
@@ -12,7 +15,10 @@ Enemy::Enemy(string _fileName, ID3D11Device* _pd3dDevice, IEffectFactory* _EF, V
 	m_yaw = _yaw;
 	m_scale = _scale;
 	target = _target;
+    m_map = _map;
 	SetVisibility(true);
+    prevousGoal = Vector2(1,1);
+    speed = 50.0f;
 	
 }
 
@@ -22,26 +28,77 @@ Enemy::~Enemy()
 
 void Enemy::Tick(GameData* _GameData)
 {
-    MoveTo(target->GetPos());
+    distanceToTarget = (target->GetPos() - m_pos).Length();
+
+    if (reloadTime < 10)
+    {
+        reloadTime += _GameData->m_DeltaTime;
+    }
+
+    if (distanceToTarget < 200)
+    {
+        if (reloadTime = 10)
+        {
+            for (size_t i = 0; i < bullets.size(); i++)
+            {
+                if (!bullets[i]->IsShot())
+                {
+                    bullets[i]->Fire();
+                    std::cout << bullets[i]->GetPos().x;
+                    break;
+                }
+            }
+            reloadTime = 0;
+        }
+    }
+    if (distanceToTarget < 400)
+    {
+        MoveTo(target->GetPos(), _GameData);
+    }
+    else if(distanceToTarget < 900)
+    {
+        MoveAlongPath(target->GetPos(), _GameData);
+    }
     // Call the base class Tick function
     CMOGO::Tick(_GameData);
 }
 
 
-void Enemy::MoveTo(Vector3 targetPos)
+void Enemy::MoveTo(Vector3 targetPos, GameData* _GameData)
 {
-   Vector3 direction = targetPos - m_pos;
+    Vector3 direction = targetPos - m_pos;
     direction.Normalize();
 
     m_yaw = atan2f(direction.x, direction.z);
     m_pitch = 0.0f;
-    m_roll = 0.0f; 
-    float speed = 0.1f; 
-    float minDistance = 20.0f; 
-    float distanceToTarget = (targetPos - m_pos).Length();
+    m_roll = 0.0f;
+   
+    float minDistance = 50.0f;
     if (distanceToTarget > minDistance)
     {
-        m_pos += direction * speed;
+        m_pos += direction * speed * _GameData->m_DeltaTime;
     }
+ 
 }
+void Enemy::MoveAlongPath(Vector3 targetPos, GameData* _GameData)
+{
+    Vector2 startTile = tilePos;
+    Vector2 goalTile = target->tilePos;
 
+    if (prevousGoal != goalTile)
+    {
+        prevousGoal = goalTile;
+
+        std::vector<Vector2> path = m_map->FindPath(startTile, goalTile);
+        if (!path.empty())
+        {
+            if (path.size() > 1) {
+                path.erase(path.begin());
+                nextTile = path.front();
+                nextPos = m_map->TileToWorld(nextTile);
+
+            }
+        }
+    }
+    MoveTo(Vector3(nextPos.x, 50, nextPos.y), _GameData);
+}

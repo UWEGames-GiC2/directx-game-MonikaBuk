@@ -16,14 +16,16 @@ TPSCamera::~TPSCamera()
 
 void TPSCamera::Tick(GameData* _GameData)
 {
-	//Set up position of camera and target position of camera based on new position and orientation of target object
 
-	m_pos = m_targetObject->GetPos() + m_dpos;
-	Matrix rotCam = Matrix::CreateLookAt(m_pos, m_targetObject->GetPos(), Vector3::Up);
-	m_viewMat = rotCam;
+	auto newYawn = m_targetObject->GetYaw();
+	
+	auto rotCam = Matrix::CreateFromYawPitchRoll(newYawn, 0, 0.0f);
+	m_target = m_targetObject->GetPos();
+	m_target.y += 30;
+	Vector3 pos = m_target + Vector3::Transform(m_dpos, rotCam);
+	m_pos = pos;
 
 
-	//and then set up proj and view matrices
+
 	Camera::Tick(_GameData);
 }
-

@@ -8,7 +8,7 @@
 #include "DrawData.h"
 #include "Helper.h"
 #include "GameData.h"
-
+#include "sstream"
 #include <iostream>
 
 #include <DirectXCollision.h>
@@ -20,7 +20,7 @@
 ID3D11RasterizerState* AnimatedObject3D::s_pRasterState = nullptr;
 int AnimatedObject3D::m_count = 0;
 
-AnimatedObject3D::AnimatedObject3D(std::string _fileName, ID3D11Device* _pd3dDevice, IEffectFactory* _EF)
+AnimatedObject3D::AnimatedObject3D(const std::string& _fileName, ID3D11Device* _pd3dDevice, IEffectFactory* _EF)
 {
 
 

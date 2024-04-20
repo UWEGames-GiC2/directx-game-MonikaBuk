@@ -35,6 +35,7 @@
     <MeshContentTask Include="icant.fbx" />
     <MeshContentTask Include="test1.fbx" />
     <MeshContentTask Include="cube.fbx" />
+    <MeshContentTask Include="Clone_Walker.FBX" />
   </ItemGroup>
   <ItemGroup>
     <None Include="tank.sdkmesh" />
