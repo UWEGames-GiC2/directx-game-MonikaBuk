@@ -19,6 +19,7 @@
 #include "Enemy.h"
 #include "GameMap.h"
 #include "EnemyBullets.h"
+#include "HealthBar.h"
 
 using std::list;
 
@@ -124,6 +125,7 @@ private:
     std::vector <std::shared_ptr<Terrain>> m_ColliderObjects;
     std::vector < std::shared_ptr<CMOGO>> m_PhysicsObjects;
     std::vector < std::shared_ptr<Bullet>> p_bullets;
+    std::vector < std::shared_ptr<EnemyBullets>> p_Ebullets;
     std::vector < std::shared_ptr<Enemy>> m_Eniemies;
     std::vector <std::shared_ptr<Terrain>> m_Map;
 
@@ -139,6 +141,8 @@ private:
     void CheckCollisionMapWithPlayer();
 
     void CheckCollisionMapWithEnemies();
+
+    void CheckCollisionBulletWithPlayer();
                                          
     //sound stuff
 	//This uses a simple system, but a better pipeline can be used using Wave Banks

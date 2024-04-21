@@ -182,6 +182,7 @@
     <ClInclude Include="GameObject2D.h" />
     <ClInclude Include="GameState.h" />
     <ClInclude Include="GPGO.h" />
+    <ClInclude Include="HealthBar.h" />
     <ClInclude Include="Helper.h" />
     <ClInclude Include="ImageGO2D.h" />
     <ClInclude Include="Light.h" />
@@ -222,6 +223,7 @@
     <ClCompile Include="gameobject.cpp" />
     <ClCompile Include="GameObject2D.cpp" />
     <ClCompile Include="GPGO.cpp" />
+    <ClCompile Include="HealthBar.cpp" />
     <ClCompile Include="ImageGO2D.cpp" />
     <ClCompile Include="light.cpp" />
     <ClCompile Include="Loop.cpp" />

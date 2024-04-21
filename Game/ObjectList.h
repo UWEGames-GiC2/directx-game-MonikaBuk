@@ -19,6 +19,7 @@
 #include "EnemyBullets.h"
 #include "AnimatedObject3D.h"
 #include "Enemy.h"
+#include "HealthBar.h"
 //VBGO examples
 #include "fileVBGO.h"
 #include "VBCube.h"

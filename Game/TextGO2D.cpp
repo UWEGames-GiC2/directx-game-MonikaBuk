@@ -3,7 +3,7 @@
 #include "DrawData2D.h"
 #include "helper.h"
 
-TextGO2D::TextGO2D(string _text)
+TextGO2D::TextGO2D(const string& _text)
 {
 	m_text = _text;
 }

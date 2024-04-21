@@ -84,7 +84,6 @@ void Player::Tick(GameData* _GameData)
 			if (!bullets[i]->IsShot())
 			{
 				bullets[i]->Fire();
-				std::cout << bullets[i]->GetPos().x;
 				break;
 			}
 		}
@@ -95,11 +94,15 @@ void Player::Tick(GameData* _GameData)
 	if (mouse.positionMode == Mouse::MODE_RELATIVE)
 	{
 		m_yaw -= (mouse.x * rotSpeed);
-		
 	}
-
 
 	//apply my base behaviour
 	CMOGO::Tick(_GameData);
+}
+
+void Player::TakeDamage(int damage)
+{
+	health -= damage;
+	healthChanged = true;
 }
 

@@ -19,12 +19,18 @@ public:
 	bool GetIsGrounded(){ return isGrounded; }
 	void SetIsGrounded(bool grounded) { isGrounded = grounded; };
 	Vector2 tilePos;
+	int GetHealth() { return health;}
+	void TakeDamage(int damage);
+	bool IsHealthChanged() { return healthChanged;}
+	void SetHealthChanged(bool changed) { healthChanged = changed;}
 
 protected:
 	bool isGrounded;
 	float gravity = 9.8f;
 	float jumpSpeed = 200.0f;
 	float moveSpeed = 10000;
+	int health = 100;
+	bool healthChanged = false;
 
 };
 

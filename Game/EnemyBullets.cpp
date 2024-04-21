@@ -35,6 +35,7 @@ void EnemyBullets::Tick(GameData* _GameData)
 				Matrix  rot = Matrix::CreateRotationY(yawn);
 				directon =  - Vector3::Forward;
 				directon = Vector3::Transform(directon, rot);
+				SetVisibility(true);
 
 
 				SetDrag(0.01f);
@@ -47,14 +48,8 @@ void EnemyBullets::Tick(GameData* _GameData)
 			}
 			firedNow = false;
 		}
-
 		m_lifeTime -= _GameData->m_DeltaTime;
-
-		if (m_lifeTime <= 8.95f && !IsVisible())
-		{
-			SetVisibility(true);
-		}
-		if (m_lifeTime < 0.0f)
+		if (m_lifeTime < 0.0f || !m_isShot)
 		{
 			m_isShot = false;
 			m_lifeTime = 0;
@@ -72,4 +67,9 @@ void EnemyBullets::Fire()
 {
 	firedNow = true;
 	m_isShot = true;
+}
+
+void EnemyBullets::Stop()
+{
+	m_isShot = false;
 }

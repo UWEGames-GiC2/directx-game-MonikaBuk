@@ -168,19 +168,22 @@
     <ClInclude Include="Bullet.h">
       <Filter>GameObjects\3D\Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="Enemy.h">
-      <Filter>Base\Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="AnimatedObject3D.h">
-      <Filter>GameObjects\3D</Filter>
+      <Filter>GameObjects\3D\Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="GameMap.h">
-      <Filter>Base\Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Pathfinding.h">
-      <Filter>Base\Header Files</Filter>
+    <ClInclude Include="Enemy.h">
+      <Filter>GameObjects\3D\Header Files</Filter>
     </ClInclude>
     <ClInclude Include="EnemyBullets.h">
+      <Filter>GameObjects\3D\Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="GameMap.h">
+      <Filter>GameObjects\3D\Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Pathfinding.h">
+      <Filter>GameObjects\3D\Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="HealthBar.h">
       <Filter>Base\Header Files</Filter>
     </ClInclude>
   </ItemGroup>
@@ -266,9 +269,6 @@
     <ClCompile Include="Bullet.cpp">
       <Filter>GameObjects\3D\Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="Enemy.cpp">
-      <Filter>Base\Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="AnimatedObject3D.cpp">
       <Filter>GameObjects\3D\Source Files</Filter>
     </ClCompile>
@@ -278,7 +278,13 @@
     <ClCompile Include="Pathfinding.cpp">
       <Filter>Base\Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="Enemy.cpp">
+      <Filter>GameObjects\3D\Source Files</Filter>
+    </ClCompile>
     <ClCompile Include="EnemyBullets.cpp">
+      <Filter>GameObjects\3D\Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="HealthBar.cpp">
       <Filter>Base\Source Files</Filter>
     </ClCompile>
   </ItemGroup>

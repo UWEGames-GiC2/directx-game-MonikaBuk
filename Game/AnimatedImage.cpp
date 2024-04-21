@@ -5,6 +5,7 @@
 #include "GameData.h"
 #include "helper.h"
 #include <iostream>
+#include <sstream>
 
 AnimatedImage::AnimatedImage(const vector<std::string>& frameFileNames, ID3D11Device* device, float frameRate, bool shoudLoop)
     : ImageGO2D(frameFileNames[0], device),
@@ -14,9 +15,10 @@ AnimatedImage::AnimatedImage(const vector<std::string>& frameFileNames, ID3D11De
 {
         isLooping = shoudLoop;
     for (const std::string& fileName : frameFileNames) {
-        string fullfilename = "../Assets/" + fileName + ".dds";
+        stringstream fullfilename;
+        fullfilename << "../Assets/" << fileName << ".dds";
         ID3D11ShaderResourceView* srv;
-        HRESULT hr = CreateDDSTextureFromFile(device, Helper::charToWChar(fullfilename.c_str()), nullptr, &srv);
+        HRESULT hr = CreateDDSTextureFromFile(device, Helper::charToWChar(fullfilename.str().c_str()), nullptr, &srv);
         if (hr != S_OK) {
             // Handle error loading texture
             std::cerr << "Failed to load texture: " << fileName << std::endl;

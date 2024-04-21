@@ -5,11 +5,13 @@
 #include "GameData.h"
 #include "helper.h"
 #include <iostream>
+#include <sstream>
 
-ImageGO2D::ImageGO2D(string _fileName, ID3D11Device* _GameData) :m_pTextureRV(nullptr)
+ImageGO2D::ImageGO2D(const string& _fileName, ID3D11Device* _GameData) :m_pTextureRV(nullptr)
 {
-	string fullfilename = "../Assets/" + _fileName + ".dds";
-	HRESULT hr = CreateDDSTextureFromFile(_GameData, Helper::charToWChar(fullfilename.c_str()), nullptr, &m_pTextureRV);
+	stringstream fullfilename;
+	fullfilename << "../Assets/" << _fileName << ".dds";
+	HRESULT hr = CreateDDSTextureFromFile(_GameData, Helper::charToWChar(fullfilename.str().c_str()), nullptr, &m_pTextureRV);
 	if (hr != S_OK)
 	{
 		CreateDDSTextureFromFile(_GameData, L"../Assets/white.dds", nullptr, &m_pTextureRV);

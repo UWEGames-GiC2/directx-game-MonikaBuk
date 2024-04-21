@@ -12,7 +12,7 @@
 class ImageGO2D :public GameObject2D
 {
 public:
-	ImageGO2D(string _fileName, ID3D11Device* _GameData);
+	ImageGO2D(const string& _fileName, ID3D11Device* _GameData);
 	virtual ~ImageGO2D();
 
 

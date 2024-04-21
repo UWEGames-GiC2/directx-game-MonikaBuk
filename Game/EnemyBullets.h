@@ -13,7 +13,7 @@ public:
 	virtual void Tick(GameData* _GameData) override;
 	bool IsShot() { return m_isShot; };
 	void Fire();
-
+	void Stop();
 
 protected:
 	bool m_isShot = false;

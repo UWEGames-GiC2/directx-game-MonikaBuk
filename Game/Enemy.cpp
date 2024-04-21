@@ -30,21 +30,20 @@ void Enemy::Tick(GameData* _GameData)
 {
     distanceToTarget = (target->GetPos() - m_pos).Length();
 
-    if (reloadTime < 10)
+    if (reloadTime <= 5.0f)
     {
         reloadTime += _GameData->m_DeltaTime;
     }
 
-    if (distanceToTarget < 200)
+    if (distanceToTarget < 200.0f)
     {
-        if (reloadTime = 10)
+        if (reloadTime >= 5.0f)
         {
             for (size_t i = 0; i < bullets.size(); i++)
             {
                 if (!bullets[i]->IsShot())
                 {
                     bullets[i]->Fire();
-                    std::cout << bullets[i]->GetPos().x;
                     break;
                 }
             }
@@ -55,7 +54,7 @@ void Enemy::Tick(GameData* _GameData)
     {
         MoveTo(target->GetPos(), _GameData);
     }
-    else if(distanceToTarget < 900)
+    else if(distanceToTarget < 600)
     {
         MoveAlongPath(target->GetPos(), _GameData);
     }
@@ -67,16 +66,21 @@ void Enemy::Tick(GameData* _GameData)
 void Enemy::MoveTo(Vector3 targetPos, GameData* _GameData)
 {
     Vector3 direction = targetPos - m_pos;
-    direction.Normalize();
+    Vector3 diff = previousDirection - direction;
+    float diffLength = diff.Length();
+    if (diffLength > 0.1) {
+        direction.Normalize();
 
-    m_yaw = atan2f(direction.x, direction.z);
-    m_pitch = 0.0f;
-    m_roll = 0.0f;
-   
-    float minDistance = 50.0f;
-    if (distanceToTarget > minDistance)
-    {
-        m_pos += direction * speed * _GameData->m_DeltaTime;
+        m_yaw = atan2f(direction.x, direction.z);
+        m_pitch = 0.0f;
+        m_roll = 0.0f;
+
+        float minDistance = 50.0f;
+        if (distanceToTarget > minDistance)
+        {
+            m_pos += direction * speed * _GameData->m_DeltaTime;
+        }
+        previousDirection = direction;
     }
  
 }

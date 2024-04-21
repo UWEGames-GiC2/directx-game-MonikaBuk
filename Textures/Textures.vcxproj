@@ -171,6 +171,8 @@
     <ImageContentTask Include="pistol4.png" />
     <ImageContentTask Include="croshair.png" />
     <ImageContentTask Include="LegoUV2.png" />
+    <ImageContentTask Include="green_button00.png" />
+    <ImageContentTask Include="grey_button00.png" />
     <Image Include="pistol5.png" />
     <ImageContentTask Include="floor_tiles_06_ambient_occlusion_1k.png" />
     <ImageContentTask Include="floor_tiles_06_basecolor_1k.png" />

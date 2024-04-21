@@ -10,7 +10,7 @@
 class TextGO2D :public GameObject2D
 {
 public:
-	TextGO2D(string _text);
+	TextGO2D(const string& _text);
 
 	virtual void Tick(GameData* _GameData);
 	virtual void Draw(DrawData2D* _DrawData);

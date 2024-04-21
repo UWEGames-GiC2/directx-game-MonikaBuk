@@ -24,7 +24,7 @@ namespace std {
 GameMap::GameMap(const std::string& _mapfileName, int width, int height, const XMFLOAT3& _tileSize) : MAP_WIDTH(width), MAP_HEIGHT(height), map(height, std::vector<int>(width))
     
 {
-
+    basePosition = Vector3::Zero;
     std::stringstream useFileName;
     useFileName << "../Models/" << _mapfileName << ".txt";
 
@@ -58,16 +58,6 @@ GameMap::GameMap(const std::string& _mapfileName, int width, int height, const X
     }
 
     file.close();
-
-    for (int y = 0; y < MAP_HEIGHT; ++y)
-    {
-      
-
-        for (int x = 0; x < MAP_WIDTH; ++x)
-        {
-            std::cout << map[y][x];
-        }
-    }
     tileSize = Vector2(_tileSize.x, _tileSize.y);
 
     GameObject::Tick(nullptr);

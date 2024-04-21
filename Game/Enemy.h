@@ -30,6 +30,7 @@ protected:
 	float distanceToTarget;
 	float speed;
 	float reloadTime = 10;
+	Vector3 previousDirection;
 	
 };
 

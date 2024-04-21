@@ -154,20 +154,24 @@ void Game::Initialize(HWND _window, int _width, int _height)
             cube->xAssignedForMap = x;
             cube->yAssignedForMap = y;
             m_Map.push_back(cube);
-
         }
     }
  
-
     //add Player
     pPlayer = std::make_shared<Player>("Test", m_d3dDevice.Get(), m_fxFactory);
     pPlayer->SetPos(playerSpawn);
     m_GameObjects.push_back(pPlayer);
     m_PhysicsObjects.push_back(pPlayer);
 
+
+    std::shared_ptr<HealthBar> pHealthbard = std::make_shared<HealthBar>("green_button00", "grey_button00", m_d3dDevice.Get(), pPlayer);
+    for (const auto& image : pHealthbard->images)
+    {
+        m_GameObjects2D.push_back(image);
+    }
+    m_GameObjects2D.push_back(pHealthbard);
     for (int j = 0; j < enemySpawnPoses.size(); ++j)
     {
-
         std::shared_ptr<Enemy> test = std::make_shared<Enemy>("test", m_d3dDevice.Get(), m_fxFactory, enemySpawnPoses[j], 0.0f, 0.0f, 0.0f, 1.4f * Vector3::One, pPlayer, map);
         m_GameObjects.push_back(test);
         m_PhysicsObjects.push_back(test);
@@ -180,10 +184,9 @@ void Game::Initialize(HWND _window, int _width, int _height)
             m_GameObjects.push_back(pEnemyBullet);
             m_PhysicsObjects.push_back(pEnemyBullet);
             test->bullets.push_back(pEnemyBullet);
+            p_Ebullets.push_back(pEnemyBullet);
         }
-
     }
-
 
    /*
     std::shared_ptr<AnimatedObject3D> asd = std::make_shared<AnimatedObject3D>("test1", m_d3dDevice.Get(), m_fxFactory);
@@ -201,7 +204,7 @@ void Game::Initialize(HWND _window, int _width, int _height)
     m_GameObjects.push_back(m_TPScam);
 
     //bullets
-    for (size_t i = 0; i < 20; i++)
+    for (size_t i = 0; i < 10; i++)
     {
         std::shared_ptr<Bullet> pBullet = std::make_shared<Bullet>("cube", m_d3dDevice.Get(), m_fxFactory, *m_FPScam);
         pBullet->SetVisibility(false);
@@ -211,6 +214,9 @@ void Game::Initialize(HWND _window, int _width, int _height)
         p_bullets.push_back(pBullet);
     }
     pPlayer->bullets = p_bullets;
+
+
+
 
 
     //create DrawData struct and populate its pointers
@@ -303,18 +309,15 @@ void Game::Update(DX::StepTimer const& _timer)
         if (m_GameData->m_GameState == GS_PLAY_FPS_CAM)
         {
             m_GameData->m_GameState = GS_PLAY_TPS_CAM;
-            m_GameData->gameStateChanged = true;
-           
+            m_GameData->gameStateChanged = true;   
         }
         else
         {
             m_GameData->m_GameState = GS_PLAY_FPS_CAM;
             m_GameData->gameStateChanged = true;
-        }
-        
+        } 
     }
  
-
     //update all objects
   
     for (std::vector<std::shared_ptr<GameObject>>::iterator it = m_GameObjects.begin(); it != m_GameObjects.end(); it++)
@@ -334,13 +337,12 @@ void Game::Update(DX::StepTimer const& _timer)
             (*it)->Tick(m_GameData.get());
         }
     }
-
-
     CheckCollision();
     CheckCollisionGroundWithPlayer();
     CheckCollisionEnemyBullet();
     CheckCollisionMapWithPlayer();
     CheckCollisionMapWithEnemies();
+    CheckCollisionBulletWithPlayer();
 }
 
 // Draws the scene.
@@ -733,18 +735,12 @@ void Game::CheckCollisionEnemyBullet()
         {
             if (p_bullets[j]->IsVisible() && p_bullets[j]->Intersects(*m_Eniemies[i]))
             {
-                std::cout << "Collision Detected!" << std::endl;
 
                 m_Eniemies[i]->SetVisibility(false);
-                p_bullets[j]->SetVisibility(false);
-
-         
+                p_bullets[j]->Stop();
+                pPlayer->bullets[j]->Stop();
                RemoveEnemyFromAllContainers(m_Eniemies[i]);
-
-             
                 m_Eniemies.erase(m_Eniemies.begin() + i);
-
-           
                 enemyErased = true;
             }
         }
@@ -800,6 +796,22 @@ void Game::CheckCollisionMapWithEnemies()
                 // Update the tile position of the current enemy
                 m_Eniemies[i]->tilePos.x = m_Map[j]->xAssignedForMap;
                 m_Eniemies[i]->tilePos.y = m_Map[j]->yAssignedForMap;
+                break;
+            }
+        }
+    }
+}
+void Game::CheckCollisionBulletWithPlayer()
+{
+    for (int j = 0; j < p_Ebullets.size(); j++)
+    {
+        if (p_Ebullets[j]->IsVisible())
+        {
+            if(pPlayer->Intersects(*p_Ebullets[j]))
+            {
+                pPlayer->TakeDamage(10);
+              
+                p_Ebullets[j]->Stop();
                 break;
             }
         }
