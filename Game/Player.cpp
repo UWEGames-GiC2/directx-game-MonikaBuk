@@ -58,8 +58,11 @@ void Player::Tick(GameData* _GameData)
 		}
 		_GameData->gameStateChanged = false;
 	}
-	
-	m_acc += Vector3(0, -gravity, 0);
+
+	if (!isGrounded)
+	{
+		m_acc += Vector3(0, -gravity, 0);
+	}
 	m_vel += m_acc * _GameData->m_DeltaTime;
 	m_pos += m_vel * _GameData->m_DeltaTime;
 
