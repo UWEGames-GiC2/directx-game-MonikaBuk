@@ -138,6 +138,7 @@ private:
 
     void RemoveEnemyFromAllContainers(std::shared_ptr<GameObject> gameObject);
 
+
     void CheckCollisionMapWithPlayer();
 
     void CheckCollisionMapWithEnemies();

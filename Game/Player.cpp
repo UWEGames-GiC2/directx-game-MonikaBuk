@@ -9,7 +9,7 @@ Player::Player(const std::string& _fileName, ID3D11Device* _pd3dDevice, IEffectF
 {
 	//any special set up for Player goes here
 	m_fudge = Matrix::CreateRotationY(XM_PI);
-	SetDrag(2);
+	SetDrag(7);
 	SetPhysicsOn(true);
 	SetVisibility(false);
 	isGrounded = true;

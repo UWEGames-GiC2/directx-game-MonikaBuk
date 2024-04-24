@@ -675,11 +675,12 @@ void Game::ReadInput()
    // SetCursorPos((window.left + window.right) >> 1, (window.bottom + window.top) >> 1);
 }
 
+    
 void Game::CheckCollision()
 {
     for (int i = 0; i < m_PhysicsObjects.size(); i++) for (int j = 0; j < m_ColliderObjects.size(); j++)
     {
-        float distanceToTarget = (pPlayer->GetPos() - m_ColliderObjects[j]->GetPos()).Length();
+        float distanceToTarget = (m_PhysicsObjects[i]->GetPos() - m_ColliderObjects[j]->GetPos()).Length();
         distanceToTarget = abs(distanceToTarget);
         if (m_ColliderObjects[j]->GetType() == TerrainType::FLOOR || distanceToTarget < 300 ) {
             if (m_PhysicsObjects[i]->Intersects(*m_ColliderObjects[j])) //std::cout << "Collision Detected!" << std::endl;
@@ -712,6 +713,8 @@ void Game::CheckCollision()
             }
         }
     }
+
+    m_FPScam->Tick(m_GameData.get());
 }
 
 
@@ -731,17 +734,22 @@ void Game::CheckCollisionEnemyBullet()
     for (int i = 0; i < m_Eniemies.size(); )
     {
         bool enemyErased = false;
+
         for (int j = 0; j < p_bullets.size() && !enemyErased; j++)
         {
-            if (p_bullets[j]->IsVisible() && p_bullets[j]->Intersects(*m_Eniemies[i]))
+            if (p_bullets[j]->IsVisible())
             {
 
-                m_Eniemies[i]->SetVisibility(false);
-                p_bullets[j]->Stop();
-                pPlayer->bullets[j]->Stop();
-               RemoveEnemyFromAllContainers(m_Eniemies[i]);
-                m_Eniemies.erase(m_Eniemies.begin() + i);
-                enemyErased = true;
+                if (p_bullets[j]->Intersects(*m_Eniemies[i]))
+                {
+
+                    m_Eniemies[i]->SetVisibility(false);
+                    p_bullets[j]->Stop();
+                    pPlayer->bullets[j]->Stop();
+                    RemoveEnemyFromAllContainers(m_Eniemies[i]);
+                    m_Eniemies.erase(m_Eniemies.begin() + i);
+                    enemyErased = true;
+                }
             }
         }
         if (!enemyErased)
@@ -807,12 +815,14 @@ void Game::CheckCollisionBulletWithPlayer()
     {
         if (p_Ebullets[j]->IsVisible())
         {
-            if(pPlayer->Intersects(*p_Ebullets[j]))
             {
-                pPlayer->TakeDamage(10);
-              
-                p_Ebullets[j]->Stop();
-                break;
+                if (pPlayer->Intersects(*p_Ebullets[j]))
+                {
+                    pPlayer->TakeDamage(10);
+
+                    p_Ebullets[j]->Stop();
+                    break;
+                }
             }
         }
     }
