@@ -15,23 +15,29 @@ public:
 	~Player();
 
 	virtual void Tick(GameData* _GameData) override;
-	std::vector<std::shared_ptr<Bullet>> bullets;
-	bool GetIsGrounded(){ return isGrounded; }
-	void SetIsGrounded(bool grounded) { isGrounded = grounded; };
-	Vector2 tilePos;
-	int GetHealth() { return health;}
-	void TakeDamage(int damage);
-	bool IsHealthChanged() { return healthChanged;}
-	void SetHealthChanged(bool changed) { healthChanged = changed;}
+
+	void SetBullets(std::vector<std::shared_ptr<Bullet>> _bullets) { m_bullets = _bullets; }
+
+	bool GetIsGrounded(){ return m_isGrounded; }
+	void SetIsGrounded(bool _grounded) { m_isGrounded = _grounded; };
+
+	void SetTilePos(Vector2 _tilePos) { m_tilePos = _tilePos;};
+	Vector2 GetTilePos(){ return m_tilePos;}
+
+	int GetHealth() { return m_health;}
+	void TakeDamage(int m_damage);
+	bool IsHealthChanged() { return m_healthChanged;}
+	void SetHealthChanged(bool _changed) { m_healthChanged = _changed;}
 
 protected:
-	bool isGrounded;
-	float gravity = 9.8f;
-	float jumpSpeed = 200.0f;
-	float moveSpeed = 10000;
-	int health = 100;
-	bool healthChanged = false;
-
+	bool m_isGrounded;
+	float m_gravity = 9.8f;
+	float m_jumpSpeed = 200.0f;
+	float m_moveSpeed = 10000;
+	int m_health = 100;
+	bool m_healthChanged = false;
+	Vector2 m_tilePos;
+	std::vector<std::shared_ptr<Bullet>> m_bullets;
 };
 
 #endif

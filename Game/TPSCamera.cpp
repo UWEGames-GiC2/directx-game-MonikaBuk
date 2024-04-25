@@ -16,16 +16,16 @@ TPSCamera::~TPSCamera()
 
 void TPSCamera::Tick(GameData* _GameData)
 {
+	float targetYaw = m_targetObject->GetYaw();
+	float interpolationFactor = 0.1f; 
+	float currentYaw = GetYaw(); 
+	float targetOffsetY = XMConvertToRadians(90);
+	Matrix rotCam = Matrix::CreateFromYawPitchRoll(targetYaw, targetOffsetY, 0);
 
-	auto newYawn = m_targetObject->GetYaw();
-	
-	auto rotCam = Matrix::CreateFromYawPitchRoll(newYawn, 0, 0.0f);
 	m_target = m_targetObject->GetPos();
 	m_target.y += 30;
 	Vector3 pos = m_target + Vector3::Transform(m_dpos, rotCam);
-	m_pos = pos;
-
-
-
+	m_pos = Vector3::Lerp(GetPos(), pos, 0.1);
 	Camera::Tick(_GameData);
 }
+

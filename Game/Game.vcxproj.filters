@@ -184,7 +184,13 @@
       <Filter>GameObjects\3D\Header Files</Filter>
     </ClInclude>
     <ClInclude Include="HealthBar.h">
+      <Filter>GameObjects\2D\Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Tile.h">
       <Filter>Base\Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="DialogueBox.h">
+      <Filter>GameObjects\2D\Header Files</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -285,7 +291,13 @@
       <Filter>GameObjects\3D\Source Files</Filter>
     </ClCompile>
     <ClCompile Include="HealthBar.cpp">
+      <Filter>GameObjects\2D\Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Tile.cpp">
       <Filter>Base\Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="DialogueBox.cpp">
+      <Filter>GameObjects\2D\Source Files</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

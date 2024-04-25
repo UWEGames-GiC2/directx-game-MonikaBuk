@@ -24,13 +24,14 @@ public:
 	void Tick(GameData* _GameData) override { _GameData; };
 	void SetType(TerrainType type) { terrainType = type;}
 	TerrainType GetType() const { return terrainType;}
-	int xAssignedForMap;
-	int yAssignedForMap;
+
+
 	
 
 protected:
 	TerrainType terrainType = OTHER;
-
+	int xAssignedForMap;
+	int yAssignedForMap;
 };
 
 #endif

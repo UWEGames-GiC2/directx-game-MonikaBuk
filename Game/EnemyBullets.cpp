@@ -24,32 +24,29 @@ void EnemyBullets::Tick(GameData* _GameData)
 	{
 		if (m_isShot)
 		{
-			if (firedNow)
+			if (m_firedNow)
 			{
 				Vector3 directon;
 
 				float yawn = m_owner->GetYaw();
 				SetYaw(yawn);
-
-			
 				Matrix  rot = Matrix::CreateRotationY(yawn);
 				directon =  - Vector3::Forward;
 				directon = Vector3::Transform(directon, rot);
 				SetVisibility(true);
 
-
 				SetDrag(0.01f);
-				m_lifeTime = 9.0f;
+				m_lifeTime = 2.0f;
 
 				SetPhysicsOn(true);
 				auto pos = m_owner->GetPos();
 				m_pos = (pos);
 				SetAcceleration(directon * 30000.0f);
 			}
-			firedNow = false;
+			m_firedNow = false;
 		}
 		m_lifeTime -= _GameData->m_DeltaTime;
-		if (m_lifeTime < 0.0f || !m_isShot)
+		if (m_lifeTime <= 0.0f || !m_isShot)
 		{
 			m_isShot = false;
 			m_lifeTime = 0;
@@ -58,14 +55,13 @@ void EnemyBullets::Tick(GameData* _GameData)
 			SetPhysicsOn(false);
 		}
 
-
 		CMOGO::Tick(_GameData);
 	}
 }
 
 void EnemyBullets::Fire()
 {
-	firedNow = true;
+	m_firedNow = true;
 	m_isShot = true;
 }
 

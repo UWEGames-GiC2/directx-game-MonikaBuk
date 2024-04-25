@@ -125,10 +125,11 @@ void Game::Initialize(HWND _window, int _width, int _height)
             float posY = map->basePosition.y;
             float posZ = map->basePosition.z + y * cube->GetSize().x;
 
-            std::shared_ptr<Terrain> cube = std::make_shared<Terrain>(
+            std::shared_ptr<Tile> cube = std::make_shared<Tile>(
                 "cube", m_d3dDevice.Get(), m_fxFactory,
                 DirectX::XMFLOAT3(posX, posY, posZ),
-                derekszog, 0.0f, 0.0f, 1.0f * DirectX::XMVectorSet(1.0f, 1.0f, 1.0f, 1.0f));
+                derekszog, 0.0f, 0.0f, 1.0f * DirectX::XMVectorSet(1.0f, 1.0f, 1.0f, 1.0f),
+                Vector2(x,y));
 
             if (map->map[y][x] == 1) {
                 m_GameObjects.push_back(cube);
@@ -151,17 +152,19 @@ void Game::Initialize(HWND _window, int _width, int _height)
                 enemySpawnPoses.push_back(newSpawnPos);
             }
             m_GameObjects.push_back(cube);
-            cube->xAssignedForMap = x;
-            cube->yAssignedForMap = y;
             m_Map.push_back(cube);
         }
     }
  
     //add Player
     pPlayer = std::make_shared<Player>("Test", m_d3dDevice.Get(), m_fxFactory);
+    pPlayer->SetScale(1.4);
     pPlayer->SetPos(playerSpawn);
     m_GameObjects.push_back(pPlayer);
     m_PhysicsObjects.push_back(pPlayer);
+
+
+   
 
 
     std::shared_ptr<HealthBar> pHealthbard = std::make_shared<HealthBar>("green_button00", "grey_button00", m_d3dDevice.Get(), pPlayer);
@@ -170,9 +173,10 @@ void Game::Initialize(HWND _window, int _width, int _height)
         m_GameObjects2D.push_back(image);
     }
     m_GameObjects2D.push_back(pHealthbard);
+
     for (int j = 0; j < enemySpawnPoses.size(); ++j)
     {
-        std::shared_ptr<Enemy> test = std::make_shared<Enemy>("test", m_d3dDevice.Get(), m_fxFactory, enemySpawnPoses[j], 0.0f, 0.0f, 0.0f, 1.4f * Vector3::One, pPlayer, map);
+        std::shared_ptr<Enemy> test = std::make_shared<Enemy>("Test", m_d3dDevice.Get(), m_fxFactory, enemySpawnPoses[j], 0.0f, 0.0f, 0.0f, 1.4f * Vector3::One, pPlayer, map);
         m_GameObjects.push_back(test);
         m_PhysicsObjects.push_back(test);
         m_Eniemies.push_back(test);
@@ -183,7 +187,7 @@ void Game::Initialize(HWND _window, int _width, int _height)
             pEnemyBullet->SetScale(0.02);
             m_GameObjects.push_back(pEnemyBullet);
             m_PhysicsObjects.push_back(pEnemyBullet);
-            test->bullets.push_back(pEnemyBullet);
+            test->SetBullet(pEnemyBullet);
             p_Ebullets.push_back(pEnemyBullet);
         }
     }
@@ -196,11 +200,11 @@ void Game::Initialize(HWND _window, int _width, int _height)
 
  
     //create a base camera
-    m_FPScam = std::make_shared <FPSCamera>(0.25f * XM_PI, AR, 1.0f, 900.0f, pPlayer,  Vector3::UnitY, Vector3(0.0f,0.0f, 0.001f), _width, _height);
+    m_FPScam = std::make_shared <FPSCamera>(0.25f * XM_PI, AR, 1.0f, 1000.0f, pPlayer,  Vector3::UnitY, Vector3(0.0f,0.0f, 0.001f), _width, _height);
     m_GameObjects.push_back(m_FPScam);
 
     //add a secondary camera
-    m_TPScam = std::make_shared <TPSCamera>(0.25f * XM_PI, AR, 1.0f, 1000.0f, pPlayer, Vector3::UnitY, Vector3(0.0f, 200.0f, 0.0f));
+    m_TPScam = std::make_shared <TPSCamera>(0.25f * XM_PI, AR, 1.0f, 1000.0f, pPlayer, Vector3::UnitY, Vector3(0.0f, 0.00f, -500.0f));
     m_GameObjects.push_back(m_TPScam);
 
     //bullets
@@ -213,7 +217,7 @@ void Game::Initialize(HWND _window, int _width, int _height)
         m_PhysicsObjects.push_back(pBullet);
         p_bullets.push_back(pBullet);
     }
-    pPlayer->bullets = p_bullets;
+    pPlayer->SetBullets(p_bullets);
 
 
 
@@ -234,6 +238,29 @@ void Game::Initialize(HWND _window, int _width, int _height)
     croshair->SetScale(0.05);
     m_FPS_GameObjects2D.push_back(croshair);
 
+    std::string starttext = "Your mission is to save the missing \n person who is lost in the maze \n and defeat enemies. \n  Press ENT to hide";
+    m_missionDialoge = std::make_shared<DialogueBox>("grey_button00", starttext, m_d3dDevice.Get());
+    for (const auto& image : m_missionDialoge->Get2DObjects())
+    {
+        m_GameObjects2D.push_back(image);
+    }
+    m_GameObjects2D.push_back(m_missionDialoge);
+
+    std::string endtext = "YOU SAVED ME";
+    m_endDialoge = std::make_shared<DialogueBox>("grey_button00", endtext, m_d3dDevice.Get());
+    for (const auto& image : m_endDialoge->Get2DObjects())
+    {
+        m_GameObjects2D.push_back(image);
+    }
+    m_GameObjects2D.push_back(m_endDialoge);
+    m_endDialoge->HideDialouge();
+
+    //Text
+    textScore = std::make_shared<TextGO2D>("0");
+    textScore->SetPos(Vector2(10 , 10));
+    textScore->SetScale(1);
+    textScore->SetColour(Color((float*)&Colors::Red));
+    m_GameObjects2D.push_back(textScore);
 
     //weapon frames 
     std::vector<string> frameFileNames;
@@ -241,18 +268,11 @@ void Game::Initialize(HWND _window, int _width, int _height)
     frameFileNames.push_back(std::string("pistol2"));
     frameFileNames.push_back(std::string("pistol3"));
     frameFileNames.push_back(std::string("pistol4"));
-    std::shared_ptr<AnimatedImage> weapon =  std::make_shared<AnimatedImage>(frameFileNames, m_d3dDevice.Get(), 20, false);
+    std::shared_ptr<AnimatedImage> weapon = std::make_shared<AnimatedImage>(frameFileNames, m_d3dDevice.Get(), 20, false);
     weapon->SetPos(Vector2(_width / 1.5, _height - 200));
     weapon->SetRot(0.2);
     weapon->SetScale(2.5);
     m_FPS_GameObjects2D.push_back(weapon);
-
-    //Text
-    std::shared_ptr<TextGO2D> text = std::make_shared<TextGO2D>("000");
-    text->SetPos(Vector2(10 , 10));
-    text->SetScale(0.5);
-    text->SetColour(Color((float*)&Colors::White));
-    m_GameObjects2D.push_back(text);
     
 
     //Test Sounds
@@ -293,7 +313,6 @@ void Game::Update(DX::StepTimer const& _timer)
     }
     else
     {
-      
         //update sounds playing
         for (list<Sound*>::iterator it = m_Sounds.begin(); it != m_Sounds.end(); it++)
         {
@@ -317,7 +336,10 @@ void Game::Update(DX::StepTimer const& _timer)
             m_GameData->gameStateChanged = true;
         } 
     }
- 
+    if (m_GameData->m_KeyBoardState_tracker.pressed.Enter)
+    {
+        m_missionDialoge->HideDialouge();
+    }
     //update all objects
   
     for (std::vector<std::shared_ptr<GameObject>>::iterator it = m_GameObjects.begin(); it != m_GameObjects.end(); it++)
@@ -659,20 +681,16 @@ void Game::ReadInput()
 {
     m_GameData->m_KeyBoardState = m_keyboard->GetState();
     m_GameData->m_KeyBoardState_tracker.Update(m_GameData->m_KeyBoardState);
-    //quit game on hiting escape
     if (m_GameData->m_KeyBoardState.Escape)
     {
         ExitGame();
     }
-
     m_GameData->m_Mouse = m_mouse->GetState();
     m_GameData->m_Mouse_tracker.Update(m_GameData->m_Mouse);
- 
 
-    //lock the cursor to the centre of the window
+
     RECT window;
     GetWindowRect(m_window, &window);
-   // SetCursorPos((window.left + window.right) >> 1, (window.bottom + window.top) >> 1);
 }
 
     
@@ -713,8 +731,14 @@ void Game::CheckCollision()
             }
         }
     }
-
-    m_FPScam->Tick(m_GameData.get());
+    if (m_GameData->m_GameState == GS_PLAY_FPS_CAM)
+    {
+        m_FPScam->Tick(m_GameData.get());
+    }
+    else
+    {
+        m_TPScam->Tick(m_GameData.get());
+    }
 }
 
 
@@ -739,16 +763,16 @@ void Game::CheckCollisionEnemyBullet()
         {
             if (p_bullets[j]->IsVisible())
             {
-
                 if (p_bullets[j]->Intersects(*m_Eniemies[i]))
                 {
-
                     m_Eniemies[i]->SetVisibility(false);
                     p_bullets[j]->Stop();
-                    pPlayer->bullets[j]->Stop();
                     RemoveEnemyFromAllContainers(m_Eniemies[i]);
                     m_Eniemies.erase(m_Eniemies.begin() + i);
                     enemyErased = true;
+                    score++;
+                    string tempScore = std::to_string(score);
+                    textScore->SetText(tempScore);
                 }
             }
         }
@@ -761,7 +785,6 @@ void Game::CheckCollisionEnemyBullet()
 
 void Game::RemoveEnemyFromAllContainers(std::shared_ptr<GameObject> enemy)
 {
-
     auto itCollider = std::find(m_ColliderObjects.begin(), m_ColliderObjects.end(), enemy);
     if (itCollider != m_ColliderObjects.end()) {
         m_ColliderObjects.erase(itCollider);
@@ -783,12 +806,9 @@ void Game::CheckCollisionMapWithPlayer()
 {
     for (int j = 0; j < m_Map.size(); j++)
     {
-     {
-            if (pPlayer->Intersects(*m_Map[j])) 
-            {
-                pPlayer->tilePos.x = m_Map[j]->xAssignedForMap;
-                pPlayer->tilePos.y = m_Map[j]->yAssignedForMap;
-            }
+        if (pPlayer->Intersects(*m_Map[j]))
+        {
+            pPlayer->SetTilePos(m_Map[j]->GetTile());
         }
     }
 }
@@ -802,8 +822,7 @@ void Game::CheckCollisionMapWithEnemies()
             if (m_Eniemies[i]->Intersects(*m_Map[j]))
             {
                 // Update the tile position of the current enemy
-                m_Eniemies[i]->tilePos.x = m_Map[j]->xAssignedForMap;
-                m_Eniemies[i]->tilePos.y = m_Map[j]->yAssignedForMap;
+                m_Eniemies[i]->SetTilePos(m_Map[j]->GetTile());
                 break;
             }
         }
@@ -818,8 +837,7 @@ void Game::CheckCollisionBulletWithPlayer()
             {
                 if (pPlayer->Intersects(*p_Ebullets[j]))
                 {
-                    pPlayer->TakeDamage(10);
-
+                    pPlayer->TakeDamage(20);
                     p_Ebullets[j]->Stop();
                     break;
                 }

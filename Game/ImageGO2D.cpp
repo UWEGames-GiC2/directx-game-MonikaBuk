@@ -53,8 +53,10 @@ void ImageGO2D::Tick(GameData* _GameData)
 
 void ImageGO2D::Draw(DrawData2D* _DrawData)
 {
-	//nullptr can be changed to a RECT* to define what area of this image to grab
-	//you can also add an extra value at the end to define layer depth
-	//right click and "Go to Defintion/Declaration" to see other version of this in DXTK
-	_DrawData->m_Sprites->Draw(m_pTextureRV, m_pos, nullptr, m_colour, m_rotation, m_origin, m_scale, SpriteEffects_None);
+	if (m_isVisible) {
+		//nullptr can be changed to a RECT* to define what area of this image to grab
+		//you can also add an extra value at the end to define layer depth
+		//right click and "Go to Defintion/Declaration" to see other version of this in DXTK
+		_DrawData->m_Sprites->Draw(m_pTextureRV, m_pos, nullptr, m_colour, m_rotation, m_origin, m_scale, SpriteEffects_None);
+	}
 }

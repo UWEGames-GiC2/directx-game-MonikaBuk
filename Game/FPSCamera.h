@@ -10,31 +10,28 @@ public:
 
 	virtual void Tick(GameData* _GameData) override;
 
-	float		GetNewPitch() { return newPitch; }
+	float		GetNewPitch() { return m_newPitch; }
 
-	float		GetNewYawn() { return newYawn; }
+	float		GetNewYawn() { return m_newYawn; }
 
-	Matrix		GetRot() { return rotCam; }
+	Matrix		GetRot() { return m_rotCam; }
 
 	Vector3		GetForwardVector() { return m_forwardVector; }
 	Vector3 GetCenterOfScreen(GameData* _GameData);
 
 protected:
 	std::shared_ptr<GameObject> m_targetPosObject;
-	float maxPitch = XMConvertToRadians(65);
-	float minPitch = XMConvertToRadians(15);
+	float m_maxPitch = XMConvertToRadians(65);
+	float m_minPitch = XMConvertToRadians(15);
 	POINT GetCursorPosition(POINT cursorPos);
 
 	float m_width;
 	float m_height;
 	
 
-	float newPitch = maxPitch / 2;
-
-	Matrix rotCam;
-
-	float newYawn;
-
+	float m_newPitch = m_maxPitch / 2;
+	Matrix m_rotCam;
+	float m_newYawn;
 	Vector3	m_forwardVector = Vector3::Forward;
 	
 	//I'm following this object

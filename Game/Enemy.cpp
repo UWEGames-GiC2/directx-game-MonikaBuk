@@ -35,20 +35,18 @@ void Enemy::Tick(GameData* _GameData)
         reloadTime += _GameData->m_DeltaTime;
     }
 
-    if (distanceToTarget < 200.0f)
+    if (distanceToTarget < 300.0f)
     {
         if (reloadTime >= 5.0f)
         {
-            for (size_t i = 0; i < bullets.size(); i++)
+
+            if (!m_bullet->IsShot())
             {
-                if (!bullets[i]->IsShot())
-                {
-                    bullets[i]->Fire();
-                    break;
-                }
+                m_bullet->Fire();
+
             }
-            reloadTime = 0;
         }
+        reloadTime = 0;
     }
     if (distanceToTarget < 400)
     {
@@ -86,8 +84,8 @@ void Enemy::MoveTo(Vector3 targetPos, GameData* _GameData)
 }
 void Enemy::MoveAlongPath(Vector3 targetPos, GameData* _GameData)
 {
-    Vector2 startTile = tilePos;
-    Vector2 goalTile = target->tilePos;
+    Vector2 startTile = m_tilePos;
+    Vector2 goalTile = target->GetTilePos();
 
     if (prevousGoal != goalTile)
     {
@@ -100,7 +98,6 @@ void Enemy::MoveAlongPath(Vector3 targetPos, GameData* _GameData)
                 path.erase(path.begin());
                 nextTile = path.front();
                 nextPos = m_map->TileToWorld(nextTile);
-
             }
         }
     }

@@ -35,7 +35,7 @@ public:
 	void SetScale(Vector2 _scale) { m_scale = _scale; }
 	void SetScale(float _scale) { m_scale = _scale * Vector2::One; }
 	void SetOrigin(Vector2 _origin) { m_origin = _origin; }
-	bool SetVisibility(bool visiblity) { m_isVisible = visiblity;}
+	void SetVisibility(bool visiblity) { m_isVisible = visiblity;}
 protected:
 
 	Vector2 m_pos;
@@ -43,7 +43,7 @@ protected:
 	Vector2 m_scale;
 	Color m_colour;
 	Vector2 m_origin;
-	bool m_isVisible;
+	bool m_isVisible = true;
 
 	bool m_visibilityChanged = false;
 

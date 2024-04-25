@@ -169,6 +169,7 @@
     <ClInclude Include="camera.h" />
     <ClInclude Include="CMOGO.h" />
     <ClInclude Include="ConstantBuffer.h" />
+    <ClInclude Include="DialogueBox.h" />
     <ClInclude Include="DrawData.h" />
     <ClInclude Include="DrawData2D.h" />
     <ClInclude Include="Enemy.h" />
@@ -198,6 +199,7 @@
     <ClInclude Include="Terrain.h" />
     <ClInclude Include="TestSound.h" />
     <ClInclude Include="TextGO2D.h" />
+    <ClInclude Include="Tile.h" />
     <ClInclude Include="TPSCamera.h" />
     <ClInclude Include="Tree.h" />
     <ClInclude Include="TreeBit.h" />
@@ -215,6 +217,7 @@
     <ClCompile Include="Bullet.cpp" />
     <ClCompile Include="camera.cpp" />
     <ClCompile Include="CMOGO.cpp" />
+    <ClCompile Include="DialogueBox.cpp" />
     <ClCompile Include="Enemy.cpp" />
     <ClCompile Include="EnemyBullets.cpp" />
     <ClCompile Include="fileVBGO.cpp" />
@@ -241,6 +244,7 @@
     <ClCompile Include="Terrain.cpp" />
     <ClCompile Include="TestSound.cpp" />
     <ClCompile Include="TextGO2D.cpp" />
+    <ClCompile Include="Tile.cpp" />
     <ClCompile Include="TPSCamera.cpp" />
     <ClCompile Include="Tree.cpp" />
     <ClCompile Include="treebit.cpp" />

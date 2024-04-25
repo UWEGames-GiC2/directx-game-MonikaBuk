@@ -13,9 +13,7 @@ FPSCamera::FPSCamera(float _fieldOfView, float _aspectRatio, float _nearPlaneDis
 	m_dpos = _dpos;
 	m_width = _width;
 	m_height = _height;
-	newPitch = _targetPos->GetPitch();
-	
-
+	m_newPitch = _targetPos->GetPitch();
 }
 
 FPSCamera::~FPSCamera()
@@ -33,25 +31,22 @@ void FPSCamera::Tick(GameData* _GameData)
 	m_forwardVector = Vector3::Forward;
 	if (mouse.positionMode == Mouse::MODE_RELATIVE)
 	{
-		newPitch -= (mouse.y * rotSpeed) ;
-		if (newPitch > maxPitch)
+		m_newPitch -= (mouse.y * rotSpeed) ;
+		if (m_newPitch > m_maxPitch)
 		{
-			newPitch = maxPitch;
+			m_newPitch = m_maxPitch;
 		}
-		if (newPitch < minPitch)
+		if (m_newPitch < m_minPitch)
 		{
-			newPitch = minPitch;
+			m_newPitch = m_minPitch;
 		}
 	}
-	newYawn = m_targetPosObject->GetYaw();
-	rotCam = Matrix::CreateFromYawPitchRoll(newYawn , newPitch - offsetY, 0.0f);
+	m_newYawn = m_targetPosObject->GetYaw();
+	m_rotCam = Matrix::CreateFromYawPitchRoll(m_newYawn , m_newPitch - offsetY, 0.0f);
 	m_target = m_targetPosObject->GetPos();
 	m_target.y += 30;
-	Vector3 pos = m_target + Vector3::Transform(m_dpos, rotCam);
+	Vector3 pos = m_target + Vector3::Transform(m_dpos, m_rotCam);
 	m_pos = pos;
-
-
-
 	Camera::Tick(_GameData);
 }
 

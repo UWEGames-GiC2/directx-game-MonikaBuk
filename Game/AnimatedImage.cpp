@@ -69,7 +69,8 @@ void AnimatedImage::Tick(GameData* _GameData)
 void AnimatedImage::Draw(DrawData2D* _DrawData)
 {
     ID3D11ShaderResourceView* currentFrame = m_animationFrames[m_currentFrameIndex].get();
-    _DrawData->m_Sprites->Draw(currentFrame, m_pos, nullptr, m_colour, m_rotation, m_origin, m_scale, SpriteEffects_None);
+    Vector3 test = Vector3(m_pos.x, m_pos.y, -20);
+    _DrawData->m_Sprites->Draw(currentFrame, test, nullptr, m_colour, m_rotation, m_origin, m_scale, SpriteEffects_None);
 }
 
 AnimatedImage::~AnimatedImage()

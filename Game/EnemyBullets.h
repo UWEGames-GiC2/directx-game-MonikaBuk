@@ -19,7 +19,7 @@ protected:
 	bool m_isShot = false;
 	float m_lifeTime = 0.0f;
 	Vector3 m_forwardMove;
-	bool firedNow = false;
+	bool m_firedNow = false;
 	std::shared_ptr<CMOGO> m_owner;
 };
 #endif

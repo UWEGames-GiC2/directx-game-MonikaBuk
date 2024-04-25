@@ -20,6 +20,7 @@
 #include "AnimatedObject3D.h"
 #include "Enemy.h"
 #include "HealthBar.h"
+#include "Tile.h";
 //VBGO examples
 #include "fileVBGO.h"
 #include "VBCube.h"
@@ -35,6 +36,7 @@
 #include "ImageGO2D.h"
 #include "TextGO2D.h"
 #include "AnimatedImage.h"
+#include "DialogueBox.h"
 
 //Sounds
 #include "TestSound.h"

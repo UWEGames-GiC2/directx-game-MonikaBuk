@@ -12,7 +12,7 @@ Player::Player(const std::string& _fileName, ID3D11Device* _pd3dDevice, IEffectF
 	SetDrag(7);
 	SetPhysicsOn(true);
 	SetVisibility(false);
-	isGrounded = true;
+	m_isGrounded = false;
 }
 
 Player::~Player()
@@ -24,26 +24,27 @@ Player::~Player()
 void Player::Tick(GameData* _GameData)
 {
 	//TURN AND FORWARD CONTROL HERE
-	Vector3 forwardMove = moveSpeed * Vector3::Forward;
+	float dt = _GameData->m_DeltaTime;
+	float speedModifier = dt * 5;
+	Vector3 forwardMove = m_moveSpeed * Vector3::Forward * speedModifier;
 	Matrix rotMove = Matrix::CreateRotationY(m_yaw);
 	forwardMove = Vector3::Transform(forwardMove, rotMove);
-	float dt = _GameData->m_DeltaTime;
-	m_acc.y = (m_acc.y - gravity) * dt;
-	if (_GameData->m_KeyBoardState.Space && isGrounded)
+
+	if (_GameData->m_KeyBoardState.Space && m_isGrounded)
 	{
-		m_vel.y += jumpSpeed;
-		isGrounded = false;
+		m_vel.y += m_jumpSpeed;
+		m_isGrounded = false;
 	}
 	if (m_vel.y < 0) {
-		m_acc.y -= gravity * 1000.0f * _GameData->m_DeltaTime;
+		m_acc.y -= m_gravity * 2000.0f * dt;
 	}
 	if (_GameData->m_KeyBoardState.W)
 	{
-		m_acc += forwardMove * dt;
+		m_acc += forwardMove;
 	}
 	if (_GameData->m_KeyBoardState.S)
 	{
-		m_acc -= forwardMove * dt;
+		m_acc -= forwardMove;
 	}
 	if (_GameData->gameStateChanged)
 	{
@@ -59,34 +60,34 @@ void Player::Tick(GameData* _GameData)
 		_GameData->gameStateChanged = false;
 	}
 
-	if (!isGrounded)
+	if (!m_isGrounded)
 	{
-		m_acc += Vector3(0, -gravity, 0);
+		m_acc += Vector3(0, -m_gravity, 0);
 	}
 	m_vel += m_acc * _GameData->m_DeltaTime;
 	m_pos += m_vel * _GameData->m_DeltaTime;
 
 	//change orinetation of player
-	Vector3 rightMove = moveSpeed * Vector3::Right;
+	Vector3 rightMove = m_moveSpeed * Vector3::Right * speedModifier;
 	rightMove = Vector3::Transform(rightMove, rotMove);
 
 
 	if (_GameData->m_KeyBoardState.A)
 	{
-		m_acc -= rightMove * dt;
+		m_acc -= rightMove;
 	}
 	if (_GameData->m_KeyBoardState.D)
 	{
-		m_acc += rightMove *dt;
+		m_acc += rightMove;
 	}
 
 	if (_GameData->m_Mouse_tracker.leftButton == _GameData->m_Mouse_tracker.PRESSED)
 	{
-		for (size_t i = 0; i < bullets.size(); i++)
+		for (size_t i = 0; i < m_bullets.size(); i++)
 		{
-			if (!bullets[i]->IsShot())
+			if (!m_bullets[i]->IsShot())
 			{
-				bullets[i]->Fire();
+				m_bullets[i]->Fire();
 				break;
 			}
 		}
@@ -105,7 +106,7 @@ void Player::Tick(GameData* _GameData)
 
 void Player::TakeDamage(int damage)
 {
-	health -= damage;
-	healthChanged = true;
+	m_health -= damage;
+	m_healthChanged = true;
 }
 

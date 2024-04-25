@@ -11,7 +11,6 @@ class TPSCamera : public Camera
 public:
 	TPSCamera(float _fieldOfView, float _aspectRatio, float _nearPlaneDistance, float _farPlaneDistance, std::shared_ptr<GameObject> _target, Vector3 _up, Vector3 _dpos);
 	virtual ~TPSCamera();
-
 	virtual void Tick(GameData* _GameData) override;
 
 protected:

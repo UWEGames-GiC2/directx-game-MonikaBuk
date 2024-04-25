@@ -20,6 +20,9 @@
 #include "GameMap.h"
 #include "EnemyBullets.h"
 #include "HealthBar.h"
+#include "TextGO2D.h"
+#include "Tile.h"
+#include "DialogueBox.h"
 
 using std::list;
 
@@ -127,9 +130,15 @@ private:
     std::vector < std::shared_ptr<Bullet>> p_bullets;
     std::vector < std::shared_ptr<EnemyBullets>> p_Ebullets;
     std::vector < std::shared_ptr<Enemy>> m_Eniemies;
-    std::vector <std::shared_ptr<Terrain>> m_Map;
+    std::vector <std::shared_ptr<Tile>> m_Map;
 
     std::shared_ptr <Player> pPlayer = NULL;
+
+    int score = 0;
+    std::shared_ptr<TextGO2D> textScore = NULL;
+
+    std::shared_ptr<DialogueBox> m_missionDialoge;
+    std::shared_ptr<DialogueBox> m_endDialoge;
 
     void CheckCollision();
     void CheckCollisionGroundWithPlayer();

@@ -14,24 +14,32 @@ public:
 
 	virtual void Tick(GameData* _GameData) override;
 
+	void SetTilePos(Vector2 _tilePos) { m_tilePos = _tilePos; };
+	Vector2 GetTilePos() { return m_tilePos; }
+
 	void MoveTo(Vector3 targetPos, GameData* _GameData);
 	void MoveAlongPath(Vector3 targetPos, GameData* _GameData);
-	Vector2 tilePos;
-	std::vector<std::shared_ptr<EnemyBullets>> bullets;
-	
+
+	void SetBullet(std::shared_ptr<EnemyBullets> bullet) { m_bullet = bullet;}
+
 
 protected:
+
+	//variables for pathfinging
 	std::shared_ptr<Player> target;
 	std::shared_ptr<GameMap> m_map;
+	Vector2 m_tilePos;
 	Vector2 prevousGoal;
 	int pathIndex;
 	Vector2 nextTile;
 	Vector2 nextPos;
 	float distanceToTarget;
+	
+	//other variables
 	float speed;
 	float reloadTime = 10;
 	Vector3 previousDirection;
-	
+	std::shared_ptr<EnemyBullets> m_bullet;
 };
 
 
