@@ -32,36 +32,39 @@ AnimatedImage::AnimatedImage(const vector<std::string>& frameFileNames, ID3D11De
 }
 void AnimatedImage::Tick(GameData* _GameData)
 {
-    if (isLooping)
+    if (!_GameData->isPaused) 
     {
-        m_frameTimer += _GameData->m_DeltaTime;
-        if (m_frameTimer >= 1.0f / m_frameRate) {
-            m_currentFrameIndex = (m_currentFrameIndex + 1) % m_animationFrames.size();
-            m_frameTimer = 0.0f;
-        }
-    }
-    else
-    {
-        if (_GameData->m_Mouse_tracker.leftButton == _GameData->m_Mouse_tracker.PRESSED)
-        {
-            play = true;
-           
-        }
-    }
-    if (play)
-    {
-        if (m_currentFrameIndex < m_animationFrames.size() -1 ) // Corrected condition
+        if (isLooping)
         {
             m_frameTimer += _GameData->m_DeltaTime;
             if (m_frameTimer >= 1.0f / m_frameRate) {
-                m_currentFrameIndex += 1;
+                m_currentFrameIndex = (m_currentFrameIndex + 1) % m_animationFrames.size();
                 m_frameTimer = 0.0f;
             }
         }
         else
         {
-            play = false;
-            m_currentFrameIndex = 0;
+            if (_GameData->m_Mouse_tracker.leftButton == _GameData->m_Mouse_tracker.PRESSED)
+            {
+                play = true;
+
+            }
+        }
+        if (play)
+        {
+            if (m_currentFrameIndex < m_animationFrames.size() - 1) // Corrected condition
+            {
+                m_frameTimer += _GameData->m_DeltaTime;
+                if (m_frameTimer >= 1.0f / m_frameRate) {
+                    m_currentFrameIndex += 1;
+                    m_frameTimer = 0.0f;
+                }
+            }
+            else
+            {
+                play = false;
+                m_currentFrameIndex = 0;
+            }
         }
     }
 }

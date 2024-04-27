@@ -28,33 +28,35 @@ Enemy::~Enemy()
 
 void Enemy::Tick(GameData* _GameData)
 {
-    distanceToTarget = (target->GetPos() - m_pos).Length();
+    if (!_GameData->isPaused) {
+        distanceToTarget = (target->GetPos() - m_pos).Length();
 
-    if (reloadTime <= 5.0f)
-    {
-        reloadTime += _GameData->m_DeltaTime;
-    }
-
-    if (distanceToTarget < 300.0f)
-    {
-        if (reloadTime >= 5.0f)
+        if (reloadTime <= 5.0f)
         {
-
-            if (!m_bullet->IsShot())
-            {
-                m_bullet->Fire();
-
-            }
+            reloadTime += _GameData->m_DeltaTime;
         }
-        reloadTime = 0;
-    }
-    if (distanceToTarget < 400)
-    {
-        MoveTo(target->GetPos(), _GameData);
-    }
-    else if(distanceToTarget < 600)
-    {
-        MoveAlongPath(target->GetPos(), _GameData);
+
+        if (distanceToTarget < 300.0f)
+        {
+            if (reloadTime >= 5.0f)
+            {
+
+                if (!m_bullet->IsShot())
+                {
+                    m_bullet->Fire();
+
+                }
+            }
+            reloadTime = 0;
+        }
+        if (distanceToTarget < 400)
+        {
+            MoveTo(target->GetPos(), _GameData);
+        }
+        else if (distanceToTarget < 600)
+        {
+            MoveAlongPath(target->GetPos(), _GameData);
+        }
     }
     // Call the base class Tick function
     CMOGO::Tick(_GameData);

@@ -13,6 +13,7 @@ Player::Player(const std::string& _fileName, ID3D11Device* _pd3dDevice, IEffectF
 	SetPhysicsOn(true);
 	SetVisibility(false);
 	m_isGrounded = false;
+	m_yaw = XMConvertToRadians(180);
 }
 
 Player::~Player()
@@ -29,75 +30,76 @@ void Player::Tick(GameData* _GameData)
 	Vector3 forwardMove = m_moveSpeed * Vector3::Forward * speedModifier;
 	Matrix rotMove = Matrix::CreateRotationY(m_yaw);
 	forwardMove = Vector3::Transform(forwardMove, rotMove);
-
-	if (_GameData->m_KeyBoardState.Space && m_isGrounded)
-	{
-		m_vel.y += m_jumpSpeed;
-		m_isGrounded = false;
-	}
-	if (m_vel.y < 0) {
-		m_acc.y -= m_gravity * 2000.0f * dt;
-	}
-	if (_GameData->m_KeyBoardState.W)
-	{
-		m_acc += forwardMove;
-	}
-	if (_GameData->m_KeyBoardState.S)
-	{
-		m_acc -= forwardMove;
-	}
-	if (_GameData->gameStateChanged)
-	{
-		if (_GameData->m_GameState == GS_PLAY_FPS_CAM)
+	if (!_GameData->isPaused) {
+		if (_GameData->m_KeyBoardState.Space && m_isGrounded)
 		{
-
-			SetVisibility(false);
+			m_vel.y += m_jumpSpeed;
+			m_isGrounded = false;
 		}
-		else
-		{
-			SetVisibility(true);
+		if (m_vel.y < 0) {
+			m_acc.y -= m_gravity * 2000.0f * dt;
 		}
-		_GameData->gameStateChanged = false;
-	}
-
-	if (!m_isGrounded)
-	{
-		m_acc += Vector3(0, -m_gravity, 0);
-	}
-	m_vel += m_acc * _GameData->m_DeltaTime;
-	m_pos += m_vel * _GameData->m_DeltaTime;
-
-	//change orinetation of player
-	Vector3 rightMove = m_moveSpeed * Vector3::Right * speedModifier;
-	rightMove = Vector3::Transform(rightMove, rotMove);
-
-
-	if (_GameData->m_KeyBoardState.A)
-	{
-		m_acc -= rightMove;
-	}
-	if (_GameData->m_KeyBoardState.D)
-	{
-		m_acc += rightMove;
-	}
-
-	if (_GameData->m_Mouse_tracker.leftButton == _GameData->m_Mouse_tracker.PRESSED)
-	{
-		for (size_t i = 0; i < m_bullets.size(); i++)
+		if (_GameData->m_KeyBoardState.W)
 		{
-			if (!m_bullets[i]->IsShot())
+			m_acc += forwardMove;
+		}
+		if (_GameData->m_KeyBoardState.S)
+		{
+			m_acc -= forwardMove;
+		}
+		if (_GameData->gameStateChanged)
+		{
+			if (_GameData->m_GameState == GS_PLAY_FPS_CAM)
 			{
-				m_bullets[i]->Fire();
-				break;
+
+				SetVisibility(false);
+			}
+			else
+			{
+				SetVisibility(true);
+			}
+			_GameData->gameStateChanged = false;
+		}
+
+		if (!m_isGrounded)
+		{
+			m_acc += Vector3(0, -m_gravity, 0);
+		}
+		m_vel += m_acc * _GameData->m_DeltaTime;
+		m_pos += m_vel * _GameData->m_DeltaTime;
+
+		//change orinetation of player
+		Vector3 rightMove = m_moveSpeed * Vector3::Right * speedModifier;
+		rightMove = Vector3::Transform(rightMove, rotMove);
+
+
+		if (_GameData->m_KeyBoardState.A)
+		{
+			m_acc -= rightMove;
+		}
+		if (_GameData->m_KeyBoardState.D)
+		{
+			m_acc += rightMove;
+		}
+
+		if (_GameData->m_Mouse_tracker.leftButton == _GameData->m_Mouse_tracker.PRESSED)
+		{
+			for (size_t i = 0; i < m_bullets.size(); i++)
+			{
+				if (!m_bullets[i]->IsShot())
+				{
+					m_bullets[i]->Fire();
+					break;
+				}
 			}
 		}
-	}
 
-	float rotSpeed = _GameData->m_DeltaTime;
-	auto mouse = _GameData->m_Mouse;
-	if (mouse.positionMode == Mouse::MODE_RELATIVE)
-	{
-		m_yaw -= (mouse.x * rotSpeed);
+		float rotSpeed = _GameData->m_DeltaTime;
+		auto mouse = _GameData->m_Mouse;
+		if (mouse.positionMode == Mouse::MODE_RELATIVE)
+		{
+			m_yaw -= (mouse.x * rotSpeed);
+		}
 	}
 
 	//apply my base behaviour

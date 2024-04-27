@@ -53,8 +53,14 @@ public:
     Game(Game const&) = delete;
     Game& operator= (Game const&) = delete;
 
-    // Initialization and management
+    // Initialization and 
+    void ClearAllVectors();
     void Initialize(HWND _window, int _width, int _height);
+   
+    void LoadObjects(int _width, int _height);
+    void LoadDialoges();
+    void LoadUIElements(float _width, float _height);
+    void LoadMap();
 
     // Basic game loop
     void Tick();
@@ -133,11 +139,20 @@ private:
     std::vector <std::shared_ptr<Tile>> m_Map;
 
     std::shared_ptr <Player> pPlayer = NULL;
+    std::shared_ptr<GameMap> map = NULL;
+    Vector3 playerSpawn;
+    vector<Vector3> enemySpawnPoses;
+    Vector3 hostageSpawn;
 
-    int score = 0;
+   
+    std::shared_ptr<TextGO2D> timerText = NULL;
+    float m_timeLimit = 60.00f;
     std::shared_ptr<TextGO2D> textScore = NULL;
+    int m_score = 0;
+    float quadrant = XMConvertToRadians(90);
 
     std::shared_ptr<DialogueBox> m_missionDialoge;
+    std::shared_ptr<DialogueBox> m_missingEnemyDialoge;
     std::shared_ptr<DialogueBox> m_endDialoge;
 
     void CheckCollision();
@@ -148,7 +163,7 @@ private:
     void RemoveEnemyFromAllContainers(std::shared_ptr<GameObject> gameObject);
 
 
-    void CheckCollisionMapWithPlayer();
+    void CheckCollisionMapWithPlayer(int _width, int _height);
 
     void CheckCollisionMapWithEnemies();
 

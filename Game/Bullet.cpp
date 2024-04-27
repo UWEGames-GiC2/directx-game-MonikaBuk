@@ -44,18 +44,18 @@ void Bullet::Tick(GameData* _GameData)
 			}
 
 			SetDrag(0.01f);
-			m_lifeTime = 2.0f;
+			m_lifeTime = 1.0f;
 
 			SetPhysicsOn(true);
 			auto pos = m_camera->GetPos();
 			m_pos = (pos);
-			SetAcceleration(directon * 30000.0f);
+			SetAcceleration(directon * 60000.0f);
 		}
 		firedNow = false;
 	}
 
 	m_lifeTime -= _GameData->m_DeltaTime;
-	if (m_lifeTime <= 1.95f && !IsVisible() && m_isShot)
+	if (m_lifeTime <= 0.95f && !IsVisible() && m_isShot)
 	{
 		SetVisibility(true);
 	}

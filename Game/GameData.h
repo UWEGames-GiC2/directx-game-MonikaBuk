@@ -17,6 +17,7 @@ struct GameData
 	float m_DeltaTime;  //time step since last frame
 	GameState m_GameState; //global GameState
 	bool gameStateChanged = false;
+	bool isPaused = true;
 
 	//player input
 	Keyboard::State m_KeyBoardState;

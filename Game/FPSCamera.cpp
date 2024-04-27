@@ -25,20 +25,21 @@ void FPSCamera::Tick(GameData* _GameData)
 {
 	float rotSpeed = _GameData->m_DeltaTime;
 	auto mouse = _GameData->m_Mouse;
-	float offsetX = XMConvertToRadians(40);
-	float offsetY = XMConvertToRadians(30);
 
-	m_forwardVector = Vector3::Forward;
-	if (mouse.positionMode == Mouse::MODE_RELATIVE)
-	{
-		m_newPitch -= (mouse.y * rotSpeed) ;
-		if (m_newPitch > m_maxPitch)
+
+	if (!_GameData->isPaused) {
+		m_forwardVector = Vector3::Forward;
+		if (mouse.positionMode == Mouse::MODE_RELATIVE)
 		{
-			m_newPitch = m_maxPitch;
-		}
-		if (m_newPitch < m_minPitch)
-		{
-			m_newPitch = m_minPitch;
+			m_newPitch -= (mouse.y * rotSpeed);
+			if (m_newPitch > m_maxPitch)
+			{
+				m_newPitch = m_maxPitch;
+			}
+			if (m_newPitch < m_minPitch)
+			{
+				m_newPitch = m_minPitch;
+			}
 		}
 	}
 	m_newYawn = m_targetPosObject->GetYaw();

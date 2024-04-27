@@ -36,12 +36,12 @@ void EnemyBullets::Tick(GameData* _GameData)
 				SetVisibility(true);
 
 				SetDrag(0.01f);
-				m_lifeTime = 2.0f;
+				m_lifeTime = 1.0f;
 
 				SetPhysicsOn(true);
 				auto pos = m_owner->GetPos();
 				m_pos = (pos);
-				SetAcceleration(directon * 30000.0f);
+				SetAcceleration(directon * 60000.0f);
 			}
 			m_firedNow = false;
 		}
