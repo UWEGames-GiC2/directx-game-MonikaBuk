@@ -33,13 +33,16 @@ DialogueBox::~DialogueBox()
 
 void DialogueBox::Tick(GameData* _GameData)
 {
-	if (_GameData->m_KeyBoardState_tracker.pressed.Enter)
+	if (_GameData->isPlaying)
 	{
-		std::cout << m_counter<< " " << active << "Enter pressed \n";
-		if (active)
+		if (_GameData->m_KeyBoardState_tracker.pressed.Enter)
 		{
-			std::cout << "Dialogue is active\n";
-			NextText(_GameData);
+			std::cout << m_counter << " " << active << "Enter pressed \n";
+			if (active)
+			{
+				std::cout << "Dialogue is active\n";
+				NextText(_GameData);
+			}
 		}
 	}
 }

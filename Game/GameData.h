@@ -18,6 +18,7 @@ struct GameData
 	GameState m_GameState; //global GameState
 	bool gameStateChanged = false;
 	bool isPaused = true;
+	bool isPlaying = false;
 
 	//player input
 	Keyboard::State m_KeyBoardState;
@@ -26,8 +27,6 @@ struct GameData
 	Keyboard::KeyboardStateTracker m_KeyBoardState_tracker;
 
 	//map
-
-
 
 };
 #endif

@@ -24,8 +24,8 @@
     <ImageContentTask Include="grey_button00.png" />
     <ImageContentTask Include="red.jpg" />
     <ImageContentTask Include="victory.png" />
-    <ImageContentTask Include="green.jfif" />
     <ImageContentTask Include="Dialog Box Example2.png" />
+    <ImageContentTask Include="green.jpg" />
   </ItemGroup>
   <ItemGroup>
     <Image Include="bricks-wall-06_color_1k.png" />

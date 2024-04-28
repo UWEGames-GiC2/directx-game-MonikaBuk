@@ -40,14 +40,15 @@ void Enemy::Tick(GameData* _GameData)
         {
             if (reloadTime >= 5.0f)
             {
-
+                std::cout << "did reset";
                 if (!m_bullet->IsShot())
                 {
                     m_bullet->Fire();
-
+                    std::cout << "fire";
+                    reloadTime = 0;
                 }
             }
-            reloadTime = 0;
+            
         }
         if (distanceToTarget < 400)
         {

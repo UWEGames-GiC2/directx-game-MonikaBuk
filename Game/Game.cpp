@@ -70,7 +70,7 @@ void Game::Initialize(HWND _window, int _width, int _height)
 
     //create GameData struct and populate its pointers
     m_GameData = std::make_unique <GameData>();
-    m_GameData->m_GameState = GS_PLAY_FPS_CAM;
+    m_GameData->m_GameState = GS_START_MENU;
 
     //set up systems for 2D rendering
     m_DrawData2D = std::make_unique<DrawData2D>();
@@ -127,6 +127,21 @@ void Game::Update(DX::StepTimer const& _timer)
         std::string tempTime = stream.str();
         timerText->SetText(tempTime);
     }
+    if (m_timeLimit <= 0.0f || pPlayer->GetHealth() <= 0.0f)
+    {
+        m_GameData->isPaused = true;
+        m_GameData->m_GameState = GS_GAME_OVER;
+    }
+    if (m_endDialoge->GetHasEnded())
+    {
+        if (!m_GameData->isPaused) {
+            m_GameData->isPaused = true;
+            m_score = m_score * m_timeLimit;
+            finalSocreText->SetText(std::to_string(m_score));
+            m_GameData->m_GameState = GS_WIN;
+        }
+    }
+
 
     float elapsedTime = float(_timer.GetElapsedSeconds());
     m_GameData->m_DeltaTime = elapsedTime;
@@ -147,23 +162,45 @@ void Game::Update(DX::StepTimer const& _timer)
             (*it)->Tick(m_GameData.get());
         }
     }
-
     ReadInput();
     //upon space bar switch camera state
     //see docs here for what's going on: https://github.com/Microsoft/DirectXTK/wiki/Keyboard
-    if (m_GameData->m_KeyBoardState_tracker.pressed.T)
+    if (m_GameData->isPlaying)
     {
-        if (m_GameData->m_GameState == GS_PLAY_FPS_CAM)
+        if (m_GameData->m_KeyBoardState_tracker.pressed.T && !m_GameData->isPaused)
         {
-            m_GameData->m_GameState = GS_PLAY_TPS_CAM;
-            m_GameData->gameStateChanged = true;   
+            if (m_GameData->m_GameState == GS_PLAY_FPS_CAM)
+            {
+                m_GameData->m_GameState = GS_PLAY_TPS_CAM;
+                m_GameData->gameStateChanged = true;
+            }
+            else
+            {
+                m_GameData->m_GameState = GS_PLAY_FPS_CAM;
+                m_GameData->gameStateChanged = true;
+            }
         }
-        else
-        {
-            m_GameData->m_GameState = GS_PLAY_FPS_CAM;
-            m_GameData->gameStateChanged = true;
-        } 
     }
+    if (m_GameData->m_GameState == GS_START_MENU)
+    {
+        if (m_GameData->m_KeyBoardState_tracker.pressed.Enter)
+        {
+            m_GameData->isPlaying = true;
+            m_GameData->m_GameState = GS_PLAY_FPS_CAM;
+        }
+    }
+    if (m_GameData->m_GameState == GS_WIN || m_GameData->m_GameState == GS_GAME_OVER)
+    {
+        if (m_GameData->m_KeyBoardState_tracker.pressed.Enter)
+        {
+            LoadObjects(m_windowWidth,  m_windowHeight);
+            m_GameData->isPlaying = false;
+            m_GameData->isPaused = true;
+            m_GameData->m_GameState = GS_START_MENU;
+        }
+    }
+
+    
     //update all objects
   
     for (std::vector<std::shared_ptr<GameObject>>::iterator it = m_GameObjects.begin(); it != m_GameObjects.end(); it++)
@@ -215,31 +252,57 @@ void Game::Render()
     //update the constant buffer for the rendering of VBGOs
     VBGO::UpdateConstantBuffer(m_DrawData.get());
 
-    //Draw 3D Game Obejects
-    for (std::vector<std::shared_ptr<GameObject>>::iterator it = m_GameObjects.begin(); it != m_GameObjects.end(); it++)
-    {
-        if ((*it)->IsVisible())
-        {
-            (*it)->Draw(m_DrawData.get());
-        }
-    }
-
-    // Draw sprite batch stuff 
     m_DrawData2D->m_Sprites->Begin(SpriteSortMode_Deferred, m_states->NonPremultiplied());
-    for (std::vector<std::shared_ptr<GameObject2D>>::iterator it = m_GameObjects2D.begin(); it != m_GameObjects2D.end(); it++)
+    if (m_GameData->m_GameState == GS_PLAY_FPS_CAM || m_GameData->m_GameState == GS_PLAY_TPS_CAM)
     {
-        (*it)->Draw(m_DrawData2D.get());
-    }
+        //Draw 3D Game Obejects
+        for (std::vector<std::shared_ptr<GameObject>>::iterator it = m_GameObjects.begin(); it != m_GameObjects.end(); it++)
+        {
+            if ((*it)->IsVisible())
+            {
+                (*it)->Draw(m_DrawData.get());
+            }
+        }
 
-
-    if (m_GameData->m_GameState == GS_PLAY_FPS_CAM)
-    {
-        for (std::vector<std::shared_ptr<GameObject2D>>::iterator it = m_FPS_GameObjects2D.begin(); it != m_FPS_GameObjects2D.end(); it++)
+        // Draw sprite batch stuff 
+  
+        for (std::vector<std::shared_ptr<GameObject2D>>::iterator it = m_GameObjects2D.begin(); it != m_GameObjects2D.end(); it++)
         {
             (*it)->Draw(m_DrawData2D.get());
         }
 
+
+        if (m_GameData->m_GameState == GS_PLAY_FPS_CAM)
+        {
+            for (std::vector<std::shared_ptr<GameObject2D>>::iterator it = m_FPS_GameObjects2D.begin(); it != m_FPS_GameObjects2D.end(); it++)
+            {
+                (*it)->Draw(m_DrawData2D.get());
+            }
+        }
     }
+    else if (m_GameData->m_GameState == GS_START_MENU)
+    {
+        for (std::vector<std::shared_ptr<GameObject2D>>::iterator it = m_Menu_GameObjects2D.begin(); it != m_Menu_GameObjects2D.end(); it++)
+        {
+            (*it)->Draw(m_DrawData2D.get());
+        }
+    }
+    else if (m_GameData->m_GameState == GS_GAME_OVER)
+    {
+        for (std::vector<std::shared_ptr<GameObject2D>>::iterator it = m_Lose_GameObjects2D.begin(); it != m_Lose_GameObjects2D.end(); it++)
+        {
+            (*it)->Draw(m_DrawData2D.get());
+        }
+    }
+    else if (m_GameData->m_GameState == GS_WIN)
+    {
+        for (std::vector<std::shared_ptr<GameObject2D>>::iterator it = m_Win_GameObjects2D.begin(); it != m_Win_GameObjects2D.end(); it++)
+        {
+            (*it)->Draw(m_DrawData2D.get());
+        }
+    }
+
+
     m_DrawData2D->m_Sprites->End();
     //drawing text screws up the Depth Stencil State, this puts it back again!
     m_d3dContext->OMSetDepthStencilState(m_states->DepthDefault(), 0);
@@ -319,6 +382,7 @@ void Game::GetDefaultSize(int& _width, int& _height) const noexcept
     // TODO: Change to desired default window size (note minimum size is 320x200).
     _width = 800;
     _height = 600;
+
 }
 
 // These are the resources that depend on the device.
@@ -562,7 +626,6 @@ void Game::CheckCollision()
             }
         }
     }
- 
 }
 
 void Game::CheckCollisionGroundWithPlayer()
@@ -699,6 +762,8 @@ void Game::CheckCollisionBulletWithPlayer()
 
 void Game::LoadObjects(int _width, int _height)
 {
+    m_windowHeight = _height;
+    m_windowWidth = _width;
     float AR = (float)_width / (float)_height;
     m_timeLimit = 30.00f;
     int m_score = 0;
@@ -719,8 +784,6 @@ void Game::LoadObjects(int _width, int _height)
 
     LoadEnemyObjects();
 
-
-    
     m_FPScam = std::make_shared <FPSCamera>(0.25f * XM_PI, AR, 1.0f, 1000.0f, pPlayer, Vector3::UnitY, Vector3(0.0f, 0.0f, 0.001f), _width, _height);
     m_GameObjects.push_back(m_FPScam);
 
@@ -730,7 +793,7 @@ void Game::LoadObjects(int _width, int _height)
 
     LoadPlayerBullets();
 
-    LoadUIElements(_width, _height);
+    LoadGameUIElements(_width, _height);
     LoadDialoges();
 
     m_GameData->isPaused = true;
@@ -738,6 +801,10 @@ void Game::LoadObjects(int _width, int _height)
     TestSound* TS = new TestSound(m_audioEngine.get(), "Explo1");
     TS->SetVolume(0.5f);
     m_Sounds.push_back(TS);
+
+    LoadStartMenuUIElements();
+    LoadLoosetMenuUIElements();
+    LoadWintMenuUIElements();
 }
 
 void Game::ClearAllVectors()
@@ -791,52 +858,6 @@ void Game::LoadDialoges()
         m_GameObjects2D.push_back(object);
     }
     m_GameObjects2D.push_back(m_missingEnemyDialoge);
-}
-
-void Game::LoadUIElements(float _width,float _height)
-{
-  
-
-    // 2D images
-    std::shared_ptr<ImageGO2D> croshair = std::make_shared<ImageGO2D>("croshair", m_d3dDevice.Get());
-    RECT window;
-    GetWindowRect(m_window, &window);
-    croshair->SetPos(Vector2(_width / 2, _height / 2));
-    croshair->SetScale(0.05);
-    m_FPS_GameObjects2D.push_back(croshair);
-
-    //Text
-    textScore = std::make_shared<TextGO2D>("0");
-    textScore->SetPos(Vector2(10, 10));
-    textScore->SetColour(Color((float*)&Colors::Red));
-    m_GameObjects2D.push_back(textScore);
-    std::stringstream ss;
-    ss << std::fixed << std::setprecision(2) << m_timeLimit;
-    std::string timeString = ss.str();
-    timerText = std::make_shared<TextGO2D>(timeString);
-    timerText->SetPos(Vector2(350, 10));
-    timerText->SetColour(Color((float*)&Colors::Red));
-    m_GameObjects2D.push_back(timerText);
-
-    //weapon frames 
-    std::vector<string> frameFileNames;
-    frameFileNames.push_back(std::string("pistol1"));
-    frameFileNames.push_back(std::string("pistol2"));
-    frameFileNames.push_back(std::string("pistol3"));
-    frameFileNames.push_back(std::string("pistol4"));
-    std::shared_ptr<AnimatedImage> weapon = std::make_shared<AnimatedImage>(frameFileNames, m_d3dDevice.Get(), 20, false);
-    weapon->SetPos(Vector2(_width / 1.5, _height - 200));
-    weapon->SetRot(0.2);
-    weapon->SetScale(2.5);
-    m_FPS_GameObjects2D.push_back(weapon);
-
-    //healtbar for player
-    std::shared_ptr<HealthBar> pHealthbard = std::make_shared<HealthBar>("green_button00", "grey_button00", m_d3dDevice.Get(), pPlayer);
-    for (const auto& image : pHealthbard->images)
-    {
-        m_GameObjects2D.push_back(image);
-    }
-    m_GameObjects2D.push_back(pHealthbard);
 }
 
 void Game::LoadMap()
@@ -944,4 +965,96 @@ void Game::LoadEnemyObjects()
             p_Ebullets.push_back(pEnemyBullet);
         }
     }
+}
+
+void Game::LoadGameUIElements(float _width,float _height)
+{
+    // 2D images
+    std::shared_ptr<ImageGO2D> croshair = std::make_shared<ImageGO2D>("croshair", m_d3dDevice.Get());
+    RECT window;
+    GetWindowRect(m_window, &window);
+    croshair->SetPos(Vector2(_width / 2, _height / 2));
+    croshair->SetScale(0.05);
+    m_FPS_GameObjects2D.push_back(croshair);
+
+    //Text
+    m_score = 0;
+    textScore = std::make_shared<TextGO2D>("0");
+    textScore->SetPos(Vector2(10, 10));
+    textScore->SetColour(Color((float*)&Colors::Red));
+    m_GameObjects2D.push_back(textScore);
+    std::stringstream ss;
+    ss << std::fixed << std::setprecision(2) << m_timeLimit;
+    std::string timeString = ss.str();
+    timerText = std::make_shared<TextGO2D>(timeString);
+    timerText->SetPos(Vector2(350, 10));
+    timerText->SetColour(Color((float*)&Colors::Red));
+    m_GameObjects2D.push_back(timerText);
+
+    //weapon frames 
+    std::vector<string> frameFileNames;
+    frameFileNames.push_back(std::string("pistol1"));
+    frameFileNames.push_back(std::string("pistol2"));
+    frameFileNames.push_back(std::string("pistol3"));
+    frameFileNames.push_back(std::string("pistol4"));
+    std::shared_ptr<AnimatedImage> weapon = std::make_shared<AnimatedImage>(frameFileNames, m_d3dDevice.Get(), 20, false);
+    weapon->SetPos(Vector2(_width / 1.5, _height - 200));
+    weapon->SetRot(0.2);
+    weapon->SetScale(2.5);
+    m_FPS_GameObjects2D.push_back(weapon);
+
+    //healtbar for player
+    std::shared_ptr<HealthBar> pHealthbard = std::make_shared<HealthBar>("green_button00", "grey_button00", m_d3dDevice.Get(), pPlayer);
+    for (const auto& image : pHealthbard->images)
+    {
+        m_GameObjects2D.push_back(image);
+    }
+    m_GameObjects2D.push_back(pHealthbard);
+}
+
+void Game::LoadStartMenuUIElements()
+{
+    std::shared_ptr<ImageGO2D> background = std::make_shared<ImageGO2D>("victory", m_d3dDevice.Get());
+    background->SetScale(0.5);
+    background->SetPos(Vector2(0, 40));
+    background->SetOrigin(Vector2(0, 0));
+    m_Menu_GameObjects2D.push_back(background);
+
+    std::shared_ptr<TextGO2D> instructions = std::make_shared<TextGO2D>("Press Enter To Start \n \n Escape to Exit any point");
+    instructions->SetPos(Vector2(80, 150));
+    instructions->SetColour(Color((float*)&Colors::Yellow));
+    instructions->SetScale(1.5);
+    m_Menu_GameObjects2D.push_back(instructions);
+
+}
+
+void Game::LoadLoosetMenuUIElements()
+{
+    std::shared_ptr<ImageGO2D> background = std::make_shared<ImageGO2D>("red", m_d3dDevice.Get());
+    background->SetOrigin(Vector2(0, 0));
+    m_Lose_GameObjects2D.push_back(background);
+
+    std::shared_ptr<TextGO2D> instructions = std::make_shared<TextGO2D>("GAME OVER \n Press enter to \n retun to menu");
+    instructions->SetPos(Vector2(50, 200));
+    instructions->SetColour(Color((float*)&Colors::Yellow));
+    instructions->SetScale(1.5);
+    m_Lose_GameObjects2D.push_back(instructions);
+}
+
+void Game::LoadWintMenuUIElements()
+{
+    std::shared_ptr<ImageGO2D> background = std::make_shared<ImageGO2D>("green", m_d3dDevice.Get());
+    background->SetOrigin(Vector2(0, 0));
+    background->SetScale(1.5);
+    m_Win_GameObjects2D.push_back(background);
+
+    finalSocreText = std::make_shared<TextGO2D>("Place Holder");
+    finalSocreText->SetScale(2);
+    finalSocreText->SetPos(Vector2(100, 400));
+    m_Win_GameObjects2D.push_back(finalSocreText);
+    std::shared_ptr<TextGO2D> instructions = std::make_shared<TextGO2D>("GAME WON \n Press enter to \n retun to menu \n Final score was:");
+    instructions->SetPos(Vector2(100, 100));
+    instructions->SetColour(Color((float*)&Colors::White));
+    instructions->SetScale(1);
+    m_Win_GameObjects2D.push_back(instructions);
 }

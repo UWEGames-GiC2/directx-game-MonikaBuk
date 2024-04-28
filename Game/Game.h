@@ -59,7 +59,10 @@ public:
    
     void LoadObjects(int _width, int _height);
     void LoadDialoges();
-    void LoadUIElements(float _width, float _height);
+    void LoadGameUIElements(float _width, float _height);
+    void LoadStartMenuUIElements();
+    void LoadLoosetMenuUIElements();
+    void LoadWintMenuUIElements();
     void LoadMap();
     void LoadPlayerObject();
     void LoadPlayerBullets();
@@ -126,6 +129,9 @@ private:
     std::unique_ptr<DirectX::Keyboard> m_keyboard;
     std::unique_ptr<DirectX::Mouse> m_mouse;
 
+    float m_windowWidth;
+    float m_windowHeight;
+
     std::vector < std::shared_ptr<GameObject>> m_GameObjects; //data structure to hold pointers to the 3D Game Objects
    // static objects
     std::vector <std::shared_ptr<Tile>> m_Map;
@@ -162,6 +168,7 @@ private:
     float m_timeLimit = 60.00f;
     std::shared_ptr<TextGO2D> textScore = NULL;
     int m_score = 0;
+    std::shared_ptr<TextGO2D> finalSocreText = NULL;
 
   //dialoges they start hidden
     std::shared_ptr<DialogueBox> m_missionDialoge;
