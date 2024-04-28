@@ -95,6 +95,12 @@ void Game::Initialize(HWND _window, int _width, int _height)
     //create a set of dummy things to show off the engine
     float AR = (float)_width / (float)_height;
     //create a base light
+    m_DrawData = std::make_shared<DrawData>();
+    m_DrawData->m_pd3dImmediateContext = nullptr;
+    m_DrawData->m_states = m_states;
+    m_DrawData->m_cam = m_FPScam;
+    m_DrawData->m_light = m_light;
+
     LoadObjects(  _width,  _height);
     
 }
@@ -526,6 +532,14 @@ void Game::CheckCollision()
             }
         }
     }
+    if (m_GameData->m_GameState == GS_PLAY_FPS_CAM)
+    {
+        m_FPScam->Tick(m_GameData.get());
+    }
+    else
+    {
+        m_TPScam->Tick(m_GameData.get());
+    }
 
     for (size_t i = 0; i < m_Eniemies.size(); i++) {
         for (size_t j = i + 1; j < m_Eniemies.size(); j++) {
@@ -548,14 +562,7 @@ void Game::CheckCollision()
             }
         }
     }
-    if (m_GameData->m_GameState == GS_PLAY_FPS_CAM)
-    {
-        m_FPScam->Tick(m_GameData.get());
-    }
-    else
-    {
-        m_TPScam->Tick(m_GameData.get());
-    }
+ 
 }
 
 void Game::CheckCollisionGroundWithPlayer()
@@ -626,14 +633,23 @@ void Game::CheckCollisionMapWithPlayer(int _width, int _height)
             pPlayer->SetTilePos(m_Map[j]->GetTile());
             if (m_Map[j]->GetWorth() == 4)
             {
+                if(!dialougeIsTrigerred)
                 if (m_score ==5)
                 {
-                    LoadObjects(_width,  _height);
+                    m_endDialoge->ShowDialouge(m_GameData.get());
                 }
-                m_missingEnemyDialoge->ShowDialouge(m_GameData.get());
-                break;
+                else 
+                {
+                    m_missingEnemyDialoge->ShowDialouge(m_GameData.get());
+                }
+                dialougeIsTrigerred = true;
             }
-        }
+            else
+            {
+                dialougeIsTrigerred = false;
+            }
+            break;
+        }  
     }
 }
 
@@ -652,6 +668,14 @@ void Game::CheckCollisionMapWithEnemies()
                 break;
             }
         }
+    }
+    if (m_GameData->m_GameState == GS_PLAY_FPS_CAM)
+    {
+        m_FPScam->Tick(m_GameData.get());
+    }
+    else
+    {
+        m_TPScam->Tick(m_GameData.get());
     }
 }
 
@@ -676,6 +700,8 @@ void Game::CheckCollisionBulletWithPlayer()
 void Game::LoadObjects(int _width, int _height)
 {
     float AR = (float)_width / (float)_height;
+    m_timeLimit = 30.00f;
+    int m_score = 0;
 
     ClearAllVectors();
    
@@ -684,71 +710,25 @@ void Game::LoadObjects(int _width, int _height)
 
     LoadMap();
 
-    m_timeLimit = 30.00f;
-    int m_score = 0;
+    hostageSpawn.x -= 30;
+    hostageSpawn.z += 70;
+    std::shared_ptr<Terrain> pHostile = std::make_shared<Terrain>("BirdModelV1", m_d3dDevice.Get(), m_fxFactory, hostageSpawn, 0.0f, quadrant*2 , 0.0f, 10.0f * Vector3::One);
+    m_GameObjects.push_back(pHostile);
 
-    std::shared_ptr<Terrain> floor = std::make_shared<Terrain>("floor", m_d3dDevice.Get(), m_fxFactory, Vector3(-150, 0, 150), 0.0f, 0.0f, 0.0f, 1 * Vector3::One);
-    floor->SetType(TerrainType::FLOOR);
-    m_GameObjects.push_back(floor);
-    m_ColliderObjects.push_back(floor);
-    floor->SetPos(Vector3(-floor->GetSize().x / 2, -floor->GetSize().y, -floor->GetSize().z / 2));
+    LoadPlayerObject();
+
+    LoadEnemyObjects();
+
 
     
-    pPlayer = std::make_shared<Player>("Test", m_d3dDevice.Get(), m_fxFactory);
-    pPlayer->SetScale(1.4);
-    m_GameObjects.push_back(pPlayer);
-    m_PhysicsObjects.push_back(pPlayer);
-    pPlayer->SetPos(playerSpawn);
-
-
-    std::shared_ptr<HealthBar> pHealthbard = std::make_shared<HealthBar>("green_button00", "grey_button00", m_d3dDevice.Get(), pPlayer);
-    for (const auto& image : pHealthbard->images)
-    {
-        m_GameObjects2D.push_back(image);
-    }
-    m_GameObjects2D.push_back(pHealthbard);
-
-    for (int j = 0; j < enemySpawnPoses.size(); ++j)
-    {
-        std::shared_ptr<Enemy> test = std::make_shared<Enemy>("Test", m_d3dDevice.Get(), m_fxFactory, enemySpawnPoses[j], 0.0f, 0.0f, 0.0f, 1.4f * Vector3::One, pPlayer, map);
-        m_GameObjects.push_back(test);
-        m_PhysicsObjects.push_back(test);
-        m_Eniemies.push_back(test);
-        for (size_t i = 0; i < 2; i++)
-        {
-            std::shared_ptr<EnemyBullets> pEnemyBullet = std::make_shared<EnemyBullets>("cube", m_d3dDevice.Get(), m_fxFactory, test);
-            pEnemyBullet->SetVisibility(false);
-            pEnemyBullet->SetScale(0.02);
-            m_GameObjects.push_back(pEnemyBullet);
-            m_PhysicsObjects.push_back(pEnemyBullet);
-            test->SetBullet(pEnemyBullet);
-            p_Ebullets.push_back(pEnemyBullet);
-        }
-    }
-
-    /*
-     std::shared_ptr<AnimatedObject3D> asd = std::make_shared<AnimatedObject3D>("test1", m_d3dDevice.Get(), m_fxFactory);
-     asd->SetPos(Vector3(20, 20, 20));
-     m_GameObjects.push_back(asd);
-     */
-
     m_FPScam = std::make_shared <FPSCamera>(0.25f * XM_PI, AR, 1.0f, 1000.0f, pPlayer, Vector3::UnitY, Vector3(0.0f, 0.0f, 0.001f), _width, _height);
     m_GameObjects.push_back(m_FPScam);
 
     m_TPScam = std::make_shared <TPSCamera>(0.25f * XM_PI, AR, 1.0f, 1000.0f, pPlayer, Vector3::UnitY, Vector3(0.0f, 0.00f, -500.0f));
     m_GameObjects.push_back(m_TPScam);
 
-    //bullets
-    for (size_t i = 0; i < 10; i++)
-    {
-        std::shared_ptr<Bullet> pBullet = std::make_shared<Bullet>("cube", m_d3dDevice.Get(), m_fxFactory, *m_FPScam);
-        pBullet->SetVisibility(false);
-        pBullet->SetScale(0.02);
-        m_GameObjects.push_back(pBullet);
-        m_PhysicsObjects.push_back(pBullet);
-        p_bullets.push_back(pBullet);
-    }
-    pPlayer->SetBullets(p_bullets);
+
+    LoadPlayerBullets();
 
     LoadUIElements(_width, _height);
     LoadDialoges();
@@ -815,11 +795,7 @@ void Game::LoadDialoges()
 
 void Game::LoadUIElements(float _width,float _height)
 {
-    m_DrawData = std::make_shared<DrawData>();
-    m_DrawData->m_pd3dImmediateContext = nullptr;
-    m_DrawData->m_states = m_states;
-    m_DrawData->m_cam = m_FPScam;
-    m_DrawData->m_light = m_light;
+  
 
     // 2D images
     std::shared_ptr<ImageGO2D> croshair = std::make_shared<ImageGO2D>("croshair", m_d3dDevice.Get());
@@ -853,10 +829,24 @@ void Game::LoadUIElements(float _width,float _height)
     weapon->SetRot(0.2);
     weapon->SetScale(2.5);
     m_FPS_GameObjects2D.push_back(weapon);
+
+    //healtbar for player
+    std::shared_ptr<HealthBar> pHealthbard = std::make_shared<HealthBar>("green_button00", "grey_button00", m_d3dDevice.Get(), pPlayer);
+    for (const auto& image : pHealthbard->images)
+    {
+        m_GameObjects2D.push_back(image);
+    }
+    m_GameObjects2D.push_back(pHealthbard);
 }
 
 void Game::LoadMap()
 {
+    std::shared_ptr<Terrain> floor = std::make_shared<Terrain>("floor", m_d3dDevice.Get(), m_fxFactory, Vector3(-150, 0, 150), 0.0f, 0.0f, 0.0f, 1 * Vector3::One);
+    floor->SetType(TerrainType::FLOOR);
+    m_GameObjects.push_back(floor);
+    m_ColliderObjects.push_back(floor);
+    floor->SetPos(Vector3(-floor->GetSize().x / 2, -floor->GetSize().y, -floor->GetSize().z / 2));
+
     std::shared_ptr<Terrain> cube = std::make_shared<Terrain>("cube", m_d3dDevice.Get(), m_fxFactory, Vector3(25.0f, 40.0f, -75.001f), quadrant, 0.0f, quadrant, 1.0f * Vector3::One);
 
     m_GameObjects.push_back(cube);
@@ -908,6 +898,50 @@ void Game::LoadMap()
             cube->SetWorth(map->map[y][x]);
             m_GameObjects.push_back(cube);
             m_Map.push_back(cube);
+        }
+    }
+}
+
+void Game::LoadPlayerObject()
+{
+    pPlayer = std::make_shared<Player>("Test", m_d3dDevice.Get(), m_fxFactory);
+    pPlayer->SetScale(1.4);
+    m_GameObjects.push_back(pPlayer);
+    m_PhysicsObjects.push_back(pPlayer);
+    pPlayer->SetPos(playerSpawn);
+}
+
+void Game::LoadPlayerBullets()
+{
+    for (size_t i = 0; i < 10; i++)
+    {
+        std::shared_ptr<Bullet> pBullet = std::make_shared<Bullet>("cube", m_d3dDevice.Get(), m_fxFactory, *m_FPScam);
+        pBullet->SetVisibility(false);
+        pBullet->SetScale(0.02);
+        m_GameObjects.push_back(pBullet);
+        m_PhysicsObjects.push_back(pBullet);
+        p_bullets.push_back(pBullet);
+    }
+    pPlayer->SetBullets(p_bullets);
+}
+
+void Game::LoadEnemyObjects()
+{
+    for (int j = 0; j < enemySpawnPoses.size(); ++j)
+    {
+        std::shared_ptr<Enemy> test = std::make_shared<Enemy>("Test", m_d3dDevice.Get(), m_fxFactory, enemySpawnPoses[j], 0.0f, 0.0f, 0.0f, 1.4f * Vector3::One, pPlayer, map);
+        m_GameObjects.push_back(test);
+        m_PhysicsObjects.push_back(test);
+        m_Eniemies.push_back(test);
+        for (size_t i = 0; i < 2; i++)
+        {
+            std::shared_ptr<EnemyBullets> pEnemyBullet = std::make_shared<EnemyBullets>("cube", m_d3dDevice.Get(), m_fxFactory, test);
+            pEnemyBullet->SetVisibility(false);
+            pEnemyBullet->SetScale(0.02);
+            m_GameObjects.push_back(pEnemyBullet);
+            m_PhysicsObjects.push_back(pEnemyBullet);
+            test->SetBullet(pEnemyBullet);
+            p_Ebullets.push_back(pEnemyBullet);
         }
     }
 }

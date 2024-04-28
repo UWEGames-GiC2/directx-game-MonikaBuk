@@ -159,6 +159,9 @@
   <ItemGroup>
     <Image Include="1024px-Crosshairs_Red.svg.png" />
     <Image Include="bricks-wall-06_color_1k.png" />
+    <ImageContentTask Include="Dialog Box Example2.png" />
+    <ImageContentTask Include="red.jpg" />
+    <ImageContentTask Include="victory.png" />
     <ImageContentTask Include="texture\hair.png" />
     <ImageContentTask Include="texture\han arm.png" />
     <ImageContentTask Include="texture\han belt.png" />
@@ -173,6 +176,7 @@
     <ImageContentTask Include="LegoUV2.png" />
     <ImageContentTask Include="green_button00.png" />
     <ImageContentTask Include="grey_button00.png" />
+    <ImageContentTask Include="green.jfif" />
     <Image Include="pistol5.png" />
     <ImageContentTask Include="floor_tiles_06_ambient_occlusion_1k.png" />
     <ImageContentTask Include="floor_tiles_06_basecolor_1k.png" />

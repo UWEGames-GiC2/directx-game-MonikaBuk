@@ -156,7 +156,6 @@
     <MeshContentTask Include="cube.fbx" />
     <MeshContentTask Include="floor.fbx" />
     <MeshContentTask Include="han.fbx" />
-    <MeshContentTask Include="icant.fbx" />
     <MeshContentTask Include="Mac10.fbx" />
     <MeshContentTask Include="Table\table.FBX">
       <FileType>Document</FileType>

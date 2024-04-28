@@ -17,6 +17,7 @@ public:
 	void ShowDialouge(GameData* _GameData);
 	void HideElements();
 	void NextText(GameData* _GameData);
+	bool GetHasEnded() { return hasEnded;}
 
 protected:
 	std::shared_ptr<ImageGO2D> m_border;
@@ -26,6 +27,7 @@ protected:
 	std::vector < std::shared_ptr<GameObject2D>> m_GameObjects2D;
 	int m_counter = 0;
 	bool active = false;
+	bool hasEnded;
 
 
 };

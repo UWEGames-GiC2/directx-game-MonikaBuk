@@ -23,7 +23,7 @@ FPSCamera::~FPSCamera()
 
 void FPSCamera::Tick(GameData* _GameData)
 {
-	float rotSpeed = _GameData->m_DeltaTime;
+	float rotSpeed = _GameData->m_DeltaTime /2;
 	auto mouse = _GameData->m_Mouse;
 
 

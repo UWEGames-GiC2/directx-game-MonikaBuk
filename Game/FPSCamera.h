@@ -38,6 +38,14 @@ protected:
 	
 	//I'm following this object
 	Vector3	m_dpos; //I'll lurk this far behind and away from it
+	float Lerp(float a, float b, float t)
+	{
+		return a + t * (b - a);
+	}
+	float Clamp(float value, float min, float max)
+	{
+		return value < min ? min : (value > max ? max : value);
+	}
 };
 
 

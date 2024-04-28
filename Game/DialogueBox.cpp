@@ -24,7 +24,7 @@ DialogueBox::DialogueBox(const string& _fileNameBox, const vector<std::string>& 
 	m_GameObjects2D.push_back(m_skipText);
 	HideElements();
 	m_counter = 0;
-
+	hasEnded = false;
 }
 
 DialogueBox::~DialogueBox()
@@ -59,6 +59,7 @@ void DialogueBox::NextText(GameData* _GameData)
 		{
 			HideDialouge(_GameData);
 			_GameData->isPaused = false;
+			hasEnded = true;
 		}
 	}
 }
