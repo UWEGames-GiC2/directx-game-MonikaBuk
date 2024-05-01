@@ -37,10 +37,8 @@ void DialogueBox::Tick(GameData* _GameData)
 	{
 		if (_GameData->m_KeyBoardState_tracker.pressed.Enter)
 		{
-			std::cout << m_counter << " " << active << "Enter pressed \n";
 			if (active)
 			{
-				std::cout << "Dialogue is active\n";
 				NextText(_GameData);
 			}
 		}
@@ -50,13 +48,11 @@ void DialogueBox::Tick(GameData* _GameData)
 
 void DialogueBox::NextText(GameData* _GameData)
 {
-	std::cout << "NextText called" << m_counter;
 	{
 		m_counter++;
 		if (m_counter < m_texts.size())
 		{
 			m_textDialog->SetText(m_texts[m_counter]);
-			std::cout << "Setting text: " << m_texts[m_counter] << std::endl;
 		}
 		else
 		{
@@ -70,7 +66,7 @@ void DialogueBox::NextText(GameData* _GameData)
 
 void DialogueBox::HideDialouge(GameData* _GameData)
 {
-	std::cout << "hide dialog called. " << active  << std::endl;
+
 	HideElements();
 	active = false;
 }
@@ -81,7 +77,6 @@ void DialogueBox::ShowDialouge(GameData* _GameData)
 	{
 		m_counter = 0;
 		active = true;
-		std::cout << "Dialogue is now active." << std::endl;
 		for (size_t j = 0; j < m_GameObjects2D.size(); j++)
 		{
 			m_GameObjects2D[j]->SetVisibility(true);

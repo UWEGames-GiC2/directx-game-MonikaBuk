@@ -696,16 +696,17 @@ void Game::CheckCollisionMapWithPlayer(int _width, int _height)
             pPlayer->SetTilePos(m_Map[j]->GetTile());
             if (m_Map[j]->GetWorth() == 4)
             {
-                if(!dialougeIsTrigerred)
-                if (m_score ==5)
-                {
-                    m_endDialoge->ShowDialouge(m_GameData.get());
+                if (!dialougeIsTrigerred) {
+                    if (m_score == enemySpawnPoses.size())
+                    {
+                        m_endDialoge->ShowDialouge(m_GameData.get());
+                    }
+                    else
+                    {
+                        m_missingEnemyDialoge->ShowDialouge(m_GameData.get());
+                    }
+                    dialougeIsTrigerred = true;
                 }
-                else 
-                {
-                    m_missingEnemyDialoge->ShowDialouge(m_GameData.get());
-                }
-                dialougeIsTrigerred = true;
             }
             else
             {
@@ -772,6 +773,9 @@ void Game::LoadObjects(int _width, int _height)
    
     m_light = std::make_shared<Light>(Vector3(0.0f, 100.0f, 160.0f), Color(1.0f, 1.0f, 1.0f, 1.0f), Color(0.4f, 0.1f, 0.1f, 1.0f));
     m_GameObjects.push_back(m_light);
+
+    std::shared_ptr<AnimatedObject3D> test = std::make_shared<AnimatedObject3D>("test1", m_d3dDevice.Get(), m_fxFactory);
+    m_GameObjects.push_back(test);
 
     LoadMap();
 
@@ -876,7 +880,6 @@ void Game::LoadMap()
     map = std::make_shared<GameMap>("map", 7, 7, cube->GetSize());
     m_GameObjects.push_back(map);
 
-
     float mapwidth = map->MAP_WIDTH * cube->GetSize().x;
     map->basePosition = { -mapwidth / 2, cube->GetSize().y / 2, -mapwidth / 2 };
     for (int y = 0; y < map->MAP_HEIGHT; ++y) {
@@ -902,15 +905,15 @@ void Game::LoadMap()
                 m_PhysicsObjects.push_back(cube);
             }
 
-            if (x == 1 && y == 1)
-            {
-                playerSpawn = cube->GetPos();
-            }
-            else if (map->map[y][x] == 2)
+            if (map->map[y][x] == 2)
             {
                 Vector3 newSpawnPos = cube->GetPos();
                 newSpawnPos.y -= 40;
                 enemySpawnPoses.push_back(newSpawnPos);
+            }
+            else if (map->map[y][x] == 3)
+            {
+                playerSpawn = cube->GetPos();
             }
             else if (map->map[y][x] == 4)
             {

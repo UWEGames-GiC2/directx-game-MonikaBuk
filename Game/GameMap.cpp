@@ -133,8 +133,8 @@ std::vector<Vector2> GameMap::FindPath(Vector2 start, Vector2 goal) const {
 
 Vector2 GameMap::TileToWorld(Vector2 nextTile)
 {
-    Vector2 tes = (nextTile * tileSize);
-    tes.x += basePosition.x;
-    tes.y += basePosition.z;
-    return  tes;
+    Vector2 pos = (nextTile * tileSize);
+    pos.x += basePosition.x;
+    pos.y += basePosition.z;
+    return  pos;
 }
