@@ -8,13 +8,13 @@ UWE Game Engine Programming Scarle 2021
  Find the bird and defeat all enemies.
  
 ## Controls:
- T - Switching camera view,
- W A S D - Movement,
- Space - Jump
- Mouse - Rotation,
- Left - Mouse Button - Shooting,
- Enter- Progress with dialogues or in the menu,
- Escape - Leave the game at any point;
+ T - Switching camera view, __
+ W A S D - Movement,__
+ Space - Jump__
+ Mouse - Rotation,__
+ Left - Mouse Button - Shooting,__
+ Enter- Progress with dialogues or in the menu,__
+ Escape - Leave the game at any point;__
  
 ## Screenshots 
 
@@ -34,7 +34,7 @@ UWE Game Engine Programming Scarle 2021
  
 ## About the Project 
  Map And Enemies: Reads in a text file of IDs and creates a map based on numbers. In my case 2 was the enemy, 4 the hostage and 1 are the walls. 0 represents empty tiles which are walkable areas for pathfinding. This map can be edited and scaled. The number of enemies 
- can be increased by editing the map and adjusting the size of rows and columns when initialising. I also have a Breadth-first search algorithm. All Enemies will find their way to the player if the player is at a certain distance; if the player gets too close the enemy will move towards the player and shoot. 
+ can be increased by editing the map and adjusting the size of rows and columns when initialising. I also have a Breadth-first search algorithm. All Enemies will find their way to the player if the player is at a certain distance; if the player gets too close the enemy will move towards the player and shoot. __
 
  The weapon has a 2D animation. 3Danimation was attempted even when loading it will load the bones in and store them in an array it will not update the position right.
  ![image](https://github.com/UWEGames-GiC2/directx-game-MonikaBuk/assets/115149820/656f1108-73f8-489d-8e6f-529cf736533c)
