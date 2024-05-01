@@ -8,13 +8,13 @@ UWE Game Engine Programming Scarle 2021
  Find the bird and defeat all enemies.
  
 ## Controls:
- T - Switching camera view, __
- W A S D - Movement,__
- Space - Jump__
- Mouse - Rotation,__
- Left - Mouse Button - Shooting,__
- Enter- Progress with dialogues or in the menu,__
- Escape - Leave the game at any point;__
+ T - Switching camera view,\
+ W A S D - Movement,\
+ Space - Jump\
+ Mouse - Rotation,\
+ Left - Mouse Button - Shooting,\
+ Enter- Progress with dialogues or in the menu,\
+ Escape - Leave the game at any point;
  
 ## Screenshots 
 
