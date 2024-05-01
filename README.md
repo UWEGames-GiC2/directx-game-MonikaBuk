@@ -29,7 +29,7 @@ UWE Game Engine Programming Scarle 2021
 
 ## Demo 
 
-[![YouTube Video]([https://img.youtube.com/vi/nce04Y1PjnQ/0.jpg](https://github.com/UWEGames-GiC2/directx-game-MonikaBuk/assets/115149820/6f2b2835-9bd9-4664-8dd4-26f2718a6982))]([https://www.youtube.com/watch?v=nce04Y1PjnQ](https://youtu.be/njV2Zi2jEMM)) 
+[![YouTube Video]([https://github.com/UWEGames-GiC2/directx-game-MonikaBuk/assets/115149820/0981dbeb-fa56-430c-8ec5-d4aa6f66ce79])]([https://www.youtube.com/watch?v=njV2Zi2jEMM&ab_channel=BukovicsMonika]) 
 
  
 ## About the Project 
