@@ -82,12 +82,6 @@ The map is dynamically generated from this file, allowing easy editing and scali
 
 ---
 
-## 🙋‍♀️ Author
-
-Your Name – [@yourhandle](https://github.com/yourhandle)
-
----
-
 ## 📄 License
 
 This project is licensed under the MIT License.
